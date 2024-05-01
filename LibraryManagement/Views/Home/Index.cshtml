@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successMessage" class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["LogoutMessage"] != null)
+{
+    <div id="logoutMessage" class="alert alert-info">@TempData["LogoutMessage"]</div>
+}
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Hide success message after 5 seconds
+            setTimeout(function () {
+                $("#successMessage").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 5000);
+
+            // Hide logout message after 5 seconds
+            setTimeout(function () {
+                $("#logoutMessage").fadeOut("slow", function () {
+                    $(this).remove();
+                });
+            }, 5000);
+        });
+    </script>
+}
+
+<div class="text-center">
+    <h1 class="display-4">Home Page</h1>
+</div>

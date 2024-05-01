@@ -1,0 +1,38 @@
+﻿@model Shared.ViewModels.LoginViewModel
+
+@if (TempData["ErrorMessages"] != null)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var errorMessage in (List<string>)TempData["ErrorMessages"])
+            {
+                <li>@errorMessage</li>
+            }
+        </ul>
+    </div>
+}
+
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <h2>Login</h2>
+        <form asp-action="Login" asp-controller="Account" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a asp-action="ResetPassword" asp-route-forgotPassword="true" class="btn btn-link">Forgot Password</a>
+            </div>
+        </form>
+    </div>
+</div>
+
