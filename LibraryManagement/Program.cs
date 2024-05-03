@@ -14,9 +14,9 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddValidatorsFromAssembly(typeof(Library.Service.AssemblyReference.AssemblyReference).Assembly);
 
 
+    
 
 var app = builder.Build();
 

@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Library.Data.Interfaces\Library.Data.Interfaces.csproj" />
-    <ProjectReference Include="..\Library.Service.Interfaces\Library.Service.Interfaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,10 +1,10 @@
 ﻿using Library.Data.Interfaces;
 using Library.Data;
-using Library.Service.Interfaces;
 using Library.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Library.Model.Models;
+using Library.Service.Interfaces;
 
 namespace LibraryManagement.ServiceExtensions
 {
@@ -19,7 +19,6 @@ namespace LibraryManagement.ServiceExtensions
 
 
         // using AddDbContext method to register RepositoryContext with DI container
-        //AddDbContext takes an action that configures DbContextOptions for RepositoryContext
         // In our case we are specifing that the context should use SQL server as a database provider
         public static void ConfigureSqlContext(this IServiceCollection services,
                         IConfiguration configuration) =>
@@ -36,7 +35,7 @@ namespace LibraryManagement.ServiceExtensions
                 o.Password.RequireLowercase = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 10;
+                o.Password.RequiredLength = 8;
                 o.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<RepositoryContext>()

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Model.Models;
-using Shared.ViewModels;
+using Library.Service.Dto;
+using LibraryManagement.ViewModels;
 
 namespace LibraryManagement.MappingProfile
 {
@@ -8,7 +9,11 @@ namespace LibraryManagement.MappingProfile
     {
         public MappingProfile()
         {
-            CreateMap<RegisterViewModel, Employee>();
+
+            CreateMap<RegisterViewModel, RegisterViewModelDto>();
+            CreateMap<LoginViewModel, LoginViewModelDto>();
+            CreateMap<ResetPasswordViewModel, ResetPasswordViewModelDto>();
+
         }
     }
 }

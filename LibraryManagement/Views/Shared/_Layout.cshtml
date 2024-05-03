@@ -2,9 +2,6 @@
 @inject SignInManager<Library.Model.Models.Employee> SignInManager
 @inject UserManager<Library.Model.Models.Employee> UserManager
 
-@{
-    var currentUSer = await UserManager.GetUserAsync(User);
-}
 
 <!DOCTYPE html>
 <html lang="en">

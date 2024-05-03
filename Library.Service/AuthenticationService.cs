@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Library.Model.Models;
+using Library.Service.Dto;
 using Library.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Shared.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Library.Service
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : IAuthentificationService
     {
 
         private readonly UserManager<Employee> _userManager;
@@ -31,7 +31,7 @@ namespace Library.Service
             _signInManager = signInManager;
         }
 
-        public async Task<IdentityResult> LoginEmployee(LoginViewModel loginViewModel)
+        public async Task<IdentityResult> LoginEmployee(LoginViewModelDto loginViewModel)
         {
             var existingUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
@@ -80,28 +80,24 @@ namespace Library.Service
 
         }
 
-        public async Task<IdentityResult> RegisterEmployee(RegisterViewModel registerViewModel)
+        public async Task<IdentityResult> RegisterEmployee(RegisterViewModelDto registerViewModelDto)
         {
-            var existingUser = await _userManager.FindByEmailAsync(registerViewModel.Email);
+            var existingUser = await _userManager.FindByEmailAsync(registerViewModelDto.Email);
             if (existingUser != null)
             {
                 return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
             }
 
-            var employee = _mapper.Map<Employee>(registerViewModel);
-            var result = await _userManager.CreateAsync(employee, registerViewModel.Password);
+            var employee = _mapper.Map<Employee>(registerViewModelDto);
+            var result = await _userManager.CreateAsync(employee, registerViewModelDto.Password);
 
-            if(result.Succeeded)
-            {
-                await _userManager.AddToRolesAsync(employee, registerViewModel.SelectedRoles);
-            }
 
             return result;
             
 
         }
 
-        public async Task<IdentityResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
+        public async Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel)
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
 

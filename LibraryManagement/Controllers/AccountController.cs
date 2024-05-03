@@ -1,13 +1,16 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Library.Model.Models;
+using Library.Service.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.Extensions;
+using LibraryManagement.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
-using Shared.ViewModels;
+
 
 namespace LibraryManagement.Controllers
 {
@@ -15,10 +18,12 @@ namespace LibraryManagement.Controllers
     {
 
         private readonly IServiceManager _serviceManager;
+        private readonly IMapper _mapper;
      
-        public AccountController(IServiceManager serviceManager)    
+        public AccountController(IServiceManager serviceManager, IMapper mapper)    
         {
             _serviceManager = serviceManager;
+            _mapper = mapper;
            
         }
         
@@ -34,10 +39,14 @@ namespace LibraryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(registerViewModel);
+                return View(registerViewModel); 
             }
 
-            var result = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModel);
+
+            var registerViewModelDto = _mapper.Map<RegisterViewModelDto>(registerViewModel);
+
+            var result = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModelDto);
+
             return HandleResult(result, registerViewModel, "Registration Completed Sucesfully");
 
 
@@ -57,7 +66,10 @@ namespace LibraryManagement.Controllers
                 return View(loginViewModel);
             }
 
-            var result = await _serviceManager.AuthenticationService.LoginEmployee(loginViewModel);
+            var loginViewModelDto = _mapper.Map<LoginViewModelDto>(loginViewModel); 
+
+            var result = await _serviceManager.AuthenticationService.LoginEmployee(loginViewModelDto);
+
             return HandleResult(result, loginViewModel, "Login Completed Succesfully");
 
         }
@@ -67,6 +79,8 @@ namespace LibraryManagement.Controllers
             await _serviceManager.AuthenticationService.LogoutEmployee();
             TempData["LogoutMessage"] = "You have been logged out";
             return RedirectToAction("Index", "Home");
+
+            
 
         }
 
@@ -86,7 +100,10 @@ namespace LibraryManagement.Controllers
                 return View(resetPasswordViewModel);
             }
 
-            var result = await _serviceManager.AuthenticationService.ResetPassword(resetPasswordViewModel);
+            var resetPasswordViewModelDto = _mapper.Map<ResetPasswordViewModelDto>(resetPasswordViewModel);
+
+            var result = await _serviceManager.AuthenticationService.ResetPassword(resetPasswordViewModelDto);
+
             return HandleResult(result, resetPasswordViewModel, "Password reset completed sucesfully");
 
 

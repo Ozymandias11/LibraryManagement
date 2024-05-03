@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Library.Service.Dto;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace Library.Service.Interfaces
 {
-    public interface IAuthenticationService
+   public interface IAuthentificationService
     {
         Task<IdentityResult> RegisterEmployee(RegisterViewModelDto registerViewModel);
-        Task<IdentityResult> LoginEmployee(LoginViewModel loginViewModel);
+        Task<IdentityResult> LoginEmployee(LoginViewModelDto loginViewModel);
         Task<IdentityResult> LogoutEmployee();
-        Task<IdentityResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel);
+        Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel);
     }
 }
