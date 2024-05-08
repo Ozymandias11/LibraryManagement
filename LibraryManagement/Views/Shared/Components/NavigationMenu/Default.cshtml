@@ -1,0 +1,77 @@
+﻿@model List<LibraryManagement.ViewModels.NavigationMenuViewModel>
+@{
+    ViewData["Title"] = "NavigationMenu";
+}
+
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+        aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav flex-grow-1">
+        @*Menu Items from the database*@
+        @foreach (var item in Model)
+        {
+            if (item.ParentMenuId == null) //Level one items will have null parent id
+            {
+                if (!string.IsNullOrWhiteSpace(item.ControllerName))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="@item.ControllerName" asp-action="@item.ActionName">@item.Name</a>
+                    </li>
+                }
+
+                var children = Model.Where(x => x.ParentMenuId == item.Id).ToList();
+                if (children != null && children.Any())
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle dropdown-toggle-centered" href="#" id="navbarDropdown" role="button" aria-expanded="false">
+                            @item.Name
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-centered" aria-labelledby="navbarDropdown">
+                            @foreach (var itm in children)
+                            {
+                                <li><a class="dropdown-item" asp-area="" asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                }
+            }
+        }
+    </ul>
+    <partial name="_LoginPartial" />
+</div>
+
+
+<style>
+    .navbar-collapse {
+        justify-content: center;
+    }
+
+    .navbar-nav {
+        text-align: center;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+
+    .dropdown-toggle-centered {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dropdown-menu-centered {
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: unset;
+    }
+
+    .dropdown-item:hover {
+    background-color: #e0e0e0;
+}
+</style>
+

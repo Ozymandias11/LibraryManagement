@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240507081443_DynamicMenuPreparation")]
+    partial class DynamicMenuPreparation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,61 +281,6 @@ namespace LibraryManagement.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Library.Model.Models.NavigationMenu", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("ActionName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ControllerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("ParentMenuId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Permitted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentMenuId");
-
-                    b.ToTable("NavigationMenus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Name = "Admin",
-                            Permitted = true
-                        },
-                        new
-                        {
-                            Id = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
-                            ActionName = "Roles",
-                            ControllerName = "Administrator",
-                            Name = "Roles",
-                            ParentMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Permitted = true
-                        },
-                        new
-                        {
-                            Id = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
-                            ActionName = "Users",
-                            ControllerName = "Administrator",
-                            Name = "Users",
-                            ParentMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Permitted = true
-                        });
-                });
-
             modelBuilder.Entity("Library.Model.Models.Publisher", b =>
                 {
                     b.Property<Guid>("PublisherId")
@@ -390,48 +338,6 @@ namespace LibraryManagement.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.ToTable("Reservations");
-                });
-
-            modelBuilder.Entity("Library.Model.Models.RoleMenuPermission", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("NavigationMenuId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NavigationMenuId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleMenus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("639c7cb4-7ca3-4832-9b23-6ef5db6b4731"),
-                            NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("67a94cf1-543c-4aa3-9f59-41d121d05205"),
-                            NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("a2ad2549-e503-4b08-96f6-824d4b5d68ab"),
-                            NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        });
                 });
 
             modelBuilder.Entity("Library.Model.Models.Room", b =>
@@ -493,25 +399,25 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bf3b332b-db73-4dd2-aa8e-fd56b2a18580",
+                            Id = "aaf08c99-cb6d-4687-8942-ba2cbd4d3ece",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "24dc19e5-72f1-4d2b-9197-2dae58d79fb1",
+                            Id = "427d68d0-29a1-4d46-88d8-d5a30f3e2022",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "e4834d66-b434-4810-9238-ffcf0dbd40a7",
+                            Id = "c2349130-fdf0-4843-afce-4fdd76bc2472",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "ed60a121-fa32-4014-8e26-d47afe6cb0ae",
+                            Id = "b5c25391-e1d6-4dc9-bc0c-19fb0b7fe484",
                             Name = "Archivist",
                             NormalizedName = "ARCHIVIST"
                         });
@@ -717,15 +623,6 @@ namespace LibraryManagement.Migrations
                         .HasForeignKey("RoomId");
                 });
 
-            modelBuilder.Entity("Library.Model.Models.NavigationMenu", b =>
-                {
-                    b.HasOne("Library.Model.Models.NavigationMenu", "ParentNavigationMenu")
-                        .WithMany()
-                        .HasForeignKey("ParentMenuId");
-
-                    b.Navigation("ParentNavigationMenu");
-                });
-
             modelBuilder.Entity("Library.Model.Models.Reservation", b =>
                 {
                     b.HasOne("Library.Model.Models.BookCopy", "BookCopy")
@@ -751,23 +648,6 @@ namespace LibraryManagement.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Employee");
-                });
-
-            modelBuilder.Entity("Library.Model.Models.RoleMenuPermission", b =>
-                {
-                    b.HasOne("Library.Model.Models.NavigationMenu", "NavigationMenu")
-                        .WithMany()
-                        .HasForeignKey("NavigationMenuId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("NavigationMenu");
                 });
 
             modelBuilder.Entity("Library.Model.Models.Shelf", b =>

@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240507180045_SeedingRoleMenupermissions")]
+    partial class SeedingRoleMenupermissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,20 +419,14 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("639c7cb4-7ca3-4832-9b23-6ef5db6b4731"),
+                            Id = new Guid("ac83b1b4-8c0f-4ea1-b2ba-120cd2ecf1ba"),
                             NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("67a94cf1-543c-4aa3-9f59-41d121d05205"),
+                            Id = new Guid("bff5fe47-2765-475c-84c8-b1614e250d86"),
                             NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("a2ad2549-e503-4b08-96f6-824d4b5d68ab"),
-                            NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         });
                 });
@@ -493,25 +490,25 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bf3b332b-db73-4dd2-aa8e-fd56b2a18580",
+                            Id = "c90629ce-a401-44e4-ba0b-ceb8a0660ece",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "24dc19e5-72f1-4d2b-9197-2dae58d79fb1",
+                            Id = "ba406a26-40fb-49a7-8605-4355efcef527",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "e4834d66-b434-4810-9238-ffcf0dbd40a7",
+                            Id = "709cb562-fefc-4182-b4d9-11f238e248b0",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "ed60a121-fa32-4014-8e26-d47afe6cb0ae",
+                            Id = "a713212b-00eb-4147-a81c-a588cea3f5d5",
                             Name = "Archivist",
                             NormalizedName = "ARCHIVIST"
                         });

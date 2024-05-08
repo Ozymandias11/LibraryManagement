@@ -10834,3 +10834,16 @@ a.text-dark:hover, a.text-dark:focus {
     }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+
+
+.navbar-collapse {
+    display: none;
+}
+
+.navbar-toggler:hover + .navbar-collapse {
+    display: block;
+}
+
+.navbar-collapse:hover {
+    display: block;
+}

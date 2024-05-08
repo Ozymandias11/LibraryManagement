@@ -48,6 +48,8 @@ namespace Library.Data
         public DbSet<Room>? Rooms { get; set; }
         public DbSet<Shelf>? Shelf { get; set; }
         public DbSet<BookCopyShelf>? Stored { get; set; }
+        public DbSet<NavigationMenu>? NavigationMenus { get; set; }
+        public DbSet<RoleMenuPermission>? RoleMenus { get; set; }
 
 
 

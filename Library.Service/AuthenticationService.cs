@@ -89,6 +89,8 @@ namespace Library.Service
             }
 
             var employee = _mapper.Map<Employee>(registerViewModelDto);
+            employee.UserName = registerViewModelDto.Email;
+
             var result = await _userManager.CreateAsync(employee, registerViewModelDto.Password);
 
 

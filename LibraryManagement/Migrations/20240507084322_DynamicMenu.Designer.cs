@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240507084322_DynamicMenu")]
+    partial class DynamicMenu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -285,9 +288,11 @@ namespace LibraryManagement.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ActionName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ControllerName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -305,32 +310,6 @@ namespace LibraryManagement.Migrations
                     b.HasIndex("ParentMenuId");
 
                     b.ToTable("NavigationMenus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Name = "Admin",
-                            Permitted = true
-                        },
-                        new
-                        {
-                            Id = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
-                            ActionName = "Roles",
-                            ControllerName = "Administrator",
-                            Name = "Roles",
-                            ParentMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Permitted = true
-                        },
-                        new
-                        {
-                            Id = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
-                            ActionName = "Users",
-                            ControllerName = "Administrator",
-                            Name = "Users",
-                            ParentMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            Permitted = true
-                        });
                 });
 
             modelBuilder.Entity("Library.Model.Models.Publisher", b =>
@@ -412,26 +391,6 @@ namespace LibraryManagement.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("RoleMenus");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("639c7cb4-7ca3-4832-9b23-6ef5db6b4731"),
-                            NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("67a94cf1-543c-4aa3-9f59-41d121d05205"),
-                            NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("a2ad2549-e503-4b08-96f6-824d4b5d68ab"),
-                            NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        });
                 });
 
             modelBuilder.Entity("Library.Model.Models.Room", b =>
@@ -493,25 +452,25 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bf3b332b-db73-4dd2-aa8e-fd56b2a18580",
+                            Id = "0e3861f3-4f89-441a-a52c-2dea75ca8938",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "24dc19e5-72f1-4d2b-9197-2dae58d79fb1",
+                            Id = "295f2e6f-5554-4193-9cd4-ce2a3b39e2e8",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "e4834d66-b434-4810-9238-ffcf0dbd40a7",
+                            Id = "7b4c9b2e-edb2-4ad9-8cf9-019fe5489792",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "ed60a121-fa32-4014-8e26-d47afe6cb0ae",
+                            Id = "3b979507-ad2f-4589-9c87-12f5e6b32ae5",
                             Name = "Archivist",
                             NormalizedName = "ARCHIVIST"
                         });

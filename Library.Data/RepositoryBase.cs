@@ -10,7 +10,7 @@ namespace Library.Data
 {
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-
+    
         private readonly RepositoryContext _repositoryContext;
         protected RepositoryBase(RepositoryContext repositoryContext)
         {

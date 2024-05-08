@@ -11,8 +11,19 @@ namespace LibraryManagement.MappingProfile
         {
 
             CreateMap<RegisterViewModel, RegisterViewModelDto>();
+
             CreateMap<LoginViewModel, LoginViewModelDto>();
+
             CreateMap<ResetPasswordViewModel, ResetPasswordViewModelDto>();
+
+            CreateMap<NavigationMenu, NavigationMenuDto>();
+             
+
+            CreateMap<NavigationMenuDto, NavigationMenuViewModel>();
+
+            CreateMap<Employee, UserViewModelDto>();
+
+            CreateMap<UserViewModelDto, UserVeiwModel>();
 
         }
     }

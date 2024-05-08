@@ -17,7 +17,6 @@ namespace Library.Model.Models
         public ICollection<Reservation>? Reservations { get; set; }
         public ICollection<BookCopyShelf>? Shelves { get; set; }
         
-        
 
 
     }
