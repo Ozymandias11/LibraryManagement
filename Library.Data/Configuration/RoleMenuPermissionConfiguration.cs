@@ -49,7 +49,13 @@ namespace Library.Data.Configuration
                       Id = Guid.NewGuid(),
                       RoleId = adminRoleId,
                       NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514")
-                  }
+                  },
+                   new RoleMenuPermission
+                   {
+                       Id = Guid.NewGuid(),
+                       RoleId = adminRoleId,
+                       NavigationMenuId = new Guid("1c48f4be-67d9-4201-93ca-6fbaead68f59")
+                   }
 
                 );
 

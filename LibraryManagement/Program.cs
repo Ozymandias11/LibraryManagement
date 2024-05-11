@@ -22,6 +22,8 @@ builder.Services.AddScoped<IUserRoleRepository, UserRoleReposiotry>();
 builder.Services.AddScoped<IDynamicMenuRepository, DynamicMenuRepository>();
 builder.Services.AddScoped<IDynamicMenuService, DynamicMenuService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailTemplateReposiotry, EmailTemplateRepository>();
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 
 
     

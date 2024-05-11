@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240510102736_SeedingDataAgain")]
+    partial class SeedingDataAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,7 +222,6 @@ namespace LibraryManagement.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TemplateName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("To")
@@ -232,7 +234,7 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d71ed3c2-e74e-4a76-9a9e-288d12feadfd"),
+                            Id = new Guid("41c1f9d7-4c14-456b-8423-5114e1128995"),
                             Body = "Dear @@userName@@,<br><br>Please click the following link to verify your email address:<br><br>@@verificationLink@@<br><br>If you didn't request this verification, please ignore this email.<br><br>Best regards,<br>The Team",
                             From = "noreply@example.com",
                             Subject = "Verify Your Email Address",
@@ -466,25 +468,25 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b1d30522-a491-45ae-8914-851e51d2fa9a"),
+                            Id = new Guid("315cfb7d-b51c-4bd9-818d-6d163aed162a"),
                             NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("388bcb5c-f0c6-428a-8395-830e76e0a1f6"),
+                            Id = new Guid("0f0a4a9b-55d2-49a5-8bb9-b5a6afa5393f"),
                             NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("28f461de-4eb1-4fd5-892b-9f5f8483742d"),
+                            Id = new Guid("eb937b27-af01-442e-8c0c-ffed68f02c4e"),
                             NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("8f1e7098-df18-4f3d-bd6d-dd883a7d8f36"),
+                            Id = new Guid("f76acf81-a926-4630-b419-4cf47e621cc6"),
                             NavigationMenuId = new Guid("1c48f4be-67d9-4201-93ca-6fbaead68f59"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         });
@@ -549,25 +551,25 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e95f2ffd-018b-4fdd-90c9-3cd851b00b96",
+                            Id = "54ac6f6c-894d-42c6-90ab-ce045f378ca6",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "6d3c79f2-6c40-4d6d-b10e-a3a6fdc5f07f",
+                            Id = "896147f6-1dd5-40dc-80f4-20e41b11d953",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "40333047-791f-453b-b2c4-fef50d609fb3",
+                            Id = "fafa1efa-2c6a-4f28-a427-eee5a98c645d",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "d70728f2-09b3-4990-a1b5-070ab5726e68",
+                            Id = "64e04df3-d77f-4d76-a58a-ef7c512fe5c3",
                             Name = "Archivist",
                             NormalizedName = "ARCHIVIST"
                         });

@@ -26,6 +26,16 @@ namespace LibraryManagement.ViewModels
 
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
         public string? ConfirmPassword { get; set; }
+        [Required(ErrorMessage = "Please select at least one role.")]
+        public ICollection<string>? SelectedRoles { get; set; }
+
+        public IEnumerable<string> AvailableRoles { get; set; } = new List<string>
+    {
+        "Administrator",
+        "Archivist",
+        "Manager",
+        "Librarian"
+    };
 
     }
 }

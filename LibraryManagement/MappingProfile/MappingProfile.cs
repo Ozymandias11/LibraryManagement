@@ -25,6 +25,10 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<UserViewModelDto, UserVeiwModel>();
 
+            CreateMap<EmailTemplate, EmailtemplateDto>().ReverseMap();
+
+            CreateMap<EmailtemplateDto, EmailTemplateViewModel>().ReverseMap();
+
         }
     }
 }
