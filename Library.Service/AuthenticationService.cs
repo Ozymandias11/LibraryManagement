@@ -5,6 +5,7 @@ using Library.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,17 @@ namespace Library.Service
             _userManager = userManager;
             _mapper = mapper;
             _signInManager = signInManager;
+        }
+
+        public async Task<IdentityResult> ConfirmEmail(string token, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            return result;
+
+
         }
 
         public async Task<IdentityResult> LoginEmployee(LoginViewModelDto loginViewModel)
@@ -93,6 +105,10 @@ namespace Library.Service
 
             var result = await _userManager.CreateAsync(employee, registerViewModelDto.Password);
 
+            if(result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(employee, "default");
+            }
 
             return result;
             
@@ -101,32 +117,18 @@ namespace Library.Service
 
         public async Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel)
         {
-            var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.Email);
-
-            if(user == null)
-            {
-                return IdentityResult.Failed(new IdentityError
-                {
-                    Code = "UserNotFound",
-                    Description = "User not found."
-                });
-
-            }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var result = await _userManager.ResetPasswordAsync(user, token, resetPasswordViewModel.NewPassword);
-
             
-            if(!result.Succeeded)
+            var user = await _userManager.FindByIdAsync(resetPasswordViewModel.userId);
+
+            if(user is null)
             {
-                return IdentityResult.Failed(new IdentityError { 
-                    Code = "PasswordResetFailed",
-                    Description = "Something went wrong" });
+                return IdentityResult.Failed();
             }
+
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordViewModel.Token,
+                resetPasswordViewModel.NewPassword);
 
             return result;
-
 
 
         }

@@ -14,5 +14,6 @@ namespace Library.Service.Interfaces
         Task<IdentityResult> LoginEmployee(LoginViewModelDto loginViewModel);
         Task<IdentityResult> LogoutEmployee();
         Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel);
+        Task<IdentityResult> ConfirmEmail(string token, string userId);
     }
 }

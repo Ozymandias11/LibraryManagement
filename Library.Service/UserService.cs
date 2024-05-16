@@ -28,6 +28,58 @@ namespace Library.Service
             _roleManager = roleManager;
         }
 
+        public async Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto)
+        {
+            var user = await _userManager.FindByIdAsync(assignRoleViewModelDto.Id);
+
+            await _userManager.RemoveFromRoleAsync(user, "Default");
+
+            var result = await _userManager.AddToRolesAsync(user, assignRoleViewModelDto.SelectedRoles);
+
+            return result;
+
+
+        }
+
+        public async Task<IdentityResult> CreateEmployee(CreateEmployeeViewModelDto createEmployeeViewModelDto)
+        {
+            var employee = new Employee
+            {
+                UserName = createEmployeeViewModelDto.Email,
+                FirstName = createEmployeeViewModelDto.FirstName,
+                LastName = createEmployeeViewModelDto.LastName,
+                Email = createEmployeeViewModelDto.Email,
+                EmailConfirmed = false
+                
+            };
+
+            var result = await _userManager.CreateAsync(employee);
+
+            if(result.Succeeded)
+            {
+                if(createEmployeeViewModelDto.SelectedRoles 
+                    != null && createEmployeeViewModelDto.SelectedRoles.Count != 0)
+                {
+                    await _userManager.AddToRolesAsync(employee, createEmployeeViewModelDto.SelectedRoles);
+                }
+                
+            }
+
+            return result;
+
+
+        }
+
+        public async Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers()
+        {
+            var usersWithDefaultRole = await _userManager.GetUsersInRoleAsync("default");
+            var usersWithDefaultRoleDto = _mapper.Map<IEnumerable<UserForPendingViewModelDto>>(usersWithDefaultRole);
+
+            return usersWithDefaultRoleDto;
+
+
+        }
+
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsers()
         {
             var users = await _userManager.Users.ToListAsync();
@@ -51,5 +103,7 @@ namespace Library.Service
             return userViewModelsDto;
 
         }
+
+        
     }
 }

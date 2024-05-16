@@ -9,8 +9,13 @@
     <span class="navbar-toggler-icon"></span>
 </button>
 
-<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-    <ul class="navbar-nav flex-grow-1">
+<div class="navbar-collapse collapse d-sm-inline-flex">
+    <ul class="navbar-nav flex-grow-1 d-flex align-items-center">
+         <a class="navbar-brand" href="index.html">
+            <span>
+              Library Management
+            </span>
+          </a>
         @*Menu Items from the database*@
         @foreach (var item in Model)
         {

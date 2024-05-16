@@ -19,11 +19,15 @@ namespace LibraryManagement.Controllers
 
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
+        private readonly IEmailService _emailService;
      
-        public AccountController(IServiceManager serviceManager, IMapper mapper)    
+        public AccountController(IServiceManager serviceManager,
+            IMapper mapper,
+            IEmailService emailService)    
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
+            _emailService = emailService;   
            
         }
         
@@ -47,8 +51,33 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModelDto);
 
+            if (result.Succeeded)
+            {
+                var emailSent = await _emailService.SendConfirmationEmail(registerViewModelDto, "Email Verification");
+
+                if (emailSent)
+                {
+                    return RedirectToAction("CheckEmail");
+                }
+
+            }
+
+
             return HandleResult(result, registerViewModel, "Registration Completed Sucesfully");
 
+
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string token ,string userId)
+        {
+            var result = await _serviceManager.AuthenticationService.ConfirmEmail(token, userId);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Login");
+            }
+
+            return View();
 
         }
 
@@ -84,31 +113,87 @@ namespace LibraryManagement.Controllers
 
         }
 
-        public IActionResult ResetPassword()
+     
+        public IActionResult ForgotPassword()
         {
-            var resetPasswordViewModel = new ResetPasswordViewModel();
+            var forgotPasswordViewModel = new ForgotPasswordViewModel();
+            return View(forgotPasswordViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel forgotPasswordViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPasswordViewModel);
+            }
+
+            var forgotPasswordDto = _mapper.Map<ForgotPasswordDto>(forgotPasswordViewModel);
+
+            bool passwordReset = await _emailService.SendEmail(forgotPasswordDto, "Password Reset");
+
+            if (passwordReset)
+            {
+                return RedirectToAction("CheckEmail");
+            }
+            return View();
+
+        }
+
+        public IActionResult CheckEmail()
+        {
+            return View();
+        }
+
+        public IActionResult ResetPassword(string token, string userId)
+        {
+            if(token == null)
+            {
+                return View();
+            }
+
+            var resetPasswordViewModel = new ResetPasswordViewModel()
+            {
+                Token = token,
+                UserId = userId
+               
+            };
+
             return View(resetPasswordViewModel);
+
         }
 
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel resetPasswordViewModel)
         {
-
-         
-            if (!ModelState.IsValid)
+            if(!ModelState.IsValid)
             {
                 return View(resetPasswordViewModel);
             }
 
             var resetPasswordViewModelDto = _mapper.Map<ResetPasswordViewModelDto>(resetPasswordViewModel);
 
+
             var result = await _serviceManager.AuthenticationService.ResetPassword(resetPasswordViewModelDto);
 
-            return HandleResult(result, resetPasswordViewModel, "Password reset completed sucesfully");
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ResetPasswordConfirmation");
+            }
+
+            return View();
 
 
 
         }
+        
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+
+
 
 
 

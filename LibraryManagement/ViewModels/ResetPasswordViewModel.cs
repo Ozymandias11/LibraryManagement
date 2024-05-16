@@ -4,16 +4,19 @@ namespace LibraryManagement.ViewModels
 {
     public class ResetPasswordViewModel
     {
-        [Required(ErrorMessage = "Email is Required")]
-        [EmailAddress(ErrorMessage = "Invalid Email type")]
-        public string? Email { get; set; }
+        [Required]
+        public string? Token { get; set; }
+        [Required]
+        public string? UserId { get; set; }
 
-        [Required(ErrorMessage = "Password is Required")]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "The password must contain at least 8 digits ")]
+        [Required]
+        [DataType(DataType.Password)]
         public string? NewPassword { get; set; }
 
-        [Required(ErrorMessage = "Confimation password is required")]
-        [Compare(nameof(NewPassword), ErrorMessage = "Password did not match")]
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string? ConfirmPassword { get; set; }
+
     }
 }

@@ -33,7 +33,12 @@ namespace Library.Data.Configuration
                   {
                       Name = "Archivist", 
                       NormalizedName = "ARCHIVIST"
-                  }
+                  },
+                   new IdentityRole
+                   {
+                       Name = "Default",
+                       NormalizedName = "DEFAULT"
+                   }
 
                 );
         }

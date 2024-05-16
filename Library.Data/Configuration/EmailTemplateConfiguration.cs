@@ -34,6 +34,19 @@ namespace Library.Data.Configuration
                     Body = "Dear @@userName@@,<br><br>Please click the following link to verify your email address:" +
                     "<br><br>@@verificationLink@@<br><br>If you didn't request this verification," +
                     " please ignore this email.<br><br>Best regards,<br>The Team"
+                },
+                new EmailTemplate
+                {
+                    Id = Guid.NewGuid(),
+                    TemplateName = "Email Verification",
+                    From = "noreply@example.com",
+                    To = "@@userEmail@@",
+                    Subject = "Verify Your Email Address",
+                    Body = "Dear @@userName@@,<br><br>Thank you for registering with our application. " +
+                           "To complete your registration, please click the following link to verify your email address:" +
+                           "<br><br><a href='@@verificationUrl@@'>Verify Email</a><br><br>" +
+                           "If you did not request this verification, please ignore this email." +
+                           "<br><br>Best regards,<br>The Team"
                 }
 
                 );

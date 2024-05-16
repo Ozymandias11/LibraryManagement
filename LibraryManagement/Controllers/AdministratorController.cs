@@ -27,8 +27,35 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> Roles()
         {
-            return View();
+           var pendingUsers = await _userService.GetAllPendingUsers();
+           var PendingUserViewModel = _mapper.Map<IEnumerable<UserForPendingViewModel>>(pendingUsers);
+           return View(PendingUserViewModel);
         }
+
+        public IActionResult AssignRoles(string Id)
+        {
+            var assignRolesViewModel = new AssignRoleViewModel
+            {
+                Id = Id
+            };
+
+            return View(assignRolesViewModel);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> AssignRoles(AssignRoleViewModelDto assignRoleViewModelDto)
+        {
+            var result = await _userService.AssignRolesToEmployees(assignRoleViewModelDto);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Roles");
+            }
+
+            return View();
+
+        }
+
 
         public async Task<IActionResult> Users()
         {
@@ -74,7 +101,35 @@ namespace LibraryManagement.Controllers
 
         }
 
-       
+        public IActionResult AddEmployee()
+        {
+            var createEmployeeViewModel = new CreateEmployeeViewModel();
+            return View(createEmployeeViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEmployee(CreateEmployeeViewModel createEmployeeViewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(createEmployeeViewModel);
+            }
+
+
+            var createEmployeeViewModelDto = _mapper.Map<CreateEmployeeViewModelDto>(createEmployeeViewModel);
+
+            var result = await _userService.CreateEmployee(createEmployeeViewModelDto);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Users");
+            }
+
+            return View(createEmployeeViewModelDto);
+
+        }
+
+
 
 
     }

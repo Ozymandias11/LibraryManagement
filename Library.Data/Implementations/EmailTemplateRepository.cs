@@ -21,7 +21,16 @@ namespace Library.Data.Implementations
 
         public async Task<EmailTemplate?> GetEmailTemplateById(Guid id, bool trackChanges)
             => await FindByCondition(et => et.Id == id, trackChanges).FirstOrDefaultAsync();
-       
-        
+
+        public async Task<EmailTemplate?> GetTemplateByName(string name, bool trackChanges)
+        {
+            var normalizedName = name.ToLower().Replace(" ", "");
+
+            var EmailTemplate =  await FindByCondition(t => t.TemplateName.ToLower().Replace(" ", "") == normalizedName,
+                trackChanges).FirstOrDefaultAsync();
+
+            return EmailTemplate;
+
+        }
     }
 }

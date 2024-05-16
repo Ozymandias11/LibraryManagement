@@ -10,9 +10,7 @@ namespace Library.Service.Dto
      string FirstName,
      string LastName,
      string Email,
-     string Username,
-     string Password,
-     string PhoneNumber
-
+     string PhoneNumber,
+     string Password
  );
 }

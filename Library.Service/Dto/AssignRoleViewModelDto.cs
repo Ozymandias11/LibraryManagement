@@ -6,10 +6,5 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Dto
 {
-  public record ResetPasswordViewModelDto(
-       string Token,
-       string userId,
-       string NewPassword,
-       string ConfirmPassword
-      );
+   public record AssignRoleViewModelDto(string Id, ICollection<string> SelectedRoles);
 }

@@ -10,6 +10,7 @@ namespace Library.Data.Interfaces
     public interface IEmailTemplateReposiotry
     {
         Task<IEnumerable<EmailTemplate>> GetAllEmailTemplates(bool trackChanges);
-        Task<EmailTemplate?> GetEmailTemplateById(Guid id, bool trackChanges);    
+        Task<EmailTemplate?> GetEmailTemplateById(Guid id, bool trackChanges);
+        Task<EmailTemplate?> GetTemplateByName(string name, bool trackChanges);
     }
 }

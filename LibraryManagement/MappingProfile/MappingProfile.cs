@@ -11,6 +11,7 @@ namespace LibraryManagement.MappingProfile
         {
 
             CreateMap<RegisterViewModel, RegisterViewModelDto>();
+            CreateMap<RegisterViewModelDto, Employee>();
 
             CreateMap<LoginViewModel, LoginViewModelDto>();
 
@@ -28,6 +29,13 @@ namespace LibraryManagement.MappingProfile
             CreateMap<EmailTemplate, EmailtemplateDto>().ReverseMap();
 
             CreateMap<EmailtemplateDto, EmailTemplateViewModel>().ReverseMap();
+
+            CreateMap<ForgotPasswordViewModel, ForgotPasswordDto>();
+
+            CreateMap<CreateEmployeeViewModel, CreateEmployeeViewModelDto>();
+
+            CreateMap<Employee, UserForPendingViewModelDto>();
+            CreateMap<UserForPendingViewModelDto, UserForPendingViewModel>();
 
         }
     }

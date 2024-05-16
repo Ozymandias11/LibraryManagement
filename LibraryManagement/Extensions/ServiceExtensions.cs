@@ -42,9 +42,12 @@ namespace LibraryManagement.ServiceExtensions
             .AddDefaultTokenProviders(); //default token provider for reseting passwords, emails and etc.
         }
 
-    
-        
-                  
+
+        public static void AddMailjetConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<MailjetSettings>(configuration.GetSection("MailjetSettings"));
+        }
+
 
 
     }
