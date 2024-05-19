@@ -14,5 +14,7 @@ namespace Library.Service.Interfaces
         Task<IEnumerable<UserViewModelDto>> GetAllUsers();
         Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers();
         Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto);
+        Task<UserViewModelDto> GetUserById(string id);
+        Task<IdentityResult> DeleteUser(UserViewModelDto user);
     }
 }

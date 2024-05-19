@@ -62,9 +62,14 @@ namespace LibraryManagement.Controllers
                 }
 
             }
+            else
+            {
+                registerViewModel.ErrorMessage = "Email already exists";
+            }
 
 
-            return HandleResult(result, registerViewModel, "Registration Completed Sucesfully");
+            //  return HandleResult(result, registerViewModel, "Registration Completed Sucesfully");
+            return View(registerViewModel);
 
 
         }
@@ -75,11 +80,16 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("RegistrationCompleted");
             }
 
             return View();
 
+        }
+
+        public IActionResult RegistrationCompleted()
+        {
+            return View();
         }
 
         public IActionResult Login()
@@ -100,7 +110,23 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.AuthenticationService.LoginEmployee(loginViewModelDto);
 
-            return HandleResult(result, loginViewModel, "Login Completed Succesfully");
+            if (result.Succeeded)
+            {
+                var emailPrefix = loginViewModelDto.Email.Split('@')[0];
+
+                // Add a success message to the temporary data
+                TempData["SuccessMessage"] = $"Hello {emailPrefix}!";
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                loginViewModel.ErrorMessage = "Wrong credentials, please try again.";
+            }
+
+            return View(loginViewModel);
+
+            // return HandleResult(result, loginViewModel, "Login Completed Succesfully");
 
         }
 
@@ -137,7 +163,11 @@ namespace LibraryManagement.Controllers
             {
                 return RedirectToAction("CheckEmail");
             }
-            return View();
+            else
+            {
+                forgotPasswordViewModel.ErrorMessage = "Wrong Email";
+            }
+            return View(forgotPasswordViewModel);
 
         }
 

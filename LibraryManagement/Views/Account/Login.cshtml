@@ -1,6 +1,6 @@
 ﻿@model LibraryManagement.ViewModels.LoginViewModel
 
-@if (TempData["ErrorMessages"] != null)
+@* @if (TempData["ErrorMessages"] != null)
 {
     <div class="alert alert-danger">
         <ul>
@@ -12,36 +12,40 @@
     </div>
 }
 
-
+ *@
 
 
 <div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
-        <div class="card-body">
-          <h2 class="text-primary text-center mb-4">Login</h2>
-          <form asp-action="Login" asp-controller="Account" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-              <label asp-for="Email" class="control-label text-primary mb-2"></label>
-              <input asp-for="Email" class="form-control form-control-lg" />
-              <span asp-validation-for="Email" class="text-danger mt-2"></span>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
+                <div class="card-body">
+                    <h2 class="text-primary text-center mb-4">Login</h2>
+                    <form asp-action="Login" asp-controller="Account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                        {
+                            <div class="alert alert-danger">@Model.ErrorMessage</div>
+                        }
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label text-primary mb-2"></label>
+                            <input asp-for="Email" class="form-control form-control-lg" />
+                            <span asp-validation-for="Email" class="text-danger mt-2"></span>
+                        </div>
+                        <div class="form-group mt-4">
+                            <label asp-for="Password" class="control-label text-primary mb-2"></label>
+                            <input asp-for="Password" class="form-control form-control-lg" type="password" />
+                            <span asp-validation-for="Password" class="text-danger mt-2"></span>
+                        </div>
+                        <div class="form-group text-center mt-5">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
+                        </div>
+                        <div class="form-group text-center mt-3">
+                            <a asp-action="ForgotPassword" asp-route-forgotPassword="true" class="btn btn-link">Forgot Password</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group mt-4">
-              <label asp-for="Password" class="control-label text-primary mb-2"></label>
-              <input asp-for="Password" class="form-control form-control-lg" type="password" />
-              <span asp-validation-for="Password" class="text-danger mt-2"></span>
-            </div>
-            <div class="form-group text-center mt-5">
-              <button type="submit" class="btn btn-primary btn-block btn-lg">Login</button>
-            </div>
-            <div class="form-group text-center mt-3">
-              <a asp-action="ForgotPassword" asp-route-forgotPassword="true" class="btn btn-link">Forgot Password</a>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>

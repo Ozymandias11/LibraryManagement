@@ -28,7 +28,7 @@
                         <textarea class="form-control" id="body" name="Body" rows="5">@Model.Body</textarea>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="submit" class="btn btn-primary mr-4">Save Changes</button>
                         <a asp-action="Templates" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
@@ -36,3 +36,38 @@
         </div>
     </div>
 </div>
+
+<style>
+    .button-spacing {
+        margin-right: 20px;
+    }
+</style>
+
+@* @section Scripts {
+    <script src="https://cdn.tiny.cloud/1/vdh7pz7fz2x78bto42f6p7d6o84o8822qozh4qzzp0y9y3nv/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#body',
+            plugins: 'code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+            height: 300
+        });
+
+        // Preview functionality
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var form = event.target;
+            var formData = new FormData(form);
+
+            fetch('/Admin/PreviewTemplate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('previewContainer').innerHTML = html;
+            });
+        });
+    </script>
+}
+ *@

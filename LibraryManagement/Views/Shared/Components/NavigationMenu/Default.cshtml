@@ -4,14 +4,11 @@
 }
 
 
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
+
 
 <div class="navbar-collapse collapse d-sm-inline-flex">
     <ul class="navbar-nav flex-grow-1 d-flex align-items-center">
-         <a class="navbar-brand" href="index.html">
+         <a class="navbar-brand" asp-asp-controller="Home" asp-action="Index">
             <span>
               Library Management
             </span>
@@ -32,10 +29,10 @@
                 if (children != null && children.Any())
                 {
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle dropdown-toggle-centered" href="#" id="navbarDropdown" role="button" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle dropdown-toggle-centered" id="navbarDropdown" role="button" aria-expanded="false">
                             @item.Name
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-centered" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu dropdown-menu-centered fixed-width text-center" aria-labelledby="navbarDropdown">
                             @foreach (var itm in children)
                             {
                                 <li><a class="dropdown-item" asp-area="" asp-controller="@itm.ControllerName" asp-action="@itm.ActionName">@itm.Name</a></li>
@@ -51,6 +48,13 @@
 
 
 <style>
+    .fixed-width {
+        width: 200px; /* Adjust the width as needed */
+    }
+
+    .text-center .dropdown-item {
+        text-align: center;
+    }
     .navbar-collapse {
         justify-content: center;
     }
@@ -77,6 +81,7 @@
 
     .dropdown-item:hover {
     background-color: #e0e0e0;
+
 }
 </style>
 

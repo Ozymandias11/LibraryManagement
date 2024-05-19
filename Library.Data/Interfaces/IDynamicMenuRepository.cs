@@ -10,6 +10,6 @@ namespace Library.Data.Interfaces
 {
     public interface IDynamicMenuRepository
     {
-        Task<List<NavigationMenu>> GetMenuItemsAsync(ClaimsPrincipal principal);
+        Task<List<NavigationMenu>> GetMenuItemsAsync(ClaimsPrincipal principal,List<string> roleIds);
     }
 }

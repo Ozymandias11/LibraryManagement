@@ -28,6 +28,7 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> Roles()
         {
            var pendingUsers = await _userService.GetAllPendingUsers();
+  
            var PendingUserViewModel = _mapper.Map<IEnumerable<UserForPendingViewModel>>(pendingUsers);
            return View(PendingUserViewModel);
         }
@@ -107,7 +108,36 @@ namespace LibraryManagement.Controllers
             return View(createEmployeeViewModel);
         }
 
-     
+        public IActionResult DeleteUser(string id, string email)
+        {
+
+            var userViewModel = new UserVeiwModel
+            {
+                Id = id,
+                Email = email
+            };
+
+
+            return View(userViewModel);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(UserVeiwModel userVeiwModel)
+        {
+            var userViewModelDto = _mapper.Map<UserViewModelDto>(userVeiwModel);
+            var result = await _userService.DeleteUser(userViewModelDto);
+            if(result.Succeeded)
+            {
+                return RedirectToAction("Users");
+            }
+
+            return View(userViewModelDto);
+        }
+
+
+
+
 
 
     }

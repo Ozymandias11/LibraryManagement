@@ -9,33 +9,40 @@ namespace LibraryManagement.MappingProfile
     {
         public MappingProfile()
         {
-
+            // Registration 
             CreateMap<RegisterViewModel, RegisterViewModelDto>();
             CreateMap<RegisterViewModelDto, Employee>();
 
+            // Login
             CreateMap<LoginViewModel, LoginViewModelDto>();
 
+            //Pasword Reset
             CreateMap<ResetPasswordViewModel, ResetPasswordViewModelDto>();
-
-            CreateMap<NavigationMenu, NavigationMenuDto>();
-             
-
-            CreateMap<NavigationMenuDto, NavigationMenuViewModel>();
-
-            CreateMap<Employee, UserViewModelDto>();
-
-            CreateMap<UserViewModelDto, UserVeiwModel>();
-
-            CreateMap<EmailTemplate, EmailtemplateDto>().ReverseMap();
-
-            CreateMap<EmailtemplateDto, EmailTemplateViewModel>().ReverseMap();
-
             CreateMap<ForgotPasswordViewModel, ForgotPasswordDto>();
 
-            CreateMap<CreateEmployeeViewModel, CreateEmployeeViewModelDto>();
+            //navigation Menu
+            CreateMap<NavigationMenu, NavigationMenuDto>();
+            CreateMap<NavigationMenuDto, NavigationMenuViewModel>();
 
+            //Employee
+            CreateMap<Employee, UserViewModelDto>();
+            CreateMap<UserViewModelDto, UserVeiwModel>().ReverseMap();
+            CreateMap<CreateEmployeeViewModel, CreateEmployeeViewModelDto>();
             CreateMap<Employee, UserForPendingViewModelDto>();
             CreateMap<UserForPendingViewModelDto, UserForPendingViewModel>();
+            CreateMap<CreateAdminViewModel, CreateAdminViewModelDto>();
+            CreateMap<CreateAdminViewModelDto, Employee>();
+           
+
+            //Emails
+            CreateMap<EmailTemplate, EmailtemplateDto>().ReverseMap();
+            CreateMap<EmailtemplateDto, EmailTemplateViewModel>().ReverseMap();
+
+
+           
+
+
+         
 
         }
     }

@@ -5,33 +5,37 @@
 }
 
 
-
-
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="text-primary mb-0">Users</h2>
+            <a asp-action="AddAdmin" asp-controller="SuperAdmin" class="btn btn-primary">Add Admin</a>
         </div>
+
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+        </div>
+
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">Username</th>
                         <th class="text-primary text-center">Email</th>
                         <th class="text-primary text-center">Phone Number</th>
                         <th class="text-primary text-center">Roles</th>
                         <th class="text-primary text-center">Email Confirmed</th>
+                        <th class="text-primary text-center">Registration Date</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="userTableBody">
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td class="text-center">@user.UserName</td>
                             <td class="text-center">@user.Email</td>
                             <td class="text-center">@user.PhoneNumber</td>
                             <td class="text-center">@user.Roles</td>
                             <td class="text-center">@user.EmailConfirmed</td>
+                            <td class="text-center">@user.CreationDate</td>
                         </tr>
                     }
                 </tbody>
@@ -39,3 +43,24 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+
+        $(document).ready(function () {
+
+            $("#searchInput").on("keyup", function () {
+
+                var value = $(this).val().toLowerCase();
+
+                $("#userTableBody tr").filter(function () {
+
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+
+                });
+
+            });
+
+        });
+
+    </script>
+}

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Service.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -10,11 +11,16 @@ namespace LibraryManagement.Controllers
     public class SuperAdminController : Controller
     {
         private readonly ISuperAdminUserService _superAdminUserService;
+        private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public SuperAdminController(ISuperAdminUserService superAdminUserService, IMapper mapper)
+        public SuperAdminController(ISuperAdminUserService superAdminUserService,
+            IMapper mapper,
+            IServiceManager serviceManager)
         {
             _superAdminUserService = superAdminUserService;
             _mapper = mapper;
+            _serviceManager = serviceManager;
+
         }
         public async Task<IActionResult> Users()
         {
@@ -22,5 +28,30 @@ namespace LibraryManagement.Controllers
             var userViewModel = _mapper.Map<IEnumerable<UserVeiwModel>>(users);
             return View(userViewModel);
         }
+        public IActionResult AddAdmin()
+        {
+            var creaeteAdminViewModel = new CreateAdminViewModel();
+            return View(creaeteAdminViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddAdmin(CreateAdminViewModel createAdminViewModel)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(createAdminViewModel);
+            }
+
+            var createAdminViewModelDto = _mapper.Map<CreateAdminViewModelDto>(createAdminViewModel);
+
+            var result = await _serviceManager.AuthenticationService.AddAdmin(createAdminViewModelDto);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Users");
+            }
+
+            return View(createAdminViewModelDto);
+        }
+
     }
 }

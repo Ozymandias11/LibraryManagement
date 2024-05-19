@@ -1,0 +1,27 @@
+﻿@model LibraryManagement.ViewModels.UserVeiwModel;
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h4>Delete User</h4>
+                </div>
+                <div class="card-body">
+                    <p>Are you sure you want to delete the user with email: <strong>@Model.Email</strong></p>
+                    <form asp-action="DeleteUser" method="post">
+                        <input type="hidden" name="userEmail" value="@Model" />
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-danger mr-4">Delete</button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

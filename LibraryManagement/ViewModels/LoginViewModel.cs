@@ -12,5 +12,7 @@ namespace LibraryManagement.ViewModels
         [Required(ErrorMessage = "Password is Required")]
        
         public string? Password { get; set; }
+
+        public string? ErrorMessage { get; set; }
     }
 }

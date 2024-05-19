@@ -134,5 +134,25 @@ namespace Library.Service
 
         }
 
+        public async Task<IdentityResult> AddAdmin(CreateAdminViewModelDto createAdminViewModelDto)
+        {
+            var admin = _mapper.Map<Employee>(createAdminViewModelDto);
+            admin.UserName = createAdminViewModelDto.Email;
+            admin.EmailConfirmed = true;
+
+            var result = await _userManager.CreateAsync(admin, createAdminViewModelDto.Password);
+
+            if (result.Succeeded)
+            {
+                admin.CreationDate = DateTime.Now;
+                await _userManager.AddToRoleAsync(admin, "Administrator");
+            }
+
+            return result;
+
+
+
+        }
+
     }
 }

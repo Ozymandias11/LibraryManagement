@@ -45,6 +45,18 @@ namespace Library.Service
 
         }
 
+        public async Task<IdentityResult> DeleteUser(UserViewModelDto user)
+        {
+            var id = user.Id;
+            var employee = await _userManager.FindByIdAsync(id);
+
+            employee.DeleteDate = DateTime.Now;
+            await _userManager.UpdateAsync(employee);
+
+            return IdentityResult.Success;
+            
+        }
+
         public async Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers()
         {
             var usersWithDefaultRole = await _userManager.GetUsersInRoleAsync("default");
@@ -55,6 +67,7 @@ namespace Library.Service
 
 
         }
+
 
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsers()
         {
@@ -79,6 +92,12 @@ namespace Library.Service
 
         }
 
-        
+        public async Task<UserViewModelDto> GetUserById(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var userViewModelDto = _mapper.Map<UserViewModelDto>(user);
+            return userViewModelDto;
+                
+        }
     }
 }

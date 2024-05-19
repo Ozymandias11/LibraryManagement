@@ -55,7 +55,13 @@ namespace Library.Service
 
             var userEmail = GetEmail(model);
 
+
             var user = await _userManager.FindByEmailAsync(userEmail);
+
+            if (user is null)
+            {
+                return false;
+            }
 
             var resetToken = await GenerateToken(model, user);
 
@@ -84,25 +90,49 @@ namespace Library.Service
 
         }
 
-        private string GetEmail<T>(T Model)
+        //private string GetEmail<T>(T Model)
+        //{
+        //    return Model switch
+        //    {
+        //        RegisterViewModelDto registerViewModelDto => registerViewModelDto.Email,
+        //        ForgotPasswordDto forgotPasswordDto => forgotPasswordDto.Email,
+        //        _ => throw new ArgumentException("Invalid model type")
+        //    };
+        //}
+
+        private string GetEmail<T>(T model)
         {
-            return Model switch
+            var emailProperty = model.GetType().GetProperty("Email");
+            if (emailProperty != null)
             {
-                RegisterViewModelDto registerViewModelDto => registerViewModelDto.Email,
-                ForgotPasswordDto forgotPasswordDto => forgotPasswordDto.Email,
-                _ => throw new ArgumentException("Invalid model type")
-            };
+                return emailProperty.GetValue(model)?.ToString();
+            }
+            throw new ArgumentException("The model does not have an 'Email' property.");
         }
 
-       private async Task<string> GenerateToken<T>(T Model, Employee employee)
+        private async Task<string> GenerateToken<T>(T model, Employee employee)
         {
-            return Model switch
+            var modelType = model.GetType();
+            if (modelType == typeof(RegisterViewModelDto))
             {
-                RegisterViewModelDto => await _userManager.GenerateEmailConfirmationTokenAsync(employee),
-                ForgotPasswordDto => await _userManager.GeneratePasswordResetTokenAsync(employee),
-                _ => throw new ArgumentException("Invalid model type")
-            };
+                return await _userManager.GenerateEmailConfirmationTokenAsync(employee);
+            }
+            else if (modelType == typeof(ForgotPasswordDto))
+            {
+                return await _userManager.GeneratePasswordResetTokenAsync(employee);
+            }
+            throw new ArgumentException("Invalid model type");
         }
+
+        //private async Task<string> GenerateToken<T>(T Model, Employee employee)
+        //{
+        //    return Model switch
+        //    {
+        //        RegisterViewModelDto => await _userManager.GenerateEmailConfirmationTokenAsync(employee),
+        //        ForgotPasswordDto => await _userManager.GeneratePasswordResetTokenAsync(employee),
+        //        _ => throw new ArgumentException("Invalid model type")
+        //    };
+        //}
 
         private string GenerateLink(string encodedToken, string userId, string templateName)
         {

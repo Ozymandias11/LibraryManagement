@@ -2,22 +2,28 @@
 @inject SignInManager<Library.Model.Models.Employee> SignInManager
 @inject UserManager<Library.Model.Models.Employee> UserManager
 
-<ul class="navbar-nav">
-    @if (SignInManager.IsSignedIn(User))
-    {
-
-        <li class="nav-item active">
-            <a class="nav-link " asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
-        </li>
-    }
-    else
-    {
-
-        <li class="nav-item active">
-            <a class="nav-link " asp-area="" asp-controller="Account" asp-action="Register">Register</a>
-        </li>
-        <li class="nav-item active">
-            <a class="nav-link " asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-        </li>
-    }
-</ul>
+<div class="text-center">
+    <ul class="navbar-nav">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <li class="nav-item active">
+                    <span class="nav-link">@TempData["SuccessMessage"]</span>
+                </li>
+            }
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+            </li>
+        }
+    </ul>
+</div>

@@ -2,9 +2,8 @@
 
 namespace LibraryManagement.ViewModels
 {
-    public class RegisterViewModel
+    public class CreateAdminViewModel
     {
-
         [Required(ErrorMessage = "First Name is required")]
         public string? FirstName { get; set; }
 
@@ -14,7 +13,7 @@ namespace LibraryManagement.ViewModels
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Format")]
         public string? Email { get; set; }
-  
+
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
 
@@ -27,6 +26,5 @@ namespace LibraryManagement.ViewModels
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
         public string? ConfirmPassword { get; set; }
         public string? ErrorMessage { get; set; }
-
     }
 }

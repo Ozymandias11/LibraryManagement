@@ -1,5 +1,6 @@
 ﻿using Library.Data.Interfaces;
 using Library.Model.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,15 @@ namespace Library.Data.Implementations
     public class DynamicMenuRepository : RepositoryBase<RoleMenuPermission>, IDynamicMenuRepository
     {
         private readonly IUserRoleRepository _userRoleRepository;
-        public DynamicMenuRepository(RepositoryContext repositoryContext, IUserRoleRepository userRoleRepository) : base(repositoryContext)
+        public DynamicMenuRepository(RepositoryContext repositoryContext,
+            IUserRoleRepository userRoleRepository
+            ) : base(repositoryContext)
         {
             _userRoleRepository = userRoleRepository;
+   
         }
 
-        public async Task<List<NavigationMenu>> GetMenuItemsAsync(ClaimsPrincipal principal)
+        public async Task<List<NavigationMenu>> GetMenuItemsAsync(ClaimsPrincipal principal, List<string> roleIds)
         {
 
             Console.WriteLine("Repository");
@@ -30,7 +34,7 @@ namespace Library.Data.Implementations
                 return new List<NavigationMenu>();
             }
 
-            var roleIds = await _userRoleRepository.GetUserRoleIds(principal);
+ 
 
             var data = await FindByCondition(menu => roleIds.Contains(menu.RoleId), trackChanges: false).
                 Select(m => new NavigationMenu
@@ -49,9 +53,8 @@ namespace Library.Data.Implementations
 
         }
 
-      
+       
 
-      
 
     }
 }
