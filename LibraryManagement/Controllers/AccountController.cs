@@ -49,11 +49,12 @@ namespace LibraryManagement.Controllers
 
             var registerViewModelDto = _mapper.Map<RegisterViewModelDto>(registerViewModel);
 
+
             var result = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModelDto);
 
             if (result.Succeeded)
             {
-                var emailSent = await _emailService.SendConfirmationEmail(registerViewModelDto, "Email Verification");
+                var emailSent = await _emailService.SendEmail(registerViewModelDto, "Email Verification");
 
                 if (emailSent)
                 {
@@ -142,11 +143,15 @@ namespace LibraryManagement.Controllers
 
         public IActionResult CheckEmail()
         {
+
             return View();
         }
 
         public IActionResult ResetPassword(string token, string userId)
         {
+
+            ViewData["IsPasswordResetLink"] = true;
+
             if(token == null)
             {
                 return View();
@@ -192,10 +197,6 @@ namespace LibraryManagement.Controllers
         {
             return View();
         }
-
-
-
-
 
 
         // helper method to store and provide user-friendly messages to UI

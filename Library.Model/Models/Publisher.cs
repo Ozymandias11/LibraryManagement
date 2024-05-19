@@ -12,5 +12,6 @@ namespace Library.Model.Models
         public string? PublisherName { get; set; }  
         public ICollection<BookPublisher>? Books { get; set; }
        
+
     }
 }

@@ -6,36 +6,39 @@
 
 
 
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2 class="text-primary text-center mb-0">Users</h2>
-            <a asp-action="AddEmployee" class="btn btn-primary">Add New Employee</a>
-        </div>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-primary">Username</th>
-                        <th class="text-primary">Email</th>
-                        <th class="text-primary">Phone Number</th>
-                        <th class="text-primary">Roles</th>
-                        <th class="text-primary">Email Confirmed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model)
-                    {
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-center mb-3">
+                <h2 class="text-primary mb-0">Users</h2>
+            </div>
+        <div class="table-responsive wide-table">
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td>@user.UserName</td>
-                            <td>@user.Email</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>@user.Roles</td>
-                            <td>@user.EmailConfirmed</td>
+                            <th class="text-primary text-center">Username</th>
+                            <th class="text-primary text-center">Email</th>
+                            <th class="text-primary text-center">Phone Number</th>
+                            <th class="text-primary text-center">Roles</th>
+                            <th class="text-primary text-center">Email Confirmed</th>
+                            <th class="text-primary text-center">Registration Date</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@user.UserName</td>
+                                <td class="text-center">@user.Email</td>
+                                <td class="text-center">@user.PhoneNumber</td>
+                                <td class="text-center">@user.Roles</td>
+                                <td class="text-center">@user.EmailConfirmed</td>
+                                <td class="text-center">@user.CreationDate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+
+                  

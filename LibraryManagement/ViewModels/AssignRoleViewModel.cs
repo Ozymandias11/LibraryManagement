@@ -13,7 +13,6 @@ namespace LibraryManagement.ViewModels
         public IEnumerable<string> AvailableRoles { get; set; } = new List<string>
     {
         "Administrator",
-        "Archivist",
         "Manager",
         "Librarian"
     };

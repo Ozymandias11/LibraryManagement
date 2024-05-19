@@ -10,5 +10,6 @@ namespace Library.Service.Dto
         string Id,
         string Email, 
         string PhoneNumber,
-        bool EmailConfirmed);
+        bool EmailConfirmed,
+        DateTime CreationDate );
 }

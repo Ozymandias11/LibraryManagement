@@ -12,7 +12,6 @@ namespace Library.Service.Interfaces
     public interface IUserService
     {
         Task<IEnumerable<UserViewModelDto>> GetAllUsers();
-        Task<IdentityResult> CreateEmployee(CreateEmployeeViewModelDto createEmployeeViewModelDto);
         Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers();
         Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto);
     }

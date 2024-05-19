@@ -64,7 +64,26 @@ namespace Library.Data.Configuration
                           ControllerName = "Administrator",
                           ActionName = "Templates",
                           Permitted = true,
+                      }, 
+                      new NavigationMenu
+                      {
+                          Id = new Guid("919bd644-16d7-483a-a6f7-aea8aa198ffd"),
+                          Name = "Super Admin",
+                          ControllerName = null,
+                          ActionName = null,
+                          Permitted = true,
+                      },
+                      new NavigationMenu
+                      {
+                          Id = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
+                          Name = "Users",
+                          ParentMenuId = new Guid("919bd644-16d7-483a-a6f7-aea8aa198ffd"),
+                          ControllerName = "SuperAdminController",
+                          ActionName = "Users",
+                          Permitted = true,
                       }
+
+
 
                 );
 

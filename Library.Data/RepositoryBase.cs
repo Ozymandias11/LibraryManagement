@@ -1,4 +1,5 @@
 ﻿using Library.Data.NewFolder;
+using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,19 @@ namespace Library.Data
         }
 
 
-        public void Create(T entity) => _repositoryContext.Set<T>().Add(entity);
+        public void Create(T entity)
+        {
+         
+            _repositoryContext.Set<T>().Add(entity);
+        }
         
             
         
-        public void Delete(T entity) => _repositoryContext.Set<T>().Remove(entity);
+        public void Delete(T entity)
+        {
+            
+            _repositoryContext.Set<T>().Update(entity);
+        }
 
 
 
@@ -39,7 +48,11 @@ namespace Library.Data
             _repositoryContext.Set<T>().AsNoTracking().Where(expression) :
             _repositoryContext.Set<T>().Where(expression);
 
-        public void Update(T entity) => _repositoryContext.Set<T>().Update(entity); 
+        public void Update(T entity)
+        {
+           
+            _repositoryContext.Set<T>().Update(entity);
+        }
        
     }
 }

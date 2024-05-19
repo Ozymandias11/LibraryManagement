@@ -107,6 +107,7 @@ namespace Library.Service
 
             if(result.Succeeded)
             {
+                employee.CreationDate = DateTime.Now;
                 await _userManager.AddToRoleAsync(employee, "default");
             }
 

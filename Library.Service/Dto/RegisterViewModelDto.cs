@@ -11,6 +11,7 @@ namespace Library.Service.Dto
      string LastName,
      string Email,
      string PhoneNumber,
-     string Password
+     string Password,
+     DateTime DateOfBirth
  );
 }

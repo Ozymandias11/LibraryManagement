@@ -29,6 +29,7 @@ namespace Library.Data.Configuration
                 .IsRequired();
 
             var adminRoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306";
+            var superAdminRoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee";
 
             builder.HasData(
                 new RoleMenuPermission
@@ -55,6 +56,18 @@ namespace Library.Data.Configuration
                        Id = Guid.NewGuid(),
                        RoleId = adminRoleId,
                        NavigationMenuId = new Guid("1c48f4be-67d9-4201-93ca-6fbaead68f59")
+                   },
+                   new RoleMenuPermission
+                   {
+                       Id = Guid.NewGuid(),
+                       RoleId = superAdminRoleId,
+                       NavigationMenuId = new Guid("919bd644-16d7-483a-a6f7-aea8aa198ffd")
+                   },
+                   new RoleMenuPermission
+                   {
+                       Id = Guid.NewGuid(),
+                       RoleId = superAdminRoleId,
+                       NavigationMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c")
                    }
 
                 );

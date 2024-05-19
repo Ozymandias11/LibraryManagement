@@ -25,6 +25,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEmailTemplateReposiotry, EmailTemplateRepository>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ISuperAdminUserService, SuperAdminUserService>();
 builder.Services.AddMailjetConfiguration(builder.Configuration);
 
 

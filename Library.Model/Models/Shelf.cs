@@ -9,8 +9,7 @@ namespace Library.Model.Models
 {
    public class Shelf
     {
-
-        
+  
         public Guid RoomId { get; set; }
         public Guid ShelfId { get; set; }
         public int MaxCapacity { get; set; }    
@@ -18,6 +17,7 @@ namespace Library.Model.Models
         public Room Room { get; set; } = null!;
 
         public ICollection<BookCopyShelf>? Books { get; set; }
+     
 
     }
 }

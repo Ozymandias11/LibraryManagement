@@ -37,8 +37,14 @@ namespace Library.Service
             _userManager = userManager;
         }
 
-        public async Task<bool> SendConfirmationEmail(RegisterViewModelDto registerViewModel, string templateName)
+
+
+
+
+
+        public async Task<bool> SendEmail<T>(T model, string templateName)
         {
+
             MailjetRequest request = new MailjetRequest
             {
                 Resource = Send.Resource
@@ -47,15 +53,17 @@ namespace Library.Service
 
             var template = await _emailTemplateReposiotry.GetTemplateByName(templateName, trackChanges: false);
 
-            var user = await _userManager.FindByEmailAsync(registerViewModel.Email);
+            var userEmail = GetEmail(model);
 
-            var resetToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var user = await _userManager.FindByEmailAsync(userEmail);
+
+            var resetToken = await GenerateToken(model, user);
 
             var EncodedToken = HttpUtility.UrlEncode(resetToken);
 
-            var resetLink = $"{_configuration["AppUrl"]}/Account/ConfirmEmail?token={EncodedToken}&userId={user.Id}";
+            var resetLink = GenerateLink(EncodedToken, user.Id, templateName);
 
-            var (Body, To) = FormatEmailBody1(registerViewModel, template.Body, resetLink, template.To);
+            var (Body, To) = FormatEmailBody(userEmail, template.Body, resetLink, template.To);
 
 
             var email = new TransactionalEmailBuilder()
@@ -71,82 +79,60 @@ namespace Library.Service
             bool result = message.Status.ToLower() == "success";
 
             return result;
+
+
+
         }
 
-        public async Task<bool> SendEmail(ForgotPasswordDto forgotPasswordDto, string templateName)
+        private string GetEmail<T>(T Model)
         {
-
-            MailjetRequest request = new MailjetRequest
+            return Model switch
             {
-                Resource = Send.Resource
+                RegisterViewModelDto registerViewModelDto => registerViewModelDto.Email,
+                ForgotPasswordDto forgotPasswordDto => forgotPasswordDto.Email,
+                _ => throw new ArgumentException("Invalid model type")
             };
-
-
-            var template = await _emailTemplateReposiotry.GetTemplateByName(templateName, trackChanges:false);
-
-            var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
-
-            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var EncodedToken = HttpUtility.UrlEncode(resetToken);
-
-            var resetLink = $"{_configuration["AppUrl"]}/Account/ResetPassword?token={EncodedToken}&userId={user.Id}";
-
-            var (Body, To) = FormatEmailBody(forgotPasswordDto, template.Body, resetLink, template.To);
-
-
-            var email = new TransactionalEmailBuilder()
-                .WithFrom(new SendContact(template.From))
-                .WithSubject(template.Subject)
-                .WithHtmlPart(Body)
-                .WithTo(new SendContact(To))
-                .Build();
-
-            var response = await _mailjetClient.SendTransactionalEmailAsync(email);
-            var message = response.Messages[0];
-
-            bool result = message.Status.ToLower() == "success";
-
-            return result;
-
-
-
         }
 
-        private (string Body, string To) FormatEmailBody(ForgotPasswordDto forgotPasswordDto, 
-            string body,
-            string ResetLink,
-            string to
-            ) 
+       private async Task<string> GenerateToken<T>(T Model, Employee employee)
         {
-            body = body.Replace("@@userName@@", forgotPasswordDto.Email);
-            body = body.Replace("@@resetLink@@", ResetLink);
-            to = to.Replace("@@userEmail@@", forgotPasswordDto.Email);
-
-
-
-
-            return (Body:body, To:to);
+            return Model switch
+            {
+                RegisterViewModelDto => await _userManager.GenerateEmailConfirmationTokenAsync(employee),
+                ForgotPasswordDto => await _userManager.GeneratePasswordResetTokenAsync(employee),
+                _ => throw new ArgumentException("Invalid model type")
+            };
         }
 
-        private (string Body, string To) FormatEmailBody1(RegisterViewModelDto registerViewModel,
+        private string GenerateLink(string encodedToken, string userId, string templateName)
+        {
+
+            var baseUrl = _configuration["AppUrl"];
+
+            return templateName switch
+            {
+                "Email Verification" => $"{baseUrl}/Account/ConfirmEmail?token={encodedToken}&userId={userId}",
+                "Password Reset" => $"{baseUrl}/Account/ResetPassword?token={encodedToken}&userId={userId}",
+                _ => throw new ArgumentException("Invalid template name")
+            }; 
+        }
+
+        private (string Body, string To) FormatEmailBody(
+           string Email,
            string body,
            string ResetLink,
            string to
            )
         {
-            body = body.Replace("@@userName@@", registerViewModel.Email);
-            body = body.Replace("@@verificationUrl@@", ResetLink);
-            to = to.Replace("@@userEmail@@", registerViewModel.Email);
+            body = body.Replace("@@userName@@", Email);
+            body = body.Replace("@@resetLink@@", ResetLink);
+            to = to.Replace("@@userEmail@@", Email);
 
 
 
 
             return (Body: body, To: to);
         }
-
-
-
 
 
     }

@@ -107,29 +107,7 @@ namespace LibraryManagement.Controllers
             return View(createEmployeeViewModel);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddEmployee(CreateEmployeeViewModel createEmployeeViewModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(createEmployeeViewModel);
-            }
-
-
-            var createEmployeeViewModelDto = _mapper.Map<CreateEmployeeViewModelDto>(createEmployeeViewModel);
-
-            var result = await _userService.CreateEmployee(createEmployeeViewModelDto);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Users");
-            }
-
-            return View(createEmployeeViewModelDto);
-
-        }
-
-
+     
 
 
     }

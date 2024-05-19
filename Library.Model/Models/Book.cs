@@ -16,6 +16,7 @@ namespace Library.Model.Models
         public ICollection<BookCategory>? Categories { get; set;}
         public ICollection<BookPublisher>? Publishers { get; set;}
         public ICollection<BookCopy>? Copyrights { get; set; }
+    
 
     }
 }

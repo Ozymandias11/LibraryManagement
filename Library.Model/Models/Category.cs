@@ -11,6 +11,7 @@ namespace Library.Model.Models
         public Guid CategoryId { get; set; }
         public string? Title { get; set; }
         public ICollection<BookCategory>? BookCategories { get; set; }
+     
 
 
     }

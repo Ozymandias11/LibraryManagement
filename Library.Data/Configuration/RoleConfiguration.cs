@@ -31,8 +31,8 @@ namespace Library.Data.Configuration
                   }, 
                   new IdentityRole
                   {
-                      Name = "Archivist", 
-                      NormalizedName = "ARCHIVIST"
+                      Name = "SuperAdmin", 
+                      NormalizedName = "SUPERADMIN"
                   },
                    new IdentityRole
                    {

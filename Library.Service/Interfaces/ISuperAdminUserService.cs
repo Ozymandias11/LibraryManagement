@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Interfaces
 {
-    public interface IEmailService
+   public interface ISuperAdminUserService
     {
-        Task<bool> SendEmail<T>(T Model, string templateName);
+        Task<IEnumerable<UserViewModelDto>> GetAllUsers();
+
+
+
     }
 }

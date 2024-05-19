@@ -1,0 +1,41 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.UserVeiwModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center mb-3">
+            <h2 class="text-primary mb-0">Users</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-primary text-center">Username</th>
+                        <th class="text-primary text-center">Email</th>
+                        <th class="text-primary text-center">Phone Number</th>
+                        <th class="text-primary text-center">Roles</th>
+                        <th class="text-primary text-center">Email Confirmed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@user.UserName</td>
+                            <td class="text-center">@user.Email</td>
+                            <td class="text-center">@user.PhoneNumber</td>
+                            <td class="text-center">@user.Roles</td>
+                            <td class="text-center">@user.EmailConfirmed</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

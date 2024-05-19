@@ -20,7 +20,8 @@ namespace Library.Model.Models
 
         public BookCopy? BookCopy { get; set; }
         public Customer? Customer { get; set; }
-        public Employee? Employee { get; set; } 
-        
+        public Employee? Employee { get; set; }
+    
+
     }
 }

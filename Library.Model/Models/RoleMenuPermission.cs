@@ -21,5 +21,7 @@ namespace Library.Model.Models
         public Guid NavigationMenuId { get; set; }
 
         public NavigationMenu NavigationMenu { get; set; }
+
+       
     }
 }

@@ -16,16 +16,13 @@ namespace Library.Service
     {
 
         private readonly UserManager<Employee> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
 
         public UserService(UserManager<Employee> userManager,
-            IMapper mapper,
-            RoleManager<IdentityRole> roleManager)
+            IMapper mapper)
         {
             _userManager = userManager; 
             _mapper = mapper;
-            _roleManager = roleManager;
         }
 
         public async Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto)
@@ -36,34 +33,12 @@ namespace Library.Service
 
             var result = await _userManager.AddToRolesAsync(user, assignRoleViewModelDto.SelectedRoles);
 
-            return result;
-
-
-        }
-
-        public async Task<IdentityResult> CreateEmployee(CreateEmployeeViewModelDto createEmployeeViewModelDto)
-        {
-            var employee = new Employee
-            {
-                UserName = createEmployeeViewModelDto.Email,
-                FirstName = createEmployeeViewModelDto.FirstName,
-                LastName = createEmployeeViewModelDto.LastName,
-                Email = createEmployeeViewModelDto.Email,
-                EmailConfirmed = false
-                
-            };
-
-            var result = await _userManager.CreateAsync(employee);
-
             if(result.Succeeded)
             {
-                if(createEmployeeViewModelDto.SelectedRoles 
-                    != null && createEmployeeViewModelDto.SelectedRoles.Count != 0)
-                {
-                    await _userManager.AddToRolesAsync(employee, createEmployeeViewModelDto.SelectedRoles);
-                }
-                
+                user.UpdateDate = DateTime.Now;
+                await _userManager.UpdateAsync(user);
             }
+
 
             return result;
 
@@ -74,6 +49,7 @@ namespace Library.Service
         {
             var usersWithDefaultRole = await _userManager.GetUsersInRoleAsync("default");
             var usersWithDefaultRoleDto = _mapper.Map<IEnumerable<UserForPendingViewModelDto>>(usersWithDefaultRole);
+                
 
             return usersWithDefaultRoleDto;
 
@@ -82,23 +58,22 @@ namespace Library.Service
 
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users
+                .Where(u => u.DeleteDate == null)
+                .ToListAsync();
 
-           
-            var userViewModelsDto = new List<UserViewModelDto>();   
-            
-            foreach(var user in users)
+            var filteredUsers = users.Where(user =>
+                !_userManager.IsInRoleAsync(user, "SuperAdmin").Result &&
+                !_userManager.IsInRoleAsync(user, "Administrator").Result && 
+                !_userManager.IsInRoleAsync(user, "Default").Result);
+
+            var userViewModelsDto = filteredUsers.Select(user =>
             {
-                var roles = await _userManager.GetRolesAsync(user);
-
+                var roles = _userManager.GetRolesAsync(user).Result;
                 var userViewModel = _mapper.Map<UserViewModelDto>(user);
-
                 userViewModel.Roles = string.Join(", ", roles);
-
-                userViewModelsDto.Add(userViewModel);
-                
-
-            }
+                return userViewModel;
+            });
 
             return userViewModelsDto;
 
