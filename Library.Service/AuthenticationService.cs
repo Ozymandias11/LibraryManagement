@@ -154,5 +154,14 @@ namespace Library.Service
 
         }
 
+        public async Task<bool> ValidateToken(string id, string Token)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            var isTokenValid = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", Token);
+
+            return isTokenValid;
+
+        }
     }
 }

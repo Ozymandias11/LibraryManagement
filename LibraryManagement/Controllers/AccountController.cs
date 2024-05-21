@@ -20,14 +20,17 @@ namespace LibraryManagement.Controllers
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly IUserService _userService;
      
         public AccountController(IServiceManager serviceManager,
             IMapper mapper,
-            IEmailService emailService)    
+            IEmailService emailService,
+            IUserService userService)    
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
             _emailService = emailService;   
+            _userService = userService;
            
         }
         
@@ -68,7 +71,7 @@ namespace LibraryManagement.Controllers
             }
 
 
-            //  return HandleResult(result, registerViewModel, "Registration Completed Sucesfully");
+
             return View(registerViewModel);
 
 
@@ -126,7 +129,6 @@ namespace LibraryManagement.Controllers
 
             return View(loginViewModel);
 
-            // return HandleResult(result, loginViewModel, "Login Completed Succesfully");
 
         }
 
@@ -177,8 +179,16 @@ namespace LibraryManagement.Controllers
             return View();
         }
 
-        public IActionResult ResetPassword(string token, string userId)
+        public async Task<IActionResult> ResetPassword(string token, string userId)
         {
+
+            var isTokenValid = await _serviceManager.AuthenticationService.ValidateToken(userId, token);
+
+            if (!isTokenValid)
+            {
+                throw new InvalidOperationException("User not found");
+            }
+
 
             ViewData["IsPasswordResetLink"] = true;
 
@@ -219,6 +229,26 @@ namespace LibraryManagement.Controllers
 
             return View();
 
+
+
+        }
+
+        public async Task<IActionResult> Profile(string id)
+        {
+            var user = await _userService.GetUserById(id);
+            var userViewModel = new UserVeiwModel() 
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Roles = string.Join(", ", user.Roles),
+                EmailConfirmed = user.EmailConfirmed,
+                CreationDate = user.CreationDate,
+                DeleteDate = user.DeleteDate
+            };
+
+            return View(userViewModel);
 
 
         }

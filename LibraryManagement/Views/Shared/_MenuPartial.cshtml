@@ -1,0 +1,128 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.NavigationMenuViewModel>
+
+
+
+
+<nav class="navbar">
+    <ul class="nav">
+        @foreach (var item in Model)
+        {
+            @if (item.Children.Any())
+            {
+                <li class="nav-item dropdown dropdown-toggle-centered">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @item.Name
+                    </a>
+                    <div class="dropdown-menu">
+                        @foreach (var child in item.Children)
+                        {
+                            @if (child.Children.Any())
+                            {
+                                <div class="dropend">
+                                    <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@child.Name</a>
+                                    <div class="dropdown-menu">
+                                        @foreach (var subChild in child.Children)
+                                        {
+                                            <a class="dropdown-item" asp-controller="@subChild.ControllerName" asp-action="@subChild.ActionName">@subChild.Name</a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" asp-controller="@child.ControllerName" asp-action="@child.ActionName">@child.Name</a>
+                            }
+                        }
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="@item.ControllerName" asp-action="@item.ActionName">@item.Name</a>
+                </li>
+            }
+        }
+    </ul>
+</nav>
+<style>
+    .navbar {
+        display: flex;
+        justify-content: center;
+    }
+
+    .nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .nav-item {
+        text-align: center;
+    }
+
+    .dropdown-menu {
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 200px; /* Adjust the width as needed */
+    }
+
+    .dropdown-item {
+        display: inline-block;
+        text-align: center;
+    }
+
+    .dropend .dropdown-menu {
+        left: auto;
+        right: 100%;
+        transform: translateX(0);
+    }
+
+    .text-center .dropdown-item {
+        text-align: center;
+    }
+
+    .dropdown:hover > .dropdown-menu {
+        display: block;
+        width: 180px; /* Adjust the width as needed for hover */
+    }
+
+    .dropend:hover > .dropdown-menu {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 100%;
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    .dropdown-toggle-centered {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dropdown-menu-right {
+        right: 0;
+        left: auto;
+        transform: none;
+    }
+
+    .dropdown-item:hover {
+        background-color: #e0e0e0;
+    }
+
+    .dropend {
+        position: relative;
+    }
+
+        .dropend .dropdown-menu {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            margin-top: 0;
+            margin-left: 0;
+            min-width: 200px; /* Adjust the width as needed */
+        }
+</style>

@@ -40,6 +40,11 @@ namespace LibraryManagement.ServiceExtensions
             })
             .AddEntityFrameworkStores<RepositoryContext>()
             .AddDefaultTokenProviders(); //default token provider for reseting passwords, emails and etc.
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+            {
+                options.TokenLifespan = TimeSpan.FromMinutes(3); // Token is valid for 3 minutes
+            });
         }
 
 

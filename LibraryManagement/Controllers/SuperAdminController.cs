@@ -10,21 +10,21 @@ namespace LibraryManagement.Controllers
     [Authorize(Roles = "SuperAdmin")]
     public class SuperAdminController : Controller
     {
-        private readonly ISuperAdminUserService _superAdminUserService;
+        private readonly IUserService _userService;
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public SuperAdminController(ISuperAdminUserService superAdminUserService,
+        public SuperAdminController(IUserService userService,
             IMapper mapper,
             IServiceManager serviceManager)
         {
-            _superAdminUserService = superAdminUserService;
+            _userService = userService;
             _mapper = mapper;
             _serviceManager = serviceManager;
 
         }
         public async Task<IActionResult> Users()
         {
-            var users = await _superAdminUserService.GetAllUsers();
+            var users = await _userService.GetAllUsersSuper();
             var userViewModel = _mapper.Map<IEnumerable<UserVeiwModel>>(users);
             return View(userViewModel);
         }

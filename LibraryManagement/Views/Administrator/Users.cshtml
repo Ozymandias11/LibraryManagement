@@ -11,15 +11,60 @@
         <div class="d-flex justify-content-center mb-3">
             <h2 class="text-primary mb-0">Users</h2>
         </div>
+        <div>
+        </div>
         <div class="table-responsive wide-table">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">Email</th>
+                        @* can be sorted *@
+                        <th class="text-primary text-center">
+                            <a href="@Url.Action("Users", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc" })">
+                                Email
+                                @if (ViewBag.SortBy == "Email")
+                                {
+                                    @if (ViewBag.SortOrder == "Email_Asc")
+                                    {
+                                        <i class="fas fa-arrow-up"></i>
+                                    }
+                                    else if (ViewBag.SortOrder == "Email_Desc")
+                                    {
+                                        <i class="fas fa-arrow-down"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort"></i>
+                                }
+                            </a>
+                        </th>
+
                         <th class="text-primary text-center">Phone Number</th>
                         <th class="text-primary text-center">Roles</th>
                         <th class="text-primary text-center">Email Confirmed</th>
-                        <th class="text-primary text-center">Registration Date</th>
+
+                        @* can be sorted *@
+                        <th class="text-primary text-center">
+                            <a href="@Url.Action("Users", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc" })">
+                                Registration Date
+                                @if (ViewBag.SortBy == "RegistrationDate")
+                                {
+                                    @if (ViewBag.SortOrder == "RegistrationDate_Asc")
+                                    {
+                                        <i class="fas fa-arrow-up"></i>
+                                    }
+                                    else if (ViewBag.SortOrder == "RegistrationDate_Desc")
+                                    {
+                                        <i class="fas fa-arrow-down"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort"></i>
+                                }
+                            </a>
+                        </th>
+
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
@@ -33,10 +78,8 @@
                             <td class="text-center">@user.EmailConfirmed</td>
                             <td class="text-center">@user.CreationDate</td>
                             <td class="text-center">
-                               @*  <form asp-action="DeleteUser" asp-route-id="@user.Id" >
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form> *@
-                                <a asp-action="DeleteUser" asp-route-Id="@user.Id" asp-route-email="@user.Email" class="btn btn-danger btn-sm" >Delete</a>
+                                <a asp-controller="Account" asp-action="Profile" asp-route-Id="@user.Id" class="btn btn-primary btn-sm mr-2">Profile</a>
+                                <a asp-action="DeleteUser" asp-route-Id="@user.Id" asp-route-email="@user.Email" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     }
@@ -44,4 +87,13 @@
             </table>
         </div>
     </div>
-</div>
+    <script>
+        function onSortByChange() {
+            var sortBy = document.getElementById("sortBy").value;
+            var url = "/Account/Users?sortBy=" + sortBy;
+            window.location.href = url;
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+

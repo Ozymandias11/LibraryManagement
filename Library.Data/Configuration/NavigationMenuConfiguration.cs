@@ -81,7 +81,35 @@ namespace Library.Data.Configuration
                           ControllerName = "SuperAdminController",
                           ActionName = "Users",
                           Permitted = true,
-                      }
+                      },
+                       new NavigationMenu
+                       {
+                           Id = new Guid("c555643a-c44b-4fb8-8fd0-cf5066b9efb9"),
+                           Name = "Pending Users",
+                           ParentMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
+                           ControllerName = "Administrator",
+                           ActionName = "Roles",
+                           Permitted = true,
+                       },
+                       new NavigationMenu
+                       {
+                           Id = new Guid("8eb1fb90-24bc-4644-9139-74b6f425a83c"),
+                           Name = "Active Users",
+                           ParentMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
+                           ControllerName = "Administrator",
+                           ActionName = "Users",
+                           Permitted = true,
+                       },
+                        new NavigationMenu
+                        {
+                            Id = new Guid("d35d1f1e-95ee-494c-96da-448d8677426e"),
+                            Name = "Deletede Users",
+                            ParentMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
+                            ControllerName = "Administrator",
+                            ActionName = "DeletedUsers",
+                            Permitted = true,
+                        }
+
 
 
 

@@ -21,10 +21,25 @@ namespace LibraryManagement.ViewComponents
         {
             Console.WriteLine("ViewComponent");
             var items = await _dynamicMenuService.GetMenuItemsAsyncService(HttpContext.User);
-            var itemsViewModel = _mapper.Map<List<NavigationMenuViewModel>>(items);
+            var itemsVM = _mapper.Map<List<NavigationMenuViewModel>>(items);
+            var itemsViewModel = CreateViewModel(null, [.. itemsVM]);
 
             return View(itemsViewModel); 
 
+        }
+
+        private IEnumerable<NavigationMenuViewModel> CreateViewModel(Guid? parentId,IEnumerable<NavigationMenuViewModel> source)
+        {
+            return from item in source
+                   where item.ParentMenuId == parentId
+                   select new NavigationMenuViewModel
+                   {
+                       Id = item.Id,
+                       Name = item.Name,
+                       ControllerName = item.ControllerName,
+                       ActionName = item.ActionName,
+                       Children = CreateViewModel(item.Id, source)
+                   };
         }
 
     }

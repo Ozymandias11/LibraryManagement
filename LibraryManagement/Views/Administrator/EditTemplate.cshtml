@@ -1,41 +1,47 @@
 ﻿
 @model LibraryManagement.ViewModels.EmailTemplateViewModel;
 
-<div class="row justify-content-center align-items-center min-vh-90">
+@* <div class="row justify-content-center align-items-center min-vh-90">
     <div class="col-md-8">
         <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
             <div class="card-body">
                 <h2 class="text-primary text-center">Edit Template</h2>
-                <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post">
-                    <div class="form-group">
-                        <label for="TemplateName">Template Name</label>
-                        <input type="text" class="form-control" id="fTemplateName" name="TemplateName" value="@Model.TemplateName">
-                    </div>
-                    <div class="form-group">
-                        <label for="from">From</label>
-                        <input type="text" class="form-control" id="from" name="From" value="@Model.From">
-                    </div>
-                    <div class="form-group">
-                        <label for="to">To</label>
-                        <input type="text" class="form-control" id="to" name="To" value="@Model.To">
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject">
-                    </div>
-                    <div class="form-group">
-                        <label for="body">Body</label>
-                        <textarea class="form-control" id="body" name="Body" rows="5">@Model.Body</textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary mr-4">Save Changes</button>
-                        <a asp-action="Templates" class="btn btn-secondary">Cancel</a>
-                    </div>
-                </form>
+               
             </div>
         </div>
     </div>
 </div>
+
+ *@
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center mb-3">
+            <h2 class="text-primary mb-0">Users</h2>
+        </div>
+        <div class="table-responsive wide-table">
+            <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post">
+                <div class="form-group">
+                    <label for="TemplateName">Template Name</label>
+                    <input type="text" class="form-control" id="fTemplateName" name="TemplateName" value="@Model.TemplateName">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject">
+                </div>
+                <div class="form-group">
+                    <label for="body">Body</label>
+                    <textarea class="form-control" id="body" name="Body" rows="5">@Model.Body</textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mr-4">Save Changes</button>
+                    <a asp-action="Templates" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
 <style>
     .button-spacing {
@@ -43,7 +49,7 @@
     }
 </style>
 
-@* @section Scripts {
+@section scripts {
     <script src="https://cdn.tiny.cloud/1/vdh7pz7fz2x78bto42f6p7d6o84o8822qozh4qzzp0y9y3nv/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
@@ -53,21 +59,20 @@
             height: 300
         });
 
-        // Preview functionality
-        document.querySelector('form').addEventListener('submit', function (event) {
-            event.preventDefault();
+        // preview functionality
+        document.queryselector('form').addeventlistener('submit', function (event) {
+            event.preventdefault();
             var form = event.target;
-            var formData = new FormData(form);
+            var formdata = new formdata(form);
 
-            fetch('/Admin/PreviewTemplate', {
-                method: 'POST',
-                body: formData
+            fetch('/admin/previewtemplate', {
+                method: 'post',
+                body: formdata
             })
             .then(response => response.text())
             .then(html => {
-                document.getElementById('previewContainer').innerHTML = html;
+                document.getelementbyid('previewcontainer').innerhtml = html;
             });
         });
     </script>
 }
- *@

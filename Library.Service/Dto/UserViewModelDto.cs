@@ -18,5 +18,6 @@ namespace Library.Service.Dto
         public string Roles { get; set; }
         public bool EmailConfirmed { get; set; }
         public DateTime CreationDate { get; set; }
+        public DateTime? DeleteDate { get; set; }
     }
 }

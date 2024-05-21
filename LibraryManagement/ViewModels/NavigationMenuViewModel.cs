@@ -13,5 +13,6 @@
         public string? ActionName { get; set; }
 
         public bool Permitted { get; set; }
+        public IEnumerable<NavigationMenuViewModel>? Children { get; set; }
     }
 }

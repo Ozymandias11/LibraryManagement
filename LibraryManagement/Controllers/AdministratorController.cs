@@ -4,6 +4,8 @@ using Library.Service.Interfaces;
 using LibraryManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Globalization;
 
 
 namespace LibraryManagement.Controllers
@@ -58,9 +60,13 @@ namespace LibraryManagement.Controllers
         }
 
 
-        public async Task<IActionResult> Users()
+        public async Task<IActionResult> Users(string sortBy, string sortOrder)
         {
-            var users = await _userService.GetAllUsers();
+
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SortBy = sortBy;
+
+            var users = await _userService.GetAllUsers(sortBy, sortOrder);
             var userViewModel = _mapper.Map<IEnumerable<UserVeiwModel>>(users);
             return View(userViewModel);
         }
@@ -133,6 +139,17 @@ namespace LibraryManagement.Controllers
             }
 
             return View(userViewModelDto);
+        }
+
+        public async Task<IActionResult> DeletedUsers()
+        {
+            var deltedeUserDtos = await _userService.GetDeletedUsers();
+
+            var deletedUSerViewModels = _mapper.Map<IEnumerable<UserVeiwModel>>(deltedeUserDtos);
+
+            return View(deletedUSerViewModels);
+
+
         }
 
 

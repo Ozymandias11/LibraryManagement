@@ -16,5 +16,6 @@ namespace Library.Service.Interfaces
         Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel);
         Task<IdentityResult> ConfirmEmail(string token, string userId);
         Task<IdentityResult> AddAdmin(CreateAdminViewModelDto createAdminViewModelDto);
+        Task<bool> ValidateToken(string id, string Token);
     }
 }

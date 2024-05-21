@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240520063722_AddedSubSubMenus")]
+    partial class AddedSubSubMenus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,7 +235,7 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("710ec5ad-e595-470e-8a2a-c57df9d12845"),
+                            Id = new Guid("9ff1d6cf-b9ea-4651-a236-a06f70a7b366"),
                             Body = "Dear @@userName@@,<br><br>Please click the following link to verify your email address:<br><br>@@verificationLink@@<br><br>If you didn't request this verification, please ignore this email.<br><br>Best regards,<br>The Team",
                             From = "noreply@example.com",
                             Subject = "Verify Your Email Address",
@@ -241,7 +244,7 @@ namespace LibraryManagement.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6555d2ef-6bc2-4991-a2da-de6758726118"),
+                            Id = new Guid("4cf190c7-b295-4470-9c53-81b07480d080"),
                             Body = "Dear @@userName@@,<br><br>Thank you for registering with our application. To complete your registration, please click the following link to verify your email address:<br><br><a href='@@verificationUrl@@'>Verify Email</a><br><br>If you did not request this verification, please ignore this email.<br><br>Best regards,<br>The Team",
                             From = "noreply@example.com",
                             Subject = "Verify Your Email Address",
@@ -342,19 +345,19 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a028acc1-a6c4-4e4d-8d1f-a047788d4352",
+                            Id = "46184fc3-00e4-4ef8-827d-3149864edc70",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1786ef59-29a6-4862-bdfb-4c110a7f7fb1",
-                            CreationDate = new DateTime(2024, 5, 20, 11, 47, 31, 36, DateTimeKind.Utc).AddTicks(5603),
+                            ConcurrencyStamp = "6a757f3e-e4e6-4c8b-a4aa-134537aabe2e",
+                            CreationDate = new DateTime(2024, 5, 20, 6, 37, 21, 550, DateTimeKind.Utc).AddTicks(1627),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "nachkebiadima2@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEBMkrNSllemXmB1fu/qozn8t54GAt26Kk1WVmZNjkZFwYy7jrrjufMxoB7m24Kqnzw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHyG3FSkFI2hjfcyin8V8kKLvs8GP64ac/qsNz+rHUTeuo8aoR+PlwQP94j+sKR4rg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f965e54-f22e-47c0-93c6-83b9e7e872e8",
+                            SecurityStamp = "a452f036-d302-4a7a-9147-416d5f83314e",
                             TwoFactorEnabled = false,
                             UserName = "nachkebiadima2@gmail.com"
                         });
@@ -454,15 +457,6 @@ namespace LibraryManagement.Migrations
                             Name = "Active Users",
                             ParentMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
                             Permitted = true
-                        },
-                        new
-                        {
-                            Id = new Guid("d35d1f1e-95ee-494c-96da-448d8677426e"),
-                            ActionName = "DeletedUsers",
-                            ControllerName = "Administrator",
-                            Name = "Deletede Users",
-                            ParentMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
-                            Permitted = true
                         });
                 });
 
@@ -549,56 +543,50 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("80adeb05-95e2-4cd8-b60b-70ebe9e2450c"),
+                            Id = new Guid("69116073-8f53-4dba-8926-20021027de96"),
                             NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("de487f38-a5ff-4026-97a5-db29603a305b"),
+                            Id = new Guid("859cc965-21cc-4ab3-b34b-1a935c697f18"),
                             NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("f6f5ed1d-151e-4704-bd4d-7371b22b9b71"),
+                            Id = new Guid("0d67b4b7-9b71-43eb-9e1b-2129fe5d7b93"),
                             NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("6a76cc84-266f-42d1-bdab-314af849fdc3"),
+                            Id = new Guid("edd72db0-a398-426f-a2be-b3e01e71d70e"),
                             NavigationMenuId = new Guid("1c48f4be-67d9-4201-93ca-6fbaead68f59"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("3d344ada-2c9a-4bf2-9b86-d53773de7534"),
+                            Id = new Guid("200f1895-50d3-40fd-9c92-f57156863ef3"),
                             NavigationMenuId = new Guid("919bd644-16d7-483a-a6f7-aea8aa198ffd"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("89d6509e-b525-4bc4-90f7-fc0b4eb3b5cc"),
+                            Id = new Guid("d03eb1da-6cf7-401f-b8d3-ea8b98c9d982"),
                             NavigationMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("ab51323a-a09b-4460-be54-6c6f570a1d02"),
+                            Id = new Guid("49a01900-ddd2-440c-9aa2-b789eefac6c2"),
                             NavigationMenuId = new Guid("c555643a-c44b-4fb8-8fd0-cf5066b9efb9"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("f765c350-e579-4297-985e-7b7230b2e9eb"),
+                            Id = new Guid("5b359fe5-bce0-4097-9c5b-c85503c6a33f"),
                             NavigationMenuId = new Guid("8eb1fb90-24bc-4644-9139-74b6f425a83c"),
-                            RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
-                        },
-                        new
-                        {
-                            Id = new Guid("22f0804e-b578-4d9c-a5e4-8e9104ce3c64"),
-                            NavigationMenuId = new Guid("d35d1f1e-95ee-494c-96da-448d8677426e"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         });
                 });
@@ -662,31 +650,31 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0a26148e-0b33-486f-9a32-445d7d2aeab5",
+                            Id = "6bffd1ab-6ec7-41a4-ab1e-b2bec67ecd41",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "e4d859cc-376f-4035-8e36-d9e0c5f26025",
+                            Id = "8e9cf572-9f56-49ab-9f43-ebb51ff2fd3d",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "8d69957c-182a-437f-85c2-ec3afee53ff0",
+                            Id = "cc2f8a96-e28a-46c0-b2d8-042bb240dca3",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "2db053e2-0e4a-445b-8773-c87f770dab7f",
+                            Id = "12b714b1-3ca8-46c1-a410-50f15d1110c3",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "2b470977-c10b-4cbc-90fa-9186fa204354",
+                            Id = "7752e4ec-ae71-48a6-b572-c1f0368416bb",
                             Name = "Default",
                             NormalizedName = "DEFAULT"
                         });
