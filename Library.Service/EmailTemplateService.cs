@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Data.Implementations;
 using Library.Data.Interfaces;
 using Library.Data.NewFolder;
 using Library.Model.Models;
@@ -27,12 +28,25 @@ namespace Library.Service
             _repositoryManager = repositoryManager;
         }
 
-        public async Task<IEnumerable<EmailtemplateDto>> GetAllTemplate(bool trackChanges)
-        {
-            var EmailTemplates = await _emailTemplateReposiotry.GetAllEmailTemplates(trackChanges);
-            var EmailTemplatesDto = _mapper.Map<IEnumerable<EmailtemplateDto>>(EmailTemplates);
+       
 
-            return EmailTemplatesDto;
+        public async Task<IEnumerable<EmailtemplateDto>> GetAllTemplate(string sortBy, string sortOrder, bool trackChanges)
+        {
+            var emailTemplates = await _emailTemplateReposiotry.GetAllEmailTemplates(trackChanges);
+
+            // Sort the entities based on the provided sortBy and sortOrder parameters
+            IOrderedEnumerable<EmailTemplate> sortedEmailTemplates = sortBy switch
+            {
+                "TemplateName" => sortOrder == "TemplateName_Asc"
+                    ? emailTemplates.OrderBy(t => t.TemplateName)
+                    : emailTemplates.OrderByDescending(t => t.TemplateName),
+                _ => emailTemplates.OrderBy(t => t.Id)
+            };
+
+            // Map the sorted entities to DTOs
+            var emailTemplatesDto = _mapper.Map<IEnumerable<EmailtemplateDto>>(sortedEmailTemplates);
+
+            return emailTemplatesDto;
         }
 
         public async Task<EmailtemplateDto> GetTemplateById(Guid id, bool trackChanges)

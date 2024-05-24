@@ -23,10 +23,6 @@
         <div class="table-responsive wide-table">
             <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post">
                 <div class="form-group">
-                    <label for="TemplateName">Template Name</label>
-                    <input type="text" class="form-control" id="fTemplateName" name="TemplateName" value="@Model.TemplateName">
-                </div>
-                <div class="form-group">
                     <label for="subject">Subject</label>
                     <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject">
                 </div>

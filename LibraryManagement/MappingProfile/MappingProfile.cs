@@ -37,7 +37,8 @@ namespace LibraryManagement.MappingProfile
             //Emails
             CreateMap<EmailTemplate, EmailtemplateDto>().ReverseMap()
                 .ForMember(dest => dest.From, opt => opt.Ignore())
-                .ForMember(dest => dest.To, opt => opt.Ignore());
+                .ForMember(dest => dest.To, opt => opt.Ignore())
+                .ForMember(dest => dest.TemplateName, opt => opt.Ignore());
 
 
 

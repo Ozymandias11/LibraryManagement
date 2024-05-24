@@ -1,0 +1,114 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.UserVeiwModel>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+
+
+<div class="card users-table">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-center mb-3">
+                <h2 class="text-primary mb-0">Users</h2>
+            </div>
+            <div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped wide-table">
+                    <thead>
+                        <tr>
+                            <th class="text-primary text-center">
+                                <a href="@Url.Action("Users", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc" })">
+                                    Email
+                                    @if (ViewBag.SortBy == "Email")
+                                    {
+                                        @if (ViewBag.SortOrder == "Email_Asc")
+                                        {
+                                            <i class="fas fa-arrow-up"></i>
+                                        }
+                                        else if (ViewBag.SortOrder == "Email_Desc")
+                                        {
+                                            <i class="fas fa-arrow-down"></i>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-sort"></i>
+                                    }
+                                </a>
+                            </th>
+                            <th class="text-primary text-center">Phone Number</th>
+                            <th class="text-primary text-center">Roles</th>
+                            <th class="text-primary text-center">Email Confirmed</th>
+                            <th class="text-primary text-center">
+                                <a href="@Url.Action("Users", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc" })">
+                                    Registration Date
+                                    @if (ViewBag.SortBy == "RegistrationDate")
+                                    {
+                                        @if (ViewBag.SortOrder == "RegistrationDate_Asc")
+                                        {
+                                            <i class="fas fa-arrow-up"></i>
+                                        }
+                                        else if (ViewBag.SortOrder == "RegistrationDate_Desc")
+                                        {
+                                            <i class="fas fa-arrow-down"></i>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <i class="fas fa-sort"></i>
+                                    }
+                                </a>
+                            </th>
+                            <th class="text-primary text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@user.Email</td>
+                                <td class="text-center">@user.PhoneNumber</td>
+                                <td class="text-center">@user.Roles</td>
+                                <td class="text-center">@user.EmailConfirmed</td>
+                                <td class="text-center">@user.CreationDate</td>
+                                <td class="text-center">
+                                    <a asp-controller="Account" asp-action="Profile" asp-route-Id="@user.Id" class="btn btn-primary btn-sm mr-2">Profile</a>
+                                    <a asp-action="DeleteUser" asp-route-Id="@user.Id" asp-route-email="@user.Email" class="btn btn-danger btn-sm">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </div>
+</div>
+
+
+
+<style>
+    .users-table {
+        margin-bottom: 20px;
+    }
+
+        .users-table .card-body {
+            padding: 15px;
+        }
+
+        .users-table .table {
+            margin-bottom: 0;
+        }
+
+            .users-table .table th,
+            .users-table .table td {
+                padding: 0.5rem;
+            }
+
+    main {
+        padding-bottom: 20px; /* Adjust the padding as needed */
+    }
+</style>

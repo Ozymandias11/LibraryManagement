@@ -1,0 +1,58 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.EmailTemplateViewModel>
+
+@{
+    ViewData["Title"] = "Email Templates";
+    bool showSuccessMessage = ViewBag.SuccessMessage != null;
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
+                <div class="card-body">
+                    <h2 class="text-primary text-center mb-4">Email Templates</h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a href="@Url.Action("Templates", new { sortBy = "TemplateName", sortOrder = ViewBag.SortOrder == "TemplateName_Asc" ? "TemplateName_Desc" : "TemplateName_Asc" })">
+                                        Template Name
+                                        @if (ViewBag.SortBy == "TemplateName")
+                                        {
+                                            @if (ViewBag.SortOrder == "TemplateName_Asc")
+                                            {
+                                                <i class="fas fa-arrow-up"></i>
+                                            }
+                                            else if (ViewBag.SortOrder == "TemplateName_Desc")
+                                            {
+                                                <i class="fas fa-arrow-down"></i>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <i class="fas fa-sort"></i>
+                                        }
+                                    </a>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var template in Model)
+                            {
+                                <tr>
+                                    <td>@template.TemplateName</td>
+                                    <td>
+                                        <a asp-action="EditTemplate" asp-route-id="@template.Id" class="btn btn-primary btn-sm">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

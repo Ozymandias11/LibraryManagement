@@ -70,46 +70,38 @@ namespace Library.Service
 
         }
 
-        public async Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper()
+        public async Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder)
         {
             var users = await _userManager.Users.ToListAsync();
 
-            var userViewModelDto = users.Select(user =>
+            var userViewModelDtos = new List<UserViewModelDto>();
+
+            foreach (var user in users)
             {
-                var roles = _userManager.GetRolesAsync(user).Result;
+                var roles = await _userManager.GetRolesAsync(user);
                 var userViewModelDto = _mapper.Map<UserViewModelDto>(user);
                 userViewModelDto.Roles = string.Join(", ", roles);
-                return userViewModelDto;
-
+                userViewModelDtos.Add(userViewModelDto);
             }
-            );
 
-            return userViewModelDto;
-
-
+            IEnumerable<UserViewModelDto> sortedUsers = sortBy switch
+            {
+                "Email" => sortOrder == "Email_Asc"
+                                        ? userViewModelDtos.OrderBy(u => u.Email)
+                                        : userViewModelDtos.OrderByDescending(u => u.Email),
+                "RegistrationDate" => sortOrder == "RegistrationDate_Asc"
+                                        ? userViewModelDtos.OrderBy(u => u.CreationDate)
+                                        : userViewModelDtos.OrderByDescending(u => u.CreationDate),
+                "Roles" => sortOrder == "Roles_Asc"
+                                        ? userViewModelDtos.OrderBy(u => u.Roles)
+                                        : userViewModelDtos.OrderByDescending(u => u.Roles),
+                _ => userViewModelDtos.OrderBy(u => u.Email),// Default sorting if no valid sortBy parameter is provided
+            };
+            return sortedUsers;
         }
-        //public async Task<IEnumerable<UserViewModelDto>> GetAllUsers()
-        //{
-        //    var users = await _userManager.Users
-        //        .Where(u => u.DeleteDate == null)
-        //        .ToListAsync();
+    
 
-        //    var filteredUsers = users.Where(user =>
-        //        !_userManager.IsInRoleAsync(user, "SuperAdmin").Result &&
-        //        !_userManager.IsInRoleAsync(user, "Administrator").Result && 
-        //        !_userManager.IsInRoleAsync(user, "Default").Result);
 
-        //    var userViewModelsDto = filteredUsers.Select(user =>
-        //    {
-        //        var roles = _userManager.GetRolesAsync(user).Result;
-        //        var userViewModel = _mapper.Map<UserViewModelDto>(user);
-        //        userViewModel.Roles = string.Join(", ", roles);
-        //        return userViewModel;
-        //    });
-
-        //    return userViewModelsDto;
-
-        //}
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder)
         {
             var users = await _userManager.Users
@@ -170,27 +162,7 @@ namespace Library.Service
         }
 
 
-        public async Task<IEnumerable<UserViewModelDto>> GetUsersAsync(string propertyName, string sortOrder)
-        {
-            if (string.IsNullOrWhiteSpace(propertyName))
-            {
-                propertyName = "Email";
-                sortOrder = "ASC";
-            }
-            var users = await _userManager.Users.Sort(propertyName, sortOrder).ToListAsync();
-
-            var usersDto = users.Select(user =>
-            {
-                var roles = _userManager.GetRolesAsync(user).Result;
-                var userViewModel = _mapper.Map<UserViewModelDto>(user);
-                userViewModel.Roles = string.Join(", ", roles);
-                return userViewModel;
-            });
-
-            return usersDto;
-
-
-        }
+     
 
         public async Task<UserViewModelDto> GetUserById(string id)
         {

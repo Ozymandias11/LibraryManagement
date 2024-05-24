@@ -16,7 +16,7 @@ namespace Library.Service.Interfaces
         Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto);
         Task<UserViewModelDto> GetUserById(string id);
         Task<IdentityResult> DeleteUser(UserViewModelDto user);
-        Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper();
+        Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder);
         Task<IEnumerable<UserViewModelDto>> GetDeletedUsers();
        // Task<IEnumerable<UserViewModelDto>> GetUsersAsync(string propertyName, string sortOrder);
     }

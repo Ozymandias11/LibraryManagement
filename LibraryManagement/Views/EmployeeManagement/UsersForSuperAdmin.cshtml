@@ -5,21 +5,18 @@
 }
 
 
-
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="text-primary mb-0">Users</h2>
+            <a asp-action="AddAdmin"  class="btn btn-primary">Add Admin</a>
         </div>
-        <div>
-        </div>
-        <div class="table-responsive wide-table">
+        <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        @* can be sorted *@
                         <th class="text-primary text-center">
-                            <a href="@Url.Action("Users", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc" })">
+                            <a href="@Url.Action("UsersForSuperAdmin", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc" })">
                                 Email
                                 @if (ViewBag.SortBy == "Email")
                                 {
@@ -38,14 +35,32 @@
                                 }
                             </a>
                         </th>
-
                         <th class="text-primary text-center">Phone Number</th>
-                        <th class="text-primary text-center">Roles</th>
-                        <th class="text-primary text-center">Email Confirmed</th>
-
-                        @* can be sorted *@
+                        
                         <th class="text-primary text-center">
-                            <a href="@Url.Action("Users", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc" })">
+                            <a href="@Url.Action("UsersForSuperAdmin", new { sortBy = "Roles", sortOrder = ViewBag.SortOrder == "Roles_Asc" ? "Roles_Desc" : "Roles_Asc" })">
+                                Roles
+                                @if (ViewBag.SortBy == "Roles")
+                                {
+                                    @if (ViewBag.SortOrder == "Roles_Asc")
+                                    {
+                                        <i class="fas fa-arrow-up"></i>
+                                    }
+                                    else if (ViewBag.SortOrder == "Roles_Desc")
+                                    {
+                                        <i class="fas fa-arrow-down"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort"></i>
+                                }
+                            </a>
+                        </th>
+
+                        <th class="text-primary text-center">Email Confirmed</th>
+                        <th class="text-primary text-center">
+                            <a href="@Url.Action("UsersForSuperAdmin", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc" })">
                                 Registration Date
                                 @if (ViewBag.SortBy == "RegistrationDate")
                                 {
@@ -64,11 +79,10 @@
                                 }
                             </a>
                         </th>
-
-                        <th class="text-primary text-center">Actions</th>
+                        <th class="text-primary text-center">Is Active</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="userTableBody">
                     @foreach (var user in Model)
                     {
                         <tr>
@@ -77,23 +91,13 @@
                             <td class="text-center">@user.Roles</td>
                             <td class="text-center">@user.EmailConfirmed</td>
                             <td class="text-center">@user.CreationDate</td>
-                            <td class="text-center">
-                                <a asp-controller="Account" asp-action="Profile" asp-route-Id="@user.Id" class="btn btn-primary btn-sm mr-2">Profile</a>
-                                <a asp-action="DeleteUser" asp-route-Id="@user.Id" asp-route-email="@user.Email" class="btn btn-danger btn-sm">Delete</a>
-                            </td>
+                            <td class="text-center">@(user.DeleteDate == null ? "True" : "False")</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
     </div>
-    <script>
-        function onSortByChange() {
-            var sortBy = document.getElementById("sortBy").value;
-            var url = "/Account/Users?sortBy=" + sortBy;
-            window.location.href = url;
-        }
-    </script>
+</div>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

@@ -9,7 +9,7 @@ namespace Library.Service.Interfaces
 {
     public interface IEmailTemplateService
     {
-        Task<IEnumerable<EmailtemplateDto>> GetAllTemplate(bool trackChanges);
+        Task<IEnumerable<EmailtemplateDto>> GetAllTemplate(string sortBy, string sortOrder,bool trackChanges);
         Task<EmailtemplateDto> GetTemplateById(Guid id, bool trackChanges);
         Task UpdateEmailTemplate(EmailtemplateDto emailtemplate, bool trackChanges);
 

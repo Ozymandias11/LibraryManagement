@@ -4,6 +4,7 @@ using Library.Data.Interfaces;
 using Library.Service;
 using Library.Service.Interfaces;
 using LibraryManagement;
+using LibraryManagement.Filters;
 using LibraryManagement.ServiceExtensions;
 
 using static System.Net.Mime.MediaTypeNames;
@@ -45,6 +46,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware<ErrorHandlingMiddleware>(); //registering middleware
 
 app.UseRouting();
 app.UseAuthentication();
