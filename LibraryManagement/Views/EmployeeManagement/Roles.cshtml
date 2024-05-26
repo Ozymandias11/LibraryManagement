@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-body">
-        <div class="d-flex justify-content-center align-items-center mb-3">
+        <div class="d-flex justify-content-center  mb-3">
             <h2 class="text-primary text-center mb-0">Pending Users</h2>
         </div>
 
@@ -14,10 +14,10 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary">Email</th>
-                        <th class="text-primary">Phone Number</th>
-                        <th class="text-primary">Email Confirmed</th>
-                        <th class="text-primary">Registration Date</th>
+                        <th class="text-primary text-center">Email</th>
+                        <th class="text-primary text-center">Phone Number</th>
+                        <th class="text-primary text-center">Email Confirmed</th>
+                        <th class="text-primary text-center">Registration Date</th>
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
@@ -25,13 +25,13 @@
                     @foreach (var user in Model)
                     {
                         <tr>
-                            <td>@user.Email</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>@user.EmailConfirmed</td>
-                            <td>@user.CreationDate</td>
-                            <td>
+                            <td class="text-center">@user.Email</td>
+                            <td class ="text-center">@user.PhoneNumber</td>
+                            <td class="text-center">@user.EmailConfirmed</td>
+                            <td class="text-center">@user.CreationDate</td>
+                            <td class="text-center">
                                 <a asp-action="AssignRoles"  asp-route-Id="@user.Id" class="btn btn-primary">Assign a role</a>
-                              @*   <a asp-action="RejectUser" asp-route-Id="@user.Id" class="btn btn-danger">Report</a> *@
+                                <a asp-action="RejectUser" asp-route-Id="@user.Id" class="btn btn-danger">Report</a> 
                             </td>
                         </tr>
                     }

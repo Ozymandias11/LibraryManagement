@@ -240,6 +240,8 @@ namespace LibraryManagement.Controllers
             {
                 Id = user.Id,
                 UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 Roles = string.Join(", ", user.Roles),

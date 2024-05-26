@@ -5,6 +5,7 @@ using Library.Service.Interfaces;
 using LibraryManagement.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LibraryManagement.Controllers
 {
@@ -45,6 +46,7 @@ namespace LibraryManagement.Controllers
             return View(assignRolesViewModel);
 
         }
+
         [HttpPost]
         public async Task<IActionResult> AssignRoles(AssignRoleViewModelDto assignRoleViewModelDto)
         {
@@ -52,12 +54,28 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
+
+                var currentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var userRoles = await _userService.GetUserRoles(currentUser);
+
+                if (userRoles.Contains("Administrator"))
+                {
+                    return RedirectToAction("Roles");
+                }
+                else if(userRoles.Contains("SuperAdmin"))
+                {
+                    return RedirectToAction("UsersForSuperAdmin");
+                }
+
+
                 return RedirectToAction("Roles");
             }
 
             return View();
 
         }
+
 
         [Authorize(Roles = "Administrator,SuperAdmin")]
         public async Task<IActionResult> Users(string sortBy, string sortOrder)
@@ -140,6 +158,22 @@ namespace LibraryManagement.Controllers
             var result = await _userService.DeleteUser(userViewModelDto);
             if (result.Succeeded)
             {
+
+                var currentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                var userRoles = await _userService.GetUserRoles(currentUser);
+
+                if (userRoles.Contains("Administrator"))
+                {
+                    return RedirectToAction("Roles");
+
+                }else if (userRoles.Contains("SuperAdmin"))
+                {
+                    return RedirectToAction("UsersForSuperAdmin");
+                }
+
+
+
                 return RedirectToAction("Users");
             }
 

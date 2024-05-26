@@ -31,7 +31,9 @@ namespace Library.Service
         {
             var user = await _userManager.FindByIdAsync(assignRoleViewModelDto.Id);
 
-            await _userManager.RemoveFromRoleAsync(user, "Default");
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            await _userManager.RemoveFromRolesAsync(user, currentRoles);
 
             var result = await _userManager.AddToRolesAsync(user, assignRoleViewModelDto.SelectedRoles);
 
@@ -175,6 +177,12 @@ namespace Library.Service
             return userDto;
 
 
+        }
+
+        public async Task<IList<string>> GetUserRoles(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            return await _userManager.GetRolesAsync(user);
         }
     }
 }

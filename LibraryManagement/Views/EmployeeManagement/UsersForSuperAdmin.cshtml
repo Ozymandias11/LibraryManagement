@@ -11,7 +11,7 @@
             <h2 class="text-primary mb-0">Users</h2>
             <a asp-action="AddAdmin"  class="btn btn-primary">Add Admin</a>
         </div>
-        <div class="table-responsive">
+        <div class="table-responsive table-container">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -80,6 +80,7 @@
                             </a>
                         </th>
                         <th class="text-primary text-center">Is Active</th>
+                        <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="userTableBody">
@@ -92,6 +93,10 @@
                             <td class="text-center">@user.EmailConfirmed</td>
                             <td class="text-center">@user.CreationDate</td>
                             <td class="text-center">@(user.DeleteDate == null ? "True" : "False")</td>
+                            <td class="text-center">
+                                
+                                <a asp-action="DeleteUser" asp-route-Id="@user.Id" asp-route-email="@user.Email" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -101,3 +106,16 @@
 </div>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<style>
+    .table-container {
+        max-height: 600px; 
+        overflow-y: auto;
+    }
+
+        .table-container thead th {
+            position: sticky;
+            top: 0;
+            background-color: #fff; 
+        }
+</style>

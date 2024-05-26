@@ -18,6 +18,6 @@ namespace Library.Service.Interfaces
         Task<IdentityResult> DeleteUser(UserViewModelDto user);
         Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder);
         Task<IEnumerable<UserViewModelDto>> GetDeletedUsers();
-       // Task<IEnumerable<UserViewModelDto>> GetUsersAsync(string propertyName, string sortOrder);
+        Task<IList<string>> GetUserRoles(string id);
     }
 }

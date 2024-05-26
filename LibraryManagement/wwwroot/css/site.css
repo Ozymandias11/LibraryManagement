@@ -284,6 +284,7 @@ a:focus {
             text-transform: uppercase;
             margin-bottom: 15px;
             color: #ffffff;
+            text-align:center;
         }
 
         .slider_section .detail-box p {

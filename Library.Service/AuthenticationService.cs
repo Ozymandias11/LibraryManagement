@@ -47,7 +47,7 @@ namespace Library.Service
         {
             var existingUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
-            if(existingUser == null)
+            if(existingUser.DeleteDate != null || existingUser == null)
             {
                 return IdentityResult.Failed(new IdentityError
                 {
