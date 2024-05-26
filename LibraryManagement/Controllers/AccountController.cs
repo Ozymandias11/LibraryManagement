@@ -191,8 +191,9 @@ namespace LibraryManagement.Controllers
 
 
             ViewData["IsPasswordResetLink"] = true;
+            ViewData["ShowNavbar"] = false;
 
-            if(token == null)
+            if (token == null)
             {
                 return View();
             }
@@ -213,6 +214,7 @@ namespace LibraryManagement.Controllers
         {
             if(!ModelState.IsValid)
             {
+                ViewData["ShowNavbar"] = false;
                 return View(resetPasswordViewModel);
             }
 
@@ -235,6 +237,8 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> Profile(string id)
         {
+
+
             var user = await _userService.GetUserById(id);
             var userViewModel = new UserVeiwModel() 
             {
@@ -250,7 +254,12 @@ namespace LibraryManagement.Controllers
                 DeleteDate = user.DeleteDate
             };
 
+
+            ViewData["ReturnUrl"] = Url.Action("Profile", new { id = id });
+            ViewData["cancelUrl"] = Url.Action("Profile", "Account", new {id = id});
             return View(userViewModel);
+
+
 
 
         }

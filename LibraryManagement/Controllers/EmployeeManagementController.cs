@@ -31,29 +31,36 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> Roles()
         {
             var pendingUsers = await _userService.GetAllPendingUsers();
-
+            ViewData["ReturnUrl"] = Request.Path;
             var PendingUserViewModel = _mapper.Map<IEnumerable<UserForPendingViewModel>>(pendingUsers);
             return View(PendingUserViewModel);
         }
 
-        public IActionResult AssignRoles(string Id)
+        public IActionResult AssignRoles(string Id, string returnUrl)
         {
             var assignRolesViewModel = new AssignRoleViewModel
             {
                 Id = Id
             };
 
+            ViewData["ReturnUrl"] = returnUrl;
+
             return View(assignRolesViewModel);
 
         }
 
         [HttpPost]
-        public async Task<IActionResult> AssignRoles(AssignRoleViewModelDto assignRoleViewModelDto)
+        public async Task<IActionResult> AssignRoles(AssignRoleViewModelDto assignRoleViewModelDto, 
+            string returnUrl)
         {
             var result = await _userService.AssignRolesToEmployees(assignRoleViewModelDto);
 
             if (result.Succeeded)
             {
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
 
                 var currentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 

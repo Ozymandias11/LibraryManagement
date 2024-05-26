@@ -30,7 +30,7 @@
                             <td class="text-center">@user.EmailConfirmed</td>
                             <td class="text-center">@user.CreationDate</td>
                             <td class="text-center">
-                                <a asp-action="AssignRoles"  asp-route-Id="@user.Id" class="btn btn-primary">Assign a role</a>
+                                <a asp-controller="EmployeeManagement" asp-action="AssignRoles" asp-route-Id="@user.Id" asp-route-returnUrl="@Context.Request.Path" class="btn btn-primary">Assign a role</a>
                                 <a asp-action="RejectUser" asp-route-Id="@user.Id" class="btn btn-danger">Report</a> 
                             </td>
                         </tr>

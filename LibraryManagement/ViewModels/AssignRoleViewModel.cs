@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LibraryManagement.Validators;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManagement.ViewModels
 {
     public class AssignRoleViewModel
     {
 
-        public string Id { get; set; }  
+        public string Id { get; set; }
 
-        [Required(ErrorMessage = "Please select at least one role.")]
+        [RequireAtLeastOneRole(ErrorMessage = "Please select at least one Role")]
         public ICollection<string>? SelectedRoles { get; set; }
 
         public IEnumerable<string> AvailableRoles { get; set; } = new List<string>
