@@ -90,15 +90,6 @@ namespace Library.Service
 
         }
 
-        //private string GetEmail<T>(T Model)
-        //{
-        //    return Model switch
-        //    {
-        //        RegisterViewModelDto registerViewModelDto => registerViewModelDto.Email,
-        //        ForgotPasswordDto forgotPasswordDto => forgotPasswordDto.Email,
-        //        _ => throw new ArgumentException("Invalid model type")
-        //    };
-        //}
 
         private string GetEmail<T>(T model)
         {
@@ -123,16 +114,6 @@ namespace Library.Service
             }
             throw new ArgumentException("Invalid model type");
         }
-
-        //private async Task<string> GenerateToken<T>(T Model, Employee employee)
-        //{
-        //    return Model switch
-        //    {
-        //        RegisterViewModelDto => await _userManager.GenerateEmailConfirmationTokenAsync(employee),
-        //        ForgotPasswordDto => await _userManager.GeneratePasswordResetTokenAsync(employee),
-        //        _ => throw new ArgumentException("Invalid model type")
-        //    };
-        //}
 
         private string GenerateLink(string encodedToken, string userId, string templateName)
         {

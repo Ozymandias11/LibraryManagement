@@ -172,7 +172,7 @@ namespace LibraryManagement.Controllers
 
                 if (userRoles.Contains("Administrator"))
                 {
-                    return RedirectToAction("Roles");
+                    return RedirectToAction("Users");
 
                 }else if (userRoles.Contains("SuperAdmin"))
                 {

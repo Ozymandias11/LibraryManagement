@@ -184,9 +184,11 @@ namespace LibraryManagement.Controllers
 
             var isTokenValid = await _serviceManager.AuthenticationService.ValidateToken(userId, token);
 
+            ViewData["ShowNavbar"] = false;
+
             if (!isTokenValid)
             {
-                throw new InvalidOperationException("User not found");
+                return View("TokenExpired");
             }
 
 

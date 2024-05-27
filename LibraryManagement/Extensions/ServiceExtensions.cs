@@ -43,7 +43,7 @@ namespace LibraryManagement.ServiceExtensions
 
             services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
-                options.TokenLifespan = TimeSpan.FromMinutes(3); // Token is valid for 3 minutes
+                options.TokenLifespan = TimeSpan.FromMinutes(5); // Token is valid for 5 minutes
             });
         }
 
