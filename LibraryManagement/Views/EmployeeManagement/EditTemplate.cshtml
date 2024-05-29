@@ -1,18 +1,4 @@
-﻿
-@model LibraryManagement.ViewModels.EmailTemplateViewModel;
-
-@* <div class="row justify-content-center align-items-center min-vh-90">
-    <div class="col-md-8">
-        <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
-            <div class="card-body">
-                <h2 class="text-primary text-center">Edit Template</h2>
-               
-            </div>
-        </div>
-    </div>
-</div>
-
- *@
+﻿@model LibraryManagement.ViewModels.EmailTemplateViewModel;
 
 
 <div class="container mt-2">
@@ -23,17 +9,17 @@
                     <div class="text-center mb-4">
                         <h2 class="text-primary mb-0">Edit Templates</h2>
                     </div>
-                    <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post">
+                    <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post" id="edit-template-form">
                         <div class="form-group">
                             <label for="subject" class="form-control-label">Subject</label>
-                            <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject" placeholder="Enter subject">
+                            <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject" placeholder="Enter subject" data-placeholder="@Model.Subject">
                         </div>
                         <div class="form-group">
                             <label for="body" class="form-control-label">Body</label>
-                            <textarea class="form-control" id="body" name="Body" rows="5" placeholder="Enter body">@Model.Body</textarea>
+                            <textarea class="form-control" id="body" name="Body" rows="5" placeholder="Enter body" data-placeholder="@Model.Body">@Model.Body</textarea>
                         </div>
                         <div class="text-center">
-                            <button type="submit" class="btn btn-primary btn-lg mr-4">Save Changes</button>
+                            <button type="submit" class="btn btn-primary btn-lg mr-4" id="save-changes-button" style="display: none;">Save Changes</button>
                             <a asp-action="Templates" class="btn btn-neutral btn-lg">Cancel</a>
                         </div>
                     </form>
@@ -42,6 +28,34 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('edit-template-form');
+        const saveButton = document.getElementById('save-changes-button');
+
+        // Function to check if any values have changed from the placeholders
+        function checkForChanges() {
+            let hasChanges = false;
+            Array.from(form.elements).forEach(element => {
+                if (element.hasAttribute('data-placeholder')) {
+                    const placeholder = element.getAttribute('data-placeholder');
+                    if (element.value !== placeholder) {
+                        hasChanges = true;
+                    }
+                }
+            });
+            saveButton.style.display = hasChanges ? 'inline-block' : 'none';
+        }
+
+        // Add event listeners to detect changes
+        form.addEventListener('input', checkForChanges);
+        form.addEventListener('change', checkForChanges);
+
+        // Initial check in case of autofill or pre-filled data
+        checkForChanges();
+    });
+</script>
 
 <style>
     Here is the updated CSS with only the classes present in the provided HTML:

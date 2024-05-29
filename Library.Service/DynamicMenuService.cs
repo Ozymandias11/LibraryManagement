@@ -38,6 +38,16 @@ namespace Library.Service
             var roleIds = await GetUserRoleIdsAsync(claimsPrincipal);
 
             var data = await _repository.GetMenuItemsAsync(claimsPrincipal, roleIds);
+
+            var userNamemenuItem = data.FirstOrDefault(m => m.Name == "UserName");
+
+            if (userNamemenuItem != null)
+            {
+                var userName = claimsPrincipal.Identity.Name;
+                userNamemenuItem.Name = userName;
+            }
+
+
             
             var dataDto = _mapper.Map<List<NavigationMenuDto>>(data);
 

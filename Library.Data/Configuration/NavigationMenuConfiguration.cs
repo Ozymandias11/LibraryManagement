@@ -108,10 +108,25 @@ namespace Library.Data.Configuration
                             ControllerName = "Administrator",
                             ActionName = "DeletedUsers",
                             Permitted = true,
-                        }
-
-
-
+                        },
+                           new NavigationMenu
+                           {
+                               Id = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
+                               Name = "UserName",
+                               ParentMenuId = null,
+                               ControllerName = null,
+                               ActionName = null,
+                               Permitted = true,
+                           },
+                             new NavigationMenu
+                             {
+                                 Id = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7"),
+                                 Name = "Profile",
+                                 ParentMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
+                                 ControllerName = "Account",
+                                 ActionName = "Profile",
+                                 Permitted = true,
+                             }
 
                 );
 

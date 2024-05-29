@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,5 +20,7 @@ namespace Library.Service.Interfaces
         Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder);
         Task<IEnumerable<UserViewModelDto>> GetDeletedUsers();
         Task<IList<string>> GetUserRoles(string id);
+        Task<UserViewModelDto> GetUserWithClaimsPrincipal(ClaimsPrincipal claimsPrincipal);
+        Task<bool> CheckIfEmailExists(string email);
     }
 }

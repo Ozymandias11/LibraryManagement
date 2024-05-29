@@ -6,10 +6,16 @@ using Library.Service.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.Extensions;
 using LibraryManagement.ViewModels;
+using Mailjet.Client.Resources;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Claims;
+using System.Web.Helpers;
 
 
 namespace LibraryManagement.Controllers
@@ -115,11 +121,6 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
-                var emailPrefix = loginViewModelDto.Email.Split('@')[0];
-
-                // Add a success message to the temporary data
-                TempData["SuccessMessage"] = $"Hello {emailPrefix}!";
-
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -237,6 +238,8 @@ namespace LibraryManagement.Controllers
 
         }
 
+        // for admins and superAdmins to view
+
         public async Task<IActionResult> Profile(string id)
         {
 
@@ -264,8 +267,67 @@ namespace LibraryManagement.Controllers
 
 
 
-        }
         
+        }
+
+
+        //for actual user profiles, more control
+        public async Task<IActionResult> UserProfile()
+        {
+            var user = await _userService.GetUserWithClaimsPrincipal(User);
+
+            var userViewModel = new UserViewModelProfile()
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Roles = string.Join(", ", user.Roles),
+            };
+
+          
+
+            return View(userViewModel);
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UserProfile(UserViewModelProfile userViewModelProfile)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(userViewModelProfile);
+            }
+
+            var currentUserEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            var existingEmail = await _userService.CheckIfEmailExists(userViewModelProfile.Email);
+
+            if (existingEmail && userViewModelProfile.Email != currentUserEmail)
+            {
+                userViewModelProfile.Email = currentUserEmail;
+                userViewModelProfile.ErrorMessage = "The email already exists";
+                return View(userViewModelProfile);
+            }
+
+            //tracking if the user wants to change email
+
+            if(currentUserEmail != userViewModelProfile.Email)
+            {
+                var emailSent = await _emailService.SendEmail(userViewModelProfile, "Email Verification");
+                if (emailSent)
+                {
+                    return RedirectToAction("CheckEmail");
+                }
+
+            }
+
+            
+
+            return View(userViewModelProfile);
+        }
+
         public IActionResult ResetPasswordConfirmation()
         {
             return View();

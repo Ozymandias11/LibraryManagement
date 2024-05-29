@@ -104,7 +104,7 @@ namespace Library.Service
         private async Task<string> GenerateToken<T>(T model, Employee employee)
         {
             var modelType = model.GetType();
-            if (modelType == typeof(RegisterViewModelDto))
+            if (modelType == typeof(RegisterViewModelDto) || modelType == typeof(UserViewModelProfileDto))
             {
                 return await _userManager.GenerateEmailConfirmationTokenAsync(employee);
             }

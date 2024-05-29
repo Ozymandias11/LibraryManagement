@@ -13,12 +13,9 @@ namespace Library.Data.Implementations
 {
     public class DynamicMenuRepository : RepositoryBase<RoleMenuPermission>, IDynamicMenuRepository
     {
-        private readonly IUserRoleRepository _userRoleRepository;
-        public DynamicMenuRepository(RepositoryContext repositoryContext,
-            IUserRoleRepository userRoleRepository
+        public DynamicMenuRepository(RepositoryContext repositoryContext
             ) : base(repositoryContext)
         {
-            _userRoleRepository = userRoleRepository;
    
         }
 

@@ -30,6 +30,8 @@ namespace Library.Data.Configuration
 
             var adminRoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306";
             var superAdminRoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee";
+            var librarianRoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45";
+            var managerRoleId = "b8b819da-4f16-4d09-9d10-7da416f2fb4b";
 
             builder.HasData(
                 new RoleMenuPermission
@@ -87,6 +89,59 @@ namespace Library.Data.Configuration
                           RoleId = adminRoleId,
                           NavigationMenuId = new Guid("d35d1f1e-95ee-494c-96da-448d8677426e")
                       }
+                      //
+                      ,
+                       new RoleMenuPermission
+                       {
+                           Id = Guid.NewGuid(),
+                           RoleId = adminRoleId,
+                           NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924")
+                       },
+                        new RoleMenuPermission
+                        {
+                            Id = Guid.NewGuid(),
+                            RoleId = librarianRoleId,
+                            NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924")
+                        },
+                         new RoleMenuPermission
+                         {
+                             Id = Guid.NewGuid(),
+                             RoleId = managerRoleId,
+                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924")
+                         },
+                         new RoleMenuPermission
+                         {
+                             Id = Guid.NewGuid(),
+                             RoleId = superAdminRoleId,
+                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924")
+                         }
+                         //
+                         ,
+                         new RoleMenuPermission
+                         {
+                             Id = Guid.NewGuid(),
+                             RoleId = adminRoleId,
+                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7")
+                         },
+                        new RoleMenuPermission
+                        {
+                            Id = Guid.NewGuid(),
+                            RoleId = librarianRoleId,
+                            NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7")
+                        },
+                         new RoleMenuPermission
+                         {
+                             Id = Guid.NewGuid(),
+                             RoleId = managerRoleId,
+                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7")
+                         },
+                         new RoleMenuPermission
+                         {
+                             Id = Guid.NewGuid(),
+                             RoleId = superAdminRoleId,
+                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7")
+                         }
+
 
                 );
 

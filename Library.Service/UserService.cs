@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -183,6 +184,25 @@ namespace Library.Service
         {
             var user = await _userManager.FindByIdAsync(id);
             return await _userManager.GetRolesAsync(user);
+        }
+
+        public async Task<UserViewModelDto> GetUserWithClaimsPrincipal(ClaimsPrincipal claimsPrincipal)
+        {
+            var user = await _userManager.GetUserAsync(claimsPrincipal);
+
+            var roles =  _userManager.GetRolesAsync(user).Result;
+
+            var userDto = _mapper.Map<UserViewModelDto>(user);
+
+            userDto.Roles = string.Join(", ", roles);
+
+            return userDto;
+        }
+
+        public async Task<bool> CheckIfEmailExists(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user != null;
         }
     }
 }
