@@ -1,0 +1,22 @@
+﻿@model LibraryManagement.ViewModels.VerificationViewModel
+
+<h2>Verify Code</h2>
+
+<p>A verification code has been sent to your phone number. Please enter the code below to complete the registration process.</p>
+
+<form asp-action="VerifyCode" method="post">
+    <div class="form-group">
+        <label for="EnteredCode">Verification Code</label>
+        <input type="text" class="form-control" id="EnteredCode" name="EnteredCode" required>
+    </div>
+
+
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+
+    <button type="submit" class="btn btn-primary">Verify</button>
+</form>

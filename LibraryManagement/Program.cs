@@ -27,8 +27,11 @@ builder.Services.AddScoped<IEmailTemplateReposiotry, EmailTemplateRepository>();
 builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ISuperAdminUserService, SuperAdminUserService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
 builder.Services.AddMailjetConfiguration(builder.Configuration);
-
+builder.Services.AddVonageConfiguration(builder.Configuration);
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IVerificationCodeCacheService, VerificationCodeCacheService>();
 
 
     

@@ -19,7 +19,7 @@ namespace LibraryManagement.ViewModels
         public string? Password { get; set; }
 
         [Required(ErrorMessage = "Phone number is required")]
-        [RegularExpression(@"^5\d{8}$", ErrorMessage = "Phone number must be in the format 5xxxxxxxx")]
+        //[RegularExpression(@"^5\d{8}$", ErrorMessage = "Phone number must be in the format 5xxxxxxxx")]
         public string? PhoneNumber { get; set; }
         [Required(ErrorMessage = "The Birth Date is a required field")]
         public DateTime DateOfBirth { get; set; }

@@ -53,6 +53,11 @@ namespace LibraryManagement.ServiceExtensions
             services.Configure<MailjetSettings>(configuration.GetSection("MailjetSettings"));
         }
 
+        public static void AddVonageConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<VonageSettings>(configuration.GetSection("VonageSettings"));
+        }
+
       
 
 

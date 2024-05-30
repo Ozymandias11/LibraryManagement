@@ -27,16 +27,22 @@ namespace LibraryManagement.Controllers
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
         private readonly IUserService _userService;
+        private readonly ISmsService _smsService;
+        private readonly IVerificationCodeCacheService _verificationCodeCacheService;
      
         public AccountController(IServiceManager serviceManager,
             IMapper mapper,
             IEmailService emailService,
-            IUserService userService)    
+            IUserService userService,
+             ISmsService smsService,
+             IVerificationCodeCacheService verificationCodeCacheService)    
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
             _emailService = emailService;   
             _userService = userService;
+            _smsService = smsService;
+            _verificationCodeCacheService = verificationCodeCacheService;
            
         }
         
@@ -89,11 +95,47 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("RegistrationCompleted");
+                var user = await _userService.GetUserById(userId);
+
+                int verificationCode = new Random().Next(100000, 999999);
+
+                var phoneSent =  await _smsService.SendSms(user.PhoneNumber, verificationCode);
+
+                if (phoneSent)
+                {
+
+                    _verificationCodeCacheService.SetVerificationCode(userId, verificationCode);
+                    var verificationViewModel = new VerificationViewModel()
+                    {
+                        Id = userId
+                    };
+
+                    return View("VerifyCode", verificationViewModel);
+                }
+
+                
+
+
             }
 
             return View();
 
+        }
+
+        [HttpPost]
+        public IActionResult VerifyCode(VerificationViewModel verificationViewModel)
+        {
+
+            var storedverificationCode = _verificationCodeCacheService.GetVerificationCode(verificationViewModel.Id);
+
+            if (storedverificationCode.HasValue && verificationViewModel.EnteredCode == storedverificationCode.Value)
+            {
+                _verificationCodeCacheService.SetVerificationCode(verificationViewModel.Id, default);
+                return RedirectToAction("RegistrationCompleted");
+            }
+
+            verificationViewModel.ErrorMessage = "Invalid Code";
+            return View(verificationViewModel);
         }
 
         public IActionResult RegistrationCompleted()
