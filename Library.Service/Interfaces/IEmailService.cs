@@ -9,6 +9,6 @@ namespace Library.Service.Interfaces
 {
     public interface IEmailService
     {
-        Task<bool> SendEmail<T>(T Model, string templateName);
+        Task<bool> SendEmail<T>(T Model, string templateName, string resetToken);
     }
 }

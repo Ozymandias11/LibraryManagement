@@ -9,7 +9,7 @@
                     <div class="text-center mb-4">
                         <h2 class="text-primary mb-0">Edit Templates</h2>
                     </div>
-                    <form asp-action="EditTemplate" asp-route-id="@Model.Id" method="post" id="edit-template-form">
+                    <form asp-action="SaveTemplate" asp-route-id="@Model.Id" method="post" id="edit-template-form">
                         <div class="form-group">
                             <label for="subject" class="form-control-label">Subject</label>
                             <input type="text" class="form-control" id="subject" name="Subject" value="@Model.Subject" placeholder="Enter subject" data-placeholder="@Model.Subject">
@@ -29,36 +29,62 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('edit-template-form');
-        const saveButton = document.getElementById('save-changes-button');
 
-        // Function to check if any values have changed from the placeholders
+@section scripts {
+    <script src="https://cdn.tiny.cloud/1/vdh7pz7fz2x78bto42f6p7d6o84o8822qozh4qzzp0y9y3nv/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
         function checkForChanges() {
+            const form = document.getElementById('edit-template-form');
+            const saveButton = document.getElementById('save-changes-button');
             let hasChanges = false;
             Array.from(form.elements).forEach(element => {
-                if (element.hasAttribute('data-placeholder')) {
-                    const placeholder = element.getAttribute('data-placeholder');
-                    if (element.value !== placeholder) {
+                if (element.name === 'Body') {
+                    // Handle TinyMCE editor content separately
+                    const editor = tinymce.get('body');
+                    const initialContent = element.getAttribute('data-placeholder');
+                    const currentContent = editor.getContent();
+                    if (currentContent !== initialContent) {
                         hasChanges = true;
+                    }
+                } else {
+                    // Handle other form elements
+                    if (element.hasAttribute('data-placeholder')) {
+                        const placeholder = element.getAttribute('data-placeholder');
+                        if (element.value !== placeholder) {
+                            hasChanges = true;
+                        }
                     }
                 }
             });
             saveButton.style.display = hasChanges ? 'inline-block' : 'none';
         }
 
-        // Add event listeners to detect changes
-        form.addEventListener('input', checkForChanges);
-        form.addEventListener('change', checkForChanges);
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('edit-template-form');
 
-        // Initial check in case of autofill or pre-filled data
-        checkForChanges();
-    });
-</script>
+            form.addEventListener('input', checkForChanges);
+            form.addEventListener('change', checkForChanges);
+
+            tinymce.init({
+                selector: '#body',
+                plugins: 'code',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
+                height: 300,
+                setup: function (editor) {
+                    editor.on('input', function () {
+                        checkForChanges();
+                    });
+                    editor.on('change', function () {
+                        checkForChanges();
+                    });
+                }
+            });
+        });
+    </script>
+}
+
 
 <style>
-    Here is the updated CSS with only the classes present in the provided HTML:
 
     :root {
         --blue: #5e72e4;
@@ -537,41 +563,10 @@
         font-weight: 300;
         line-height: 1.7;
     }
-</style>
 
-
-
-
-<style>
     .button-spacing {
         margin-right: 20px;
     }
 </style>
 
-@section scripts {
-    <script src="https://cdn.tiny.cloud/1/vdh7pz7fz2x78bto42f6p7d6o84o8822qozh4qzzp0y9y3nv/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <script>
-        tinymce.init({
-            selector: '#body',
-            plugins: 'code',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code',
-            height: 300
-        });
 
-        // preview functionality
-        document.queryselector('form').addeventlistener('submit', function (event) {
-            event.preventdefault();
-            var form = event.target;
-            var formdata = new formdata(form);
-
-            fetch('/admin/previewtemplate', {
-                method: 'post',
-                body: formdata
-            })
-            .then(response => response.text())
-            .then(html => {
-                document.getelementbyid('previewcontainer').innerhtml = html;
-            });
-        });
-    </script>
-}

@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Dto
 {
-  public record ResetPasswordViewModelDto(
-       string Token,
-       string email,
-       string NewPassword,
-       string ConfirmPassword
-      );
+    public record EmailToSendDto(
+    string Username,
+    string Email,
+    string resetLink
+    );
 }

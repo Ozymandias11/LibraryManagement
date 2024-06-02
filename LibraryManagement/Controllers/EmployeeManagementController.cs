@@ -122,7 +122,7 @@ namespace LibraryManagement.Controllers
         }
         [Authorize(Roles = "Administrator,SuperAdmin")]
         [HttpPost]
-        public async Task<IActionResult> EditTemplate(EmailTemplateViewModel emailTemplateViewModel)
+        public async Task<IActionResult> SaveTemplate(EmailTemplateViewModel emailTemplateViewModel)
         {
 
 

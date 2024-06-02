@@ -65,11 +65,11 @@ namespace LibraryManagement.Controllers
             var registerViewModelDto = _mapper.Map<RegisterViewModelDto>(registerViewModel);
 
 
-            var result = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModelDto);
+            var (result, emailConfirmationToken) = await _serviceManager.AuthenticationService.RegisterEmployee(registerViewModelDto);
 
             if (result.Succeeded)
             {
-                var emailSent = await _emailService.SendEmail(registerViewModelDto, "Email Verification");
+                var emailSent = await _emailService.SendEmail(registerViewModelDto, "Email Verification", emailConfirmationToken);
 
                 if (emailSent)
                 {
@@ -89,13 +89,13 @@ namespace LibraryManagement.Controllers
 
         }
 
-        public async Task<IActionResult> ConfirmEmail(string token ,string userId)
+        public async Task<IActionResult> ConfirmEmail(string token ,string email)
         {
-            var result = await _serviceManager.AuthenticationService.ConfirmEmail(token, userId);
+            var result = await _serviceManager.AuthenticationService.ConfirmEmail(token, email);
 
             if (result.Succeeded)
             {
-                var user = await _userService.GetUserById(userId);
+                var user = await _userService.GetUserByEmail(email);
 
                 int verificationCode = new Random().Next(100000, 999999);
 
@@ -104,10 +104,10 @@ namespace LibraryManagement.Controllers
                 if (phoneSent)
                 {
 
-                    _verificationCodeCacheService.SetVerificationCode(userId, verificationCode);
+                    _verificationCodeCacheService.SetVerificationCode(user.Id, verificationCode);
                     var verificationViewModel = new VerificationViewModel()
                     {
-                        Id = userId
+                        Id = user.Id
                     };
 
                     return View("VerifyCode", verificationViewModel);
@@ -119,6 +119,34 @@ namespace LibraryManagement.Controllers
             }
 
             return View();
+
+        }
+
+        public async Task<IActionResult> ConfirmEmailChangeRequest(string token, string email)
+        {
+
+            var currentUserEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            var result = await _serviceManager.AuthenticationService.UpdateEmail(currentUserEmail, email, token);
+            
+
+            if (result.Succeeded)
+            {
+
+               // await _userService.UpdateEmail(email);
+
+
+                ViewBag.Message = "Your email has been verified successfully.";
+                ViewBag.IsSuccess = true;
+            }
+            else
+            {
+                ViewBag.Message = "Email verification failed. Please try again.";
+                ViewBag.IsSuccess = false;
+            }
+
+            return View();
+
 
         }
 
@@ -201,8 +229,9 @@ namespace LibraryManagement.Controllers
             }
 
             var forgotPasswordDto = _mapper.Map<ForgotPasswordDto>(forgotPasswordViewModel);
+            var token = await _serviceManager.AuthenticationService.ForgotPassword(forgotPasswordViewModel.Email);
 
-            bool passwordReset = await _emailService.SendEmail(forgotPasswordDto, "Password Reset");
+            bool passwordReset = await _emailService.SendEmail(forgotPasswordDto, "Password Reset", token);
 
             if (passwordReset)
             {
@@ -222,17 +251,17 @@ namespace LibraryManagement.Controllers
             return View();
         }
 
-        public async Task<IActionResult> ResetPassword(string token, string userId)
+        public async Task<IActionResult> ResetPassword(string token, string email)
         {
 
-            var isTokenValid = await _serviceManager.AuthenticationService.ValidateToken(userId, token);
+          //  var isTokenValid = await _serviceManager.AuthenticationService.ValidateToken(userId, token);
 
             ViewData["ShowNavbar"] = false;
 
-            if (!isTokenValid)
-            {
-                return View("TokenExpired");
-            }
+            //if (!isTokenValid)
+            //{
+            //    return View("TokenExpired");
+            //}
 
 
             ViewData["IsPasswordResetLink"] = true;
@@ -246,7 +275,7 @@ namespace LibraryManagement.Controllers
             var resetPasswordViewModel = new ResetPasswordViewModel()
             {
                 Token = token,
-                UserId = userId
+                email = email
                
             };
 
@@ -342,30 +371,42 @@ namespace LibraryManagement.Controllers
                 return View(userViewModelProfile);
             }
 
-            var currentUserEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
-            var existingEmail = await _userService.CheckIfEmailExists(userViewModelProfile.Email);
-
-            if (existingEmail && userViewModelProfile.Email != currentUserEmail)
-            {
-                userViewModelProfile.Email = currentUserEmail;
-                userViewModelProfile.ErrorMessage = "The email already exists";
-                return View(userViewModelProfile);
-            }
 
             //tracking if the user wants to change email
 
-            if(currentUserEmail != userViewModelProfile.Email)
+            var currentUserEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (currentUserEmail != userViewModelProfile.Email)
             {
-                var emailSent = await _emailService.SendEmail(userViewModelProfile, "Email Verification");
+
+                // user can't chose the email which is already present on the database
+
+              
+                var existingEmail = await _userService.CheckIfEmailExists(userViewModelProfile.Email);
+
+                if (existingEmail)
+                {
+                    userViewModelProfile.Email = currentUserEmail;
+                    userViewModelProfile.ErrorMessage = "The email already exists";
+                    return View(userViewModelProfile);
+                }
+
+
+                var token = await _serviceManager.AuthenticationService.ChangeEmail(currentUserEmail, userViewModelProfile.Email);
+                var emailSent = await _emailService.SendEmail(userViewModelProfile, "Change Email Request", token);
                 if (emailSent)
                 {
-                    return RedirectToAction("CheckEmail");
+                    userViewModelProfile.Email = currentUserEmail; // Not to change email Directly without verification
+                    userViewModelProfile.SuccessMessage = "To activate your new email, please check your new email address for a verification link.";
                 }
 
             }
 
-            
+
+            var UserViewmOdelProfileDto = _mapper.Map<UserViewModelProfileDto>(userViewModelProfile);
+
+            await _userService.UpdateProfile(UserViewmOdelProfileDto, true);
+          
 
             return View(userViewModelProfile);
         }

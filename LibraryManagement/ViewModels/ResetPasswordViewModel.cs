@@ -7,7 +7,7 @@ namespace LibraryManagement.ViewModels
         [Required]
         public string? Token { get; set; }
         [Required]
-        public string? UserId { get; set; }
+        public string? email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

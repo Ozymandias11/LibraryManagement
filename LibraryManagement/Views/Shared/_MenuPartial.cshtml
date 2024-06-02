@@ -2,12 +2,11 @@
 
 
 
-
 <nav class="navbar">
-    <ul class="nav">
-        @foreach (var item in Model)
+    <ul class="nav ms-auto">
+        @foreach (var item in Model.Where(item => item.Name != "My Account"))
         {
-            @if (item.Children.Any())
+            if (item.Children.Any())
             {
                 <li class="nav-item dropdown dropdown-toggle-centered">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,6 +39,49 @@
             {
                 <li class="nav-item">
                     <a class="nav-link" asp-controller="@item.ControllerName" asp-action="@item.ActionName">@item.Name</a>
+                </li>
+            }
+        }
+
+        @{
+            var myAccountItem = Model.FirstOrDefault(item => item.Name == "My Account");
+        }
+
+        @if (myAccountItem != null)
+        {
+            if (myAccountItem.Children.Any())
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        @myAccountItem.Name
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        @foreach (var child in myAccountItem.Children)
+                        {
+                            @if (child.Children.Any())
+                            {
+                                <div class="dropend">
+                                    <a class="dropdown-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">@child.Name</a>
+                                    <div class="dropdown-menu">
+                                        @foreach (var subChild in child.Children)
+                                        {
+                                            <a class="dropdown-item" asp-controller="@subChild.ControllerName" asp-action="@subChild.ActionName">@subChild.Name</a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <a class="dropdown-item" asp-controller="@child.ControllerName" asp-action="@child.ActionName">@child.Name</a>
+                            }
+                        }
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="@myAccountItem.ControllerName" asp-action="@myAccountItem.ActionName">@myAccountItem.Name</a>
                 </li>
             }
         }

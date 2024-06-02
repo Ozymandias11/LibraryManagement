@@ -180,6 +180,14 @@ namespace Library.Service
 
         }
 
+        public async Task<UserViewModelDto> GetUserByEmail(string email)
+        {
+            var user = await _userManager.FindByIdAsync(email);
+            var userDto = _mapper.Map<UserViewModelDto>(user);
+
+            return userDto;
+        }
+
         public async Task<IList<string>> GetUserRoles(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -204,5 +212,30 @@ namespace Library.Service
             var user = await _userManager.FindByEmailAsync(email);
             return user != null;
         }
+
+        public async Task UpdateProfile(UserViewModelProfileDto userViewModelProfileDto, bool trackChanges)
+        {
+            var curruser = await _userManager.FindByEmailAsync(userViewModelProfileDto.Email);
+
+
+            _mapper.Map(userViewModelProfileDto, curruser);
+            curruser.UpdateDate = DateTime.Now;
+
+            await _userManager.UpdateAsync(curruser);
+
+        }
+
+        //public async Task UpdateEmail(string email)
+        //{
+        //    var currUser = await _userManager.FindByEmailAsync(email);
+
+
+        //    currUser.Email = email;
+        //    currUser.UpdateDate = DateTime.Now; 
+
+        //    await _userManager.UpdateAsync(currUser);
+
+
+        //}
     }
 }

@@ -42,7 +42,7 @@ namespace Library.Service
 
 
 
-        public async Task<bool> SendEmail<T>(T model, string templateName)
+        public async Task<bool> SendEmail<T>(T model, string templateName, string resetToken)
         {
 
             MailjetRequest request = new MailjetRequest
@@ -56,18 +56,9 @@ namespace Library.Service
             var userEmail = GetEmail(model);
 
 
-            var user = await _userManager.FindByEmailAsync(userEmail);
-
-            if (user is null)
-            {
-                return false;
-            }
-
-            var resetToken = await GenerateToken(model, user);
-
             var EncodedToken = HttpUtility.UrlEncode(resetToken);
 
-            var resetLink = GenerateLink(EncodedToken, user.Id, templateName);
+            var resetLink = GenerateLink(EncodedToken,userEmail, templateName);
 
             var (Body, To) = FormatEmailBody(userEmail, template.Body, resetLink, template.To);
 
@@ -93,6 +84,7 @@ namespace Library.Service
 
         private string GetEmail<T>(T model)
         {
+
             var emailProperty = model.GetType().GetProperty("Email");
             if (emailProperty != null)
             {
@@ -101,29 +93,16 @@ namespace Library.Service
             throw new ArgumentException("The model does not have an 'Email' property.");
         }
 
-        private async Task<string> GenerateToken<T>(T model, Employee employee)
-        {
-            var modelType = model.GetType();
-            if (modelType == typeof(RegisterViewModelDto) || modelType == typeof(UserViewModelProfileDto))
-            {
-                return await _userManager.GenerateEmailConfirmationTokenAsync(employee);
-            }
-            else if (modelType == typeof(ForgotPasswordDto))
-            {
-                return await _userManager.GeneratePasswordResetTokenAsync(employee);
-            }
-            throw new ArgumentException("Invalid model type");
-        }
-
-        private string GenerateLink(string encodedToken, string userId, string templateName)
+        private string GenerateLink(string encodedToken, string email, string templateName)
         {
 
             var baseUrl = _configuration["AppUrl"];
 
             return templateName switch
             {
-                "Email Verification" => $"{baseUrl}/Account/ConfirmEmail?token={encodedToken}&userId={userId}",
-                "Password Reset" => $"{baseUrl}/Account/ResetPassword?token={encodedToken}&userId={userId}",
+                "Email Verification" => $"{baseUrl}/Account/ConfirmEmail?token={encodedToken}&email={email}",
+                "Password Reset" => $"{baseUrl}/Account/ResetPassword?token={encodedToken}&email={email}",
+                "Change Email Request" => $"{baseUrl}/Account/ConfirmEmailChangeRequest?token={encodedToken}&email={email}",
                 _ => throw new ArgumentException("Invalid template name")
             }; 
         }

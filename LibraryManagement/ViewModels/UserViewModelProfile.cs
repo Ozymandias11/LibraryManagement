@@ -18,5 +18,6 @@ namespace LibraryManagement.ViewModels
         public string PhoneNumber { get; set; }
         public string Roles { get; set; }
         public string? ErrorMessage { get; set; }
+        public string? SuccessMessage { get; set; }
     }
 }

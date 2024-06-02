@@ -34,6 +34,7 @@ namespace LibraryManagement.MappingProfile
             CreateMap<CreateAdminViewModelDto, Employee>();
             CreateMap<AssignRoleViewModel, AssignRoleViewModelDto>();
             CreateMap<UserViewModelProfile , UserViewModelProfileDto>();
+            CreateMap<UserViewModelProfileDto, Employee>();
 
 
             //Emails

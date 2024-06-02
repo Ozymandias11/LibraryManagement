@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,9 +33,25 @@ namespace Library.Service
             _signInManager = signInManager;
         }
 
-        public async Task<IdentityResult> ConfirmEmail(string token, string userId)
+        public async Task<bool> ConfirmEmailChange(string currentUserEmail,string token, string email)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+
+            var user = await _userManager.FindByEmailAsync(currentUserEmail);
+
+            var isTokenValid = await _userManager.VerifyUserTokenAsync(
+                           user,
+                           _userManager.Options.Tokens.EmailConfirmationTokenProvider,
+                           "ChangeEmailConfirmation",
+                           token);
+
+            return isTokenValid;
+
+
+        }
+
+        public async Task<IdentityResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
 
@@ -92,12 +109,12 @@ namespace Library.Service
 
         }
 
-        public async Task<IdentityResult> RegisterEmployee(RegisterViewModelDto registerViewModelDto)
+        public async Task<(IdentityResult result, string emailConfirmationToken)> RegisterEmployee(RegisterViewModelDto registerViewModelDto)
         {
             var existingUser = await _userManager.FindByEmailAsync(registerViewModelDto.Email);
             if (existingUser != null)
             {
-                return IdentityResult.Failed(new IdentityError { Description = "Email already exists" });
+                return (IdentityResult.Failed(new IdentityError { Description = "Email already exists" }), null);
             }
 
             var employee = _mapper.Map<Employee>(registerViewModelDto);
@@ -109,17 +126,22 @@ namespace Library.Service
             {
                 employee.CreationDate = DateTime.Now;
                 await _userManager.AddToRoleAsync(employee, "default");
+
+                var emailConfirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(employee);
+
+                // Return both result and token
+                return (result, emailConfirmationToken);
             }
 
-            return result;
-            
+            return (result, null);
+
 
         }
 
         public async Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel)
         {
-            
-            var user = await _userManager.FindByIdAsync(resetPasswordViewModel.userId);
+
+            var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.email);
 
             if(user is null)
             {
@@ -162,6 +184,32 @@ namespace Library.Service
 
             return isTokenValid;
 
+        }
+
+        public async Task<string> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            var token  = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            return token;
+        }
+
+        public async Task<string> ChangeEmail(string oldEmail, string newEmail)
+        {
+            var user = await _userManager.FindByEmailAsync(oldEmail);
+
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+
+            return token;
+
+        }
+
+        public async Task<IdentityResult> UpdateEmail(string oldEmail, string newEmail, string token)
+        {
+            var currUser = await _userManager.FindByEmailAsync(oldEmail);
+            var result = await _userManager.ChangeEmailAsync(currUser, newEmail, token);
+
+            return result;
         }
     }
 }

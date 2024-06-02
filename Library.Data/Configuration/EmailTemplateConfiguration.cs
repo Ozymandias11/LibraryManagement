@@ -47,6 +47,31 @@ namespace Library.Data.Configuration
                            "<br><br><a href='@@verificationUrl@@'>Verify Email</a><br><br>" +
                            "If you did not request this verification, please ignore this email." +
                            "<br><br>Best regards,<br>The Team"
+                },
+                new EmailTemplate
+                {
+                    Id = Guid.NewGuid(),
+                    TemplateName = "Change Email Request",
+                    From = "natchkebiadima1@gmail.com",
+                    To = "@@userEmail@@",
+                    Subject = "Email Change Request",
+                    Body = "Dear @@userName@@,<br><br>We have received a request to change the email address associated with your account." +
+                           " If you made this request, please click the following link to verify your new email address:" +
+                           "<br><br><a href='@@resetLinkl@@'>Verify New Email</a><br><br>" +
+                           "If you did not request this change, please ignore this email and your email address will remain the same." +
+                           "<br><br>Best regards,<br>The Team"
+                },
+                new EmailTemplate
+                {
+                    Id = Guid.NewGuid(),
+                    TemplateName = "Email Change Notification",
+                    From = "natchkebiadima1@gmail.com",
+                    To = "@@originalEmail@@",
+                    Subject = "Email Change Request Notification",
+                    Body = "Dear @@userName@@,<br><br>We have received a request to change the email address associated with your account" +
+                       " If you made this request, no further action is required. Please verify your new email address using the link sent to it." +
+                       "<br><br>If you did not request this change, please contact us immediately to secure your account." +
+                       "<br><br>Best regards,<br>The Team"
                 }
 
                 );

@@ -22,5 +22,9 @@ namespace Library.Service.Interfaces
         Task<IList<string>> GetUserRoles(string id);
         Task<UserViewModelDto> GetUserWithClaimsPrincipal(ClaimsPrincipal claimsPrincipal);
         Task<bool> CheckIfEmailExists(string email);
+        Task UpdateProfile(UserViewModelProfileDto userViewModelProfileDto, bool trackChanges);
+      //  Task UpdateEmail(string email);
+        Task<UserViewModelDto> GetUserByEmail(string email);
     }
 }
+
