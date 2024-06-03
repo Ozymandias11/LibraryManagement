@@ -32,7 +32,7 @@ namespace Library.Data.Configuration
                     To = "@@userEmail@@",
                     Subject = "Verify Your Email Address",
                     Body = "Dear @@userName@@,<br><br>Please click the following link to verify your email address:" +
-                    "<br><br>@@verificationLink@@<br><br>If you didn't request this verification," +
+                    "<br><br>@@resetLink@@<br><br>If you didn't request this verification," +
                     " please ignore this email.<br><br>Best regards,<br>The Team"
                 },
                 new EmailTemplate
@@ -44,7 +44,7 @@ namespace Library.Data.Configuration
                     Subject = "Verify Your Email Address",
                     Body = "Dear @@userName@@,<br><br>Thank you for registering with our application. " +
                            "To complete your registration, please click the following link to verify your email address:" +
-                           "<br><br><a href='@@verificationUrl@@'>Verify Email</a><br><br>" +
+                           "<br><br><a href='@@resetLink@@'>Verify Email</a><br><br>" +
                            "If you did not request this verification, please ignore this email." +
                            "<br><br>Best regards,<br>The Team"
                 },
@@ -57,7 +57,7 @@ namespace Library.Data.Configuration
                     Subject = "Email Change Request",
                     Body = "Dear @@userName@@,<br><br>We have received a request to change the email address associated with your account." +
                            " If you made this request, please click the following link to verify your new email address:" +
-                           "<br><br><a href='@@resetLinkl@@'>Verify New Email</a><br><br>" +
+                           "<br><br><a href='@@resetLink@@'>Verify New Email</a><br><br>" +
                            "If you did not request this change, please ignore this email and your email address will remain the same." +
                            "<br><br>Best regards,<br>The Team"
                 },

@@ -41,45 +41,30 @@ namespace Library.Service
 
 
 
-
         public async Task<bool> SendEmail<T>(T model, string templateName, string resetToken)
         {
-
             MailjetRequest request = new MailjetRequest
             {
                 Resource = Send.Resource
             };
-
-
             var template = await _emailTemplateReposiotry.GetTemplateByName(templateName, trackChanges: false);
-
             var userEmail = GetEmail(model);
-
-
             var EncodedToken = HttpUtility.UrlEncode(resetToken);
-
-            var resetLink = GenerateLink(EncodedToken,userEmail, templateName);
-
+            var resetLink = GenerateLink(EncodedToken, userEmail, templateName);
             var (Body, To) = FormatEmailBody(userEmail, template.Body, resetLink, template.To);
-
-
             var email = new TransactionalEmailBuilder()
                 .WithFrom(new SendContact(template.From))
                 .WithSubject(template.Subject)
                 .WithHtmlPart(Body)
                 .WithTo(new SendContact(To))
                 .Build();
-
             var response = await _mailjetClient.SendTransactionalEmailAsync(email);
             var message = response.Messages[0];
-
             bool result = message.Status.ToLower() == "success";
-
             return result;
-
-
-
         }
+
+
 
 
         private string GetEmail<T>(T model)
@@ -107,23 +92,40 @@ namespace Library.Service
             }; 
         }
 
-        private (string Body, string To) FormatEmailBody(
-           string Email,
-           string body,
-           string ResetLink,
-           string to
-           )
+
+
+        // User reflection to dynamically find the placeholders and update them
+        public static string ReplacePlaceholders(string emailBody, object obj)
         {
-            body = body.Replace("@@userName@@", Email);
-            body = body.Replace("@@resetLink@@", ResetLink);
-            to = to.Replace("@@userEmail@@", Email);
+            var properties = obj.GetType().GetProperties();
 
+            foreach (var property in properties)
+            {
+                var placeholderName = $"@@{property.Name}@@";
+                var placeholderValue = property.GetValue(obj)?.ToString() ?? string.Empty;
+                emailBody = emailBody.Replace(placeholderName, placeholderValue);
+            }
 
+            return emailBody;
+        }
 
+        private (string Body, string To) FormatEmailBody(
+            string Email,
+            string body,
+            string ResetLink,
+            string to
+        )
+        {
+            var replacementData = new { userName = Email, resetLink = ResetLink };
+
+            // Replace placeholders in the email body
+            body = ReplacePlaceholders(body, replacementData);
+
+            // Replace placeholders in the "to" field
+            to = ReplacePlaceholders(to, new { userEmail = Email });
 
             return (Body: body, To: to);
         }
-
 
     }
 }

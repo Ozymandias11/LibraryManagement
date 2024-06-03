@@ -113,7 +113,6 @@ namespace Library.Service
 
             var filteredUsers = users.Where(user =>
                 !_userManager.IsInRoleAsync(user, "SuperAdmin").Result &&
-                !_userManager.IsInRoleAsync(user, "Administrator").Result &&
                 !_userManager.IsInRoleAsync(user, "Default").Result);
 
 
@@ -182,7 +181,7 @@ namespace Library.Service
 
         public async Task<UserViewModelDto> GetUserByEmail(string email)
         {
-            var user = await _userManager.FindByIdAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             var userDto = _mapper.Map<UserViewModelDto>(user);
 
             return userDto;

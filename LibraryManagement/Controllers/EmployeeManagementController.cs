@@ -36,11 +36,19 @@ namespace LibraryManagement.Controllers
             return View(PendingUserViewModel);
         }
 
-        public IActionResult AssignRoles(string Id, string returnUrl)
+        public async Task<IActionResult> AssignRoles(string Id, string returnUrl)
         {
+
+            var user = await _userService.GetUserById(Id);
+
+            var roles = await _userService.GetUserRoles(Id);
+
             var assignRolesViewModel = new AssignRoleViewModel
             {
-                Id = Id
+                Id = Id,
+                Email = user.Email,
+                CurrentRoles = roles.ToList()
+                
             };
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -230,10 +238,14 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Users");
+                return RedirectToAction("UsersForSuperAdmin");
+            }
+            else
+            {
+                createAdminViewModel.ErrorMessage = "Email Already exists";
             }
 
-            return View(createAdminViewModelDto);
+            return View(createAdminViewModel);
         }
 
         [AllowAnonymous]

@@ -39,13 +39,6 @@ namespace Library.Service
 
             var data = await _repository.GetMenuItemsAsync(claimsPrincipal, roleIds);
 
-            //var userNamemenuItem = data.FirstOrDefault(m => m.Name == "UserName");
-
-            //if (userNamemenuItem != null)
-            //{
-            //    var userName = claimsPrincipal.Identity.Name;
-            //    userNamemenuItem.Name = userName;
-            //}
 
 
             

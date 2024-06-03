@@ -17,6 +17,7 @@ namespace LibraryManagement.ViewComponents
             _mapper = mapper;
         }
 
+        // getting all of the users menu based on their role
         public async Task<IViewComponentResult> InvokeAsync()
         {
             Console.WriteLine("ViewComponent");

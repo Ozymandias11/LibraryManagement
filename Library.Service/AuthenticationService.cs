@@ -64,7 +64,17 @@ namespace Library.Service
         {
             var existingUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
-            if(existingUser.DeleteDate != null || existingUser == null)
+            if(existingUser == null)
+            {
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "UserNotFound",
+                    Description = "User not found."
+                });
+            }
+
+            // check if the user is deleted or not
+            if(existingUser.DeleteDate != null)
             {
                 return IdentityResult.Failed(new IdentityError
                 {
@@ -158,6 +168,15 @@ namespace Library.Service
 
         public async Task<IdentityResult> AddAdmin(CreateAdminViewModelDto createAdminViewModelDto)
         {
+
+            var existingEmail = await _userManager.FindByEmailAsync(createAdminViewModelDto.Email);
+
+            if (existingEmail != null)
+            {
+                return IdentityResult.Failed();
+            }
+
+
             var admin = _mapper.Map<Employee>(createAdminViewModelDto);
             admin.UserName = createAdminViewModelDto.Email;
             admin.EmailConfirmed = true;
@@ -176,6 +195,7 @@ namespace Library.Service
 
         }
 
+        // to validate if the token is for specific purpose and has not expired
         public async Task<bool> ValidateToken(string id, string Token)
         {
             var user = await _userManager.FindByIdAsync(id);
