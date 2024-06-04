@@ -12,19 +12,20 @@ namespace Library.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder);
+        Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString);
         Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers();
         Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto);
         Task<UserViewModelDto> GetUserById(string id);
         Task<IdentityResult> DeleteUser(UserViewModelDto user);
         Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder);
-        Task<IEnumerable<UserViewModelDto>> GetDeletedUsers();
+        Task<IEnumerable<UserViewModelDto>> GetDeletedUsers(string sortBy, string sortOrder, string searchString);
         Task<IList<string>> GetUserRoles(string id);
         Task<UserViewModelDto> GetUserWithClaimsPrincipal(ClaimsPrincipal claimsPrincipal);
         Task<bool> CheckIfEmailExists(string email);
         Task UpdateProfile(UserViewModelProfileDto userViewModelProfileDto, bool trackChanges);
       //  Task UpdateEmail(string email);
         Task<UserViewModelDto> GetUserByEmail(string email);
+        Task<IdentityResult> RenewEmployee(UserViewModelDto userViewModelDto);
     }
 }
 

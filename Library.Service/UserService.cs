@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -73,6 +74,9 @@ namespace Library.Service
 
         }
 
+
+        //კოდის დუპლიკაციის მოსაგვარებლად quryBuidler-ы ან რამე მსგავს generic მეთოდს შევქმნი
+        
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder)
         {
             var users = await _userManager.Users.ToListAsync();
@@ -105,7 +109,7 @@ namespace Library.Service
     
 
 
-        public async Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder)
+        public async Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString)
         {
             var users = await _userManager.Users
                 .Where(u => u.DeleteDate == null)
@@ -114,6 +118,13 @@ namespace Library.Service
             var filteredUsers = users.Where(user =>
                 !_userManager.IsInRoleAsync(user, "SuperAdmin").Result &&
                 !_userManager.IsInRoleAsync(user, "Default").Result);
+
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                filteredUsers = filteredUsers.Where(user => user.Email.Contains(searchString) 
+                || user.PhoneNumber.Contains(searchString));
+            }
 
 
             switch (sortBy)
@@ -146,9 +157,36 @@ namespace Library.Service
 
         }
 
-        public async Task<IEnumerable<UserViewModelDto>> GetDeletedUsers()
+        public async Task<IEnumerable<UserViewModelDto>> GetDeletedUsers(string sortBy, string sortOrder, string searchString)
         {
-            var users = await _userManager.Users.Where(u => u.DeleteDate != null).ToListAsync();
+            IEnumerable<Employee> users = await _userManager.Users.Where(u => u.DeleteDate != null).ToListAsync();
+
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(user => user.Email.Contains(searchString)
+                || user.PhoneNumber.Contains(searchString));
+            }
+
+            switch (sortBy)
+            {
+                case "Email":
+                    users = sortOrder == "Email_Asc"
+                        ? users.OrderBy(u => u.Email)
+                        : users.OrderByDescending(u => u.Email);
+                    break;
+                case "RegistrationDate":
+                    users = sortOrder == "RegistrationDate_Asc"
+                        ? users.OrderBy(u => u.CreationDate)
+                        : users.OrderByDescending(u => u.CreationDate);
+                    break;
+                default:
+                    // Default sorting if no valid sortBy parameter is provided
+                    users = users.OrderBy(u => u.Email);
+                    break;
+            }
+
+
 
             var usersDto = users.Select(user =>
             {
@@ -224,17 +262,17 @@ namespace Library.Service
 
         }
 
-        //public async Task UpdateEmail(string email)
-        //{
-        //    var currUser = await _userManager.FindByEmailAsync(email);
+        public async Task<IdentityResult> RenewEmployee(UserViewModelDto userViewModelDto)
+        {
+           var employee = await _userManager.FindByIdAsync(userViewModelDto.Id);
+
+            employee.DeleteDate = null;
+            await _userManager.UpdateAsync(employee);
+
+            return IdentityResult.Success;
 
 
-        //    currUser.Email = email;
-        //    currUser.UpdateDate = DateTime.Now; 
+        }
 
-        //    await _userManager.UpdateAsync(currUser);
-
-
-        //}
     }
 }

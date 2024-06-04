@@ -416,6 +416,13 @@ namespace LibraryManagement.Controllers
             return View();
         }
 
+        public IActionResult AccessDenied(string returnUrl)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+
+        }
+
 
         // helper method to store and provide user-friendly messages to UI
         private IActionResult HandleResult(IdentityResult result, object viewModel, string successMessage)

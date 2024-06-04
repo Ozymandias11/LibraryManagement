@@ -4,8 +4,6 @@
     ViewData["Title"] = "Users";
 }
 
-
-
 <div class="container mt-2">
     <div class="row justify-content-center">
         <div class="col-lg-12">
@@ -14,12 +12,27 @@
                     <div class="text-center mb-4">
                         <h2 class="text-primary mb-0">Users</h2>
                     </div>
+                    <table>
+                        <tr>
+                            <form method="get" action="Users">
+                            <td style="padding-right:755px"></td>
+                            <td>
+                                <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@ViewData["CurrentSearchString"]" aria-label="Search" aria-describedby="btnNavbarSearch" />
+                            </td>
+                            <td>
+                                <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
+                                <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
+                                <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
+                            </td>
+                            </form>
+                        </tr>
+                    </table>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th class="text-center">
-                                        <a href="@Url.Action("Users", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc" })" class="text-primary">
+                                        <a href="@Url.Action("Users", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
                                             Email
                                             @if (ViewBag.SortBy == "Email")
                                             {
@@ -42,7 +55,7 @@
                                     <th class="text-center text-primary">Roles</th>
                                     <th class="text-center text-primary">Email Confirmed</th>
                                     <th class="text-center">
-                                        <a href="@Url.Action("Users", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc" })" class="text-primary">
+                                        <a href="@Url.Action("Users", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
                                             Registration Date
                                             @if (ViewBag.SortBy == "RegistrationDate")
                                             {
@@ -64,7 +77,7 @@
                                     <th class="text-center text-primary">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tableBody">
                                 @foreach (var user in Model)
                                 {
                                     <tr>
@@ -74,8 +87,10 @@
                                         <td class="text-center">@user.EmailConfirmed</td>
                                         <td class="text-center">@user.CreationDate</td>
                                         <td class="text-center">
-                                            <a asp-controller="Account" asp-action="Profile" asp-route-Id="@user.Id" class="btn btn-primary btn-sm">Profile</a>
-                                            <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-user-id="@user.Id" data-user-email="@user.Email">Delete</button>
+                                            <div class="d-flex justify-content-center">
+                                                <a asp-controller="Account" asp-action="Profile" asp-route-Id="@user.Id" class="btn btn-primary btn-sm mr-2">Profile</a>
+                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-user-id="@user.Id" data-user-email="@user.Email">Delete</button>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -112,21 +127,13 @@
     </div>
 </div>
 
-
-@* ვცადე გატანა მარა არა და არ იმუშავა ისე, კიდევ მოვუბრუნდები :)) *@
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var userId = button.data('user-id'); // Extract info from data-* attributes
-            var userEmail = button.data('user-email'); // Extract info from data-* attributes
-
-            var modal = $(this);
-            modal.find('#userId').val(userId);
-            modal.find('#userEmail').text(userEmail);
-        });
-    </script>
-}
-
+<script>
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var userId = button.data('user-id')
+        var userEmail = button.data('user-email')
+        var modal = $(this)
+        modal.find('#userId').val(userId)
+        modal.find('#userEmail').text(userEmail)
+    })
+</script>

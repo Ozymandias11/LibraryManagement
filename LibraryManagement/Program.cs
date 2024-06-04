@@ -5,7 +5,7 @@ using Library.Service;
 using Library.Service.Interfaces;
 using LibraryManagement;
 using LibraryManagement.ServiceExtensions;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,9 +32,12 @@ builder.Services.AddVonageConfiguration(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IVerificationCodeCacheService, VerificationCodeCacheService>();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
 
-
-    
 
 var app = builder.Build();
 
@@ -50,10 +53,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 
 
 

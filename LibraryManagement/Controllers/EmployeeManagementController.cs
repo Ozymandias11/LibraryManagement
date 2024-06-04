@@ -93,13 +93,14 @@ namespace LibraryManagement.Controllers
 
 
         [Authorize(Roles = "Administrator,SuperAdmin")]
-        public async Task<IActionResult> Users(string sortBy, string sortOrder)
+        public async Task<IActionResult> Users(string sortBy, string sortOrder, string searchString)
         {
 
             ViewBag.SortOrder = sortOrder;
             ViewBag.SortBy = sortBy;
+            ViewData["CurrentSearchString"] = searchString;
 
-            var users = await _userService.GetAllUsers(sortBy, sortOrder);
+            var users = await _userService.GetAllUsers(sortBy, sortOrder, searchString);
             var userViewModel = _mapper.Map<IEnumerable<UserVeiwModel>>(users);
             return View(userViewModel);
         }
@@ -195,9 +196,14 @@ namespace LibraryManagement.Controllers
             return View(userViewModelDto);
         }
         [Authorize(Roles = "Administrator,SuperAdmin")]
-        public async Task<IActionResult> DeletedUsers()
+        public async Task<IActionResult> DeletedUsers(string sortBy, string sortOrder, string searchString)
         {
-            var deltedeUserDtos = await _userService.GetDeletedUsers();
+
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.SortBy = sortBy;
+            ViewData["CurrentSearchString"] = searchString;
+
+            var deltedeUserDtos = await _userService.GetDeletedUsers(sortBy, sortOrder, searchString);
 
             var deletedUSerViewModels = _mapper.Map<IEnumerable<UserVeiwModel>>(deltedeUserDtos);
 
@@ -206,7 +212,25 @@ namespace LibraryManagement.Controllers
 
         }
 
-        [Authorize(Roles = "SuperAdmin")]
+        [HttpPost]
+        public async Task<IActionResult> RenewEmployee(UserVeiwModel userVeiwModel)
+        {
+            var userViewModelDto = _mapper.Map<UserViewModelDto>(userVeiwModel);
+
+            var result = await _userService.RenewEmployee(userViewModelDto);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("DeletedUsers");
+            }
+
+            return View();
+
+
+        }
+
+
+        [CustomAuthorize("SuperAdmin")]
         public async Task<IActionResult> UsersForSuperAdmin(string sortBy, string sortOrder)
         {
             ViewBag.SortBy = sortBy;    
