@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Library.Data
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : BaseModel
     {
     
         private readonly RepositoryContext _repositoryContext;
@@ -22,6 +22,7 @@ namespace Library.Data
         public void Create(T entity)
         {
          
+            entity.CreatedDate = DateTime.Now;
             _repositoryContext.Set<T>().Add(entity);
         }
         
@@ -29,13 +30,13 @@ namespace Library.Data
         
         public void Delete(T entity)
         {
-            
+            entity.DeletedDate = DateTime.Now;
             _repositoryContext.Set<T>().Update(entity);
         }
 
 
 
-        // trackChanges hepls us to speed up read only queries
+        // trackChanges hepls us to speed up read-only queries
         public IQueryable<T> FindAll(bool trackChanges) =>
             !trackChanges ?
             _repositoryContext.Set<T>().AsNoTracking() :
@@ -50,7 +51,7 @@ namespace Library.Data
 
         public void Update(T entity)
         {
-           
+           entity.UpdatedDate = DateTime.Now;
             _repositoryContext.Set<T>().Update(entity);
         }
        

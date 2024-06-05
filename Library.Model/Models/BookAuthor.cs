@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class BookAuthor
+    public class BookAuthor : BaseModel
     {
 
        

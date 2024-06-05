@@ -3,6 +3,7 @@ using Library.Service.Dto;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Library.Service.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString);
+        Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString, string currentAdminId);
         Task<IEnumerable<UserForPendingViewModelDto>> GetAllPendingUsers();
         Task<IdentityResult> AssignRolesToEmployees(AssignRoleViewModelDto assignRoleViewModelDto);
         Task<UserViewModelDto> GetUserById(string id);
@@ -23,9 +24,10 @@ namespace Library.Service.Interfaces
         Task<UserViewModelDto> GetUserWithClaimsPrincipal(ClaimsPrincipal claimsPrincipal);
         Task<bool> CheckIfEmailExists(string email);
         Task UpdateProfile(UserViewModelProfileDto userViewModelProfileDto, bool trackChanges);
-      //  Task UpdateEmail(string email);
+
         Task<UserViewModelDto> GetUserByEmail(string email);
         Task<IdentityResult> RenewEmployee(UserViewModelDto userViewModelDto);
+        Task UpdateProfileAdminAccess(UserViewModelDto userViewModelDto, bool trackChanges);
     }
 }
 

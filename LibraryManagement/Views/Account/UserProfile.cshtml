@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <form asp-action="UserProfile" asp-controller="Account" method="post">
+                    <form id="user-profile-form" asp-action="UserProfile" asp-controller="Account" method="post">
                           @if (!string.IsNullOrEmpty(Model.ErrorMessage))
                         {
                             <div class="alert alert-danger">@Model.ErrorMessage</div>
@@ -89,7 +89,7 @@
                         </div>
                         <div class="form-group row justify-content-end">
                             <div class="col-auto">
-                                <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3" style="display: none;">Save Changes</button>
+                                <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
                                 <a asp-controller="Home" asp-action="Index" class="btn btn-neutral btn-lg mr-3">Cancel</a>
                             </div>
                         </div>
@@ -99,11 +99,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
 
 
 

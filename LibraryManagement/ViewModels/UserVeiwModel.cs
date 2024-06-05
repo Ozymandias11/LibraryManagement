@@ -8,7 +8,6 @@ namespace LibraryManagement.ViewModels
         
 
         public string Id { get; set; }  
-        public string UserName { get; set; }
         [Required(ErrorMessage = "FisrName is a required Field")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "LastName is a required Field")]

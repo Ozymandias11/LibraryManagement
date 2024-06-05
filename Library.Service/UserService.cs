@@ -4,6 +4,7 @@ using Library.Service.Dto;
 using Library.Service.Extensions;
 using Library.Service.Interfaces;
 using Mailjet.Client.Resources;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -109,10 +110,11 @@ namespace Library.Service
     
 
 
-        public async Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString)
+        public async Task<IEnumerable<UserViewModelDto>> GetAllUsers(string sortBy, string sortOrder, string searchString, string currentAdminId)
         {
+
             var users = await _userManager.Users
-                .Where(u => u.DeleteDate == null)
+                .Where(u => u.DeleteDate == null && u.Id != currentAdminId)
                 .ToListAsync();
 
             var filteredUsers = users.Where(user =>
@@ -274,5 +276,15 @@ namespace Library.Service
 
         }
 
+        public async Task UpdateProfileAdminAccess(UserViewModelDto userViewModelDto, bool trackChanges)
+        {
+            var employee = await _userManager.FindByEmailAsync(userViewModelDto.Email);
+
+            _mapper.Map(userViewModelDto, employee);
+            employee.UpdateDate = DateTime.Now;
+
+            await _userManager.UpdateAsync(employee);
+
+        }
     }
 }

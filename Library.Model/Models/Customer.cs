@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class Customer
+    public class Customer : BaseModel
     {
         public Guid CustomerId { get; set; }
         public string? FirstName { get; set; }  

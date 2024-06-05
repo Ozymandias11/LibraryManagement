@@ -100,7 +100,9 @@ namespace LibraryManagement.Controllers
             ViewBag.SortBy = sortBy;
             ViewData["CurrentSearchString"] = searchString;
 
-            var users = await _userService.GetAllUsers(sortBy, sortOrder, searchString);
+            var currentAdmin = await _userService.GetUserWithClaimsPrincipal(User);
+
+            var users = await _userService.GetAllUsers(sortBy, sortOrder, searchString, currentAdmin.Id);
             var userViewModel = _mapper.Map<IEnumerable<UserVeiwModel>>(users);
             return View(userViewModel);
         }

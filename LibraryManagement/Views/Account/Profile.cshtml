@@ -7,32 +7,39 @@
                 <div class="card-header bg-white border-0">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            @if(User.Identity.Name == Model.Email)
-                            {
-                                <h3 class="mb-0">My Account</h3>
-                            }
                             <h3 class="mb-0">@Model.Email</h3>
+                          
                         </div>
                         <div class="col-4 text-right">
-                           <a asp-controller="EmployeeManagement" asp-action="AssignRoles" asp-route-Id="@Model.Id" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-sm btn-primary">Reassign Roles</a>
+                            <a asp-controller="EmployeeManagement" asp-action="AssignRoles" asp-route-Id="@Model.Id" asp-route-returnUrl="@ViewData["ReturnUrl"]" class="btn btn-sm btn-primary">Reassign Roles</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form>
-                        <h6 class="heading-small text-muted mb-4">User information  </h6>
+                    <form id="user-profile-form" asp-action="Profile" asp-controller="Account" method="post">
+                        <h6 class="heading-small text-muted mb-4">User information</h6>
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group focused">
                                         <label class="form-control-label">First name</label>
-                                        <p id="input-first-name" class="form-control form-control-alternative">@Model.FirstName</p>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-first-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.FirstName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-first-name')"></i>
+                                            <input type="hidden" name="FirstName" id="hidden-first-name" value="@Model.FirstName" />
+                                        </div>
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group focused">
                                         <label class="form-control-label">Last name</label>
-                                        <p id="input-last-name" class="form-control form-control-alternative">@Model.LastName</p>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-last-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.LastName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-last-name')"></i>
+                                            <input type="hidden" name="LastName" id="hidden-last-name" value="@Model.LastName" />
+                                        </div>
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
@@ -40,32 +47,47 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="form-control-label">Email address</label>
-                                        <p id="input-email" class="form-control form-control-alternative">@Model.Email</p>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-email" class="form-control form-control-alternative mb-0 mr-2 placeholder">@Model.Email</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-email')"></i>
+                                            <input type="hidden" name="Email" id="hidden-email" value="@Model.Email" />
+                                        </div>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group focused">
                                         <label class="form-control-label">Roles</label>
-                                        <p id="user-roles" class="form-control form-control-alternative">@Model.Roles</p>
+                                        <div class="d-flex align-items-center">
+                                            <p id="user-roles" class="form-control form-control-alternative mb-0 mr-2">@Model.Roles</p>
+                                        </div>
+                                        <input type="hidden" name="Roles" value="@Model.Roles" />
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <hr class="my-4">
-                        <!-- Address -->
                         <h6 class="heading-small text-muted mb-4">Contact information</h6>
                         <div class="pl-lg-4">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group focused">
                                         <label class="form-control-label">Phone</label>
-                                        <p id="user-phone" class="form-control form-control-alternative">@Model.PhoneNumber</p>
+                                        <div class="d-flex align-items-center">
+                                            <p id="user-phone" class="form-control form-control-alternative mb-0 mr-2 placeholder">@Model.PhoneNumber</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('user-phone')"></i>
+                                            <input type="hidden" name="PhoneNumber" id="hidden-phone" value="@Model.PhoneNumber" />
+                                        </div>
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 text-right">
-                        <a asp-controller="EmployeeManagement" asp-action="Users" class="btn btn-neutral btn-lg">Cancel</a>
+                        <div class="form-group row justify-content-end">
+                            <div class="col-auto">
+                                <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
+                                <a asp-controller="Home" asp-action="Index" class="btn btn-neutral btn-lg mr-3">Cancel</a>
+                            </div>
                         </div>
                     </form>
                 </div>

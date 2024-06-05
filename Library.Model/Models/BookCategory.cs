@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class BookCategory
+    public class BookCategory : BaseModel
     {
 
         public Guid BookId { get; set; }

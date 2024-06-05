@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Library.Model.Models
 {
 
-    public class NavigationMenu
+    public class NavigationMenu : BaseModel
     {
 
         

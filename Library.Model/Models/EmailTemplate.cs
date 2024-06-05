@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class EmailTemplate
+    public class EmailTemplate : BaseModel
     {
         public Guid Id { get; set; }
         public string? TemplateName { get; set; }    

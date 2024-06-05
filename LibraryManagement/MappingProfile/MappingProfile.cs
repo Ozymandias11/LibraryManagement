@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Library.Model.Models;
 using Library.Service.Dto;
+using Library.Service.Dto.Library.Dto;
 using LibraryManagement.ViewModels;
+using LibraryManagement.ViewModels.Library.ViewModels;
 
 namespace LibraryManagement.MappingProfile
 {
@@ -35,6 +37,8 @@ namespace LibraryManagement.MappingProfile
             CreateMap<AssignRoleViewModel, AssignRoleViewModelDto>();
             CreateMap<UserViewModelProfile , UserViewModelProfileDto>();
             CreateMap<UserViewModelProfileDto, Employee>();
+            CreateMap<UserVeiwModel, UserViewModelDto>();
+            CreateMap<UserViewModelDto,Employee>();
 
 
             //Emails
@@ -43,13 +47,15 @@ namespace LibraryManagement.MappingProfile
                 .ForMember(dest => dest.To, opt => opt.Ignore())
                 .ForMember(dest => dest.TemplateName, opt => opt.Ignore());
 
-
-
             CreateMap<EmailtemplateDto, EmailTemplateViewModel>().ReverseMap()
                   .ForMember(dest => dest.From, opt => opt.Ignore())
                   .ForMember(dest => dest.To, opt => opt.Ignore());
-            
 
+            // Authors
+            CreateMap<Author, AuthorDto>();
+            CreateMap<AuthorDto, AuthorViewModel>();  
+            CreateMap<CreateAuthorViewModel, CreateAuthorDto>();
+            CreateMap<CreateAuthorDto, Author>();
 
 
 

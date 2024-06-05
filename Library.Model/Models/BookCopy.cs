@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class BookCopy
+    public class BookCopy : BaseModel
     {
         public Guid BookCopyId { get; set; }
         public int NumberOfPages { get; set; }

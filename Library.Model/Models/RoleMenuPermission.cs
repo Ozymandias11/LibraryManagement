@@ -9,9 +9,10 @@ using System.Threading.Tasks;
 namespace Library.Model.Models
 {
    
-    public class RoleMenuPermission
-    {
-        
+    public class RoleMenuPermission : BaseModel
+    { 
+
+
         public Guid Id { get; set; }
 
       

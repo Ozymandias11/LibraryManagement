@@ -319,7 +319,6 @@ namespace LibraryManagement.Controllers
             var userViewModel = new UserVeiwModel() 
             {
                 Id = user.Id,
-                UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
@@ -340,6 +339,27 @@ namespace LibraryManagement.Controllers
 
         
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Profile(UserVeiwModel userVeiwModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(userVeiwModel);
+
+            }
+
+            var userViewModelDto = _mapper.Map<UserViewModelDto>(userVeiwModel);
+
+            await _userService.UpdateProfileAdminAccess(userViewModelDto, true);
+
+            return View(userVeiwModel);
+
+
+        }
+
+
 
 
         //for actual user profiles, more control
@@ -381,7 +401,7 @@ namespace LibraryManagement.Controllers
 
                 // user can't chose the email which is already present on the database
 
-              
+
                 var existingEmail = await _userService.CheckIfEmailExists(userViewModelProfile.Email);
 
                 if (existingEmail)
@@ -410,6 +430,10 @@ namespace LibraryManagement.Controllers
 
             return View(userViewModelProfile);
         }
+
+   
+
+
 
         public IActionResult ResetPasswordConfirmation()
         {

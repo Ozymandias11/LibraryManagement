@@ -6,13 +6,16 @@ using System.Threading.Tasks;
 
 namespace Library.Model.Models
 {
-    public class Author
+    public class Author : BaseModel
     {
 
         public Guid AuthorId { get; set; }
         public string? FirstName { get; set; }   
         public string? LastName { get; set; }   
         public DateTime DateOfBirth { get; set; }
+
+
+
         public ICollection<BookAuthor>? BooksWritten{ get; set; }
 
     }

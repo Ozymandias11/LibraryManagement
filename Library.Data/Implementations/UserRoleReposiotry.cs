@@ -12,25 +12,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Library.Data.Implementations
 {
-    public class UserRoleReposiotry : RepositoryBase<IdentityUserRole<string>>, IUserRoleRepository
-    {
-        public UserRoleReposiotry(RepositoryContext repositoryContext) : base(repositoryContext)
-        {
-        }
+    //public class UserRoleReposiotry : RepositoryBase<IdentityUserRole<string>>, IUserRoleRepository
+    //{
+    //    public UserRoleReposiotry(RepositoryContext repositoryContext) : base(repositoryContext)
+    //    {
+    //    }
 
-        public async Task<List<string>> GetUserRoleIds(ClaimsPrincipal ctx)
-        {
-            var userId = GetUserId(ctx);
-            var data = await FindByCondition(role => role.UserId == userId, trackChanges:false)
-                .Select(role => role.RoleId)  
-                .ToListAsync();
+    //    public async Task<List<string>> GetUserRoleIds(ClaimsPrincipal ctx)
+    //    {
+    //        var userId = GetUserId(ctx);
+    //        var data = await FindByCondition(role => role.UserId == userId, trackChanges:false)
+    //            .Select(role => role.RoleId)  
+    //            .ToListAsync();
 
-            return data;
-        }
+    //        return data;
+    //    }
 
-        private string GetUserId(ClaimsPrincipal user)
-        {
-            return ((ClaimsIdentity)user.Identity).FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        }
-    }
+    //    private string GetUserId(ClaimsPrincipal user)
+    //    {
+    //        return ((ClaimsIdentity)user.Identity).FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    //    }
+    //}
 }

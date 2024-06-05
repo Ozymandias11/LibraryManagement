@@ -18,7 +18,7 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.AddAutoMapper(typeof(Program));
-builder.Services.AddScoped<IUserRoleRepository, UserRoleReposiotry>();
+//builder.Services.AddScoped<IUserRoleRepository, UserRoleReposiotry>();
 builder.Services.AddScoped<IDynamicMenuRepository, DynamicMenuRepository>();
 builder.Services.AddScoped<IDynamicMenuService, DynamicMenuService>();
 builder.Services.AddScoped<IUserService, UserService>();
