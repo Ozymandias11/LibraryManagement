@@ -1,17 +1,17 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.AuthorViewModel>
+﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.PublisherViewModel>
 
 @{
-    ViewData["Title"] = "Authors";
+    ViewData["Title"] = "Publishers";
 }
 
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center mb-3">
-            <h2 class="text-primary mb-0">Authors</h2>
+            <h2 class="text-primary mb-0">Publishers</h2>
         </div>
         <table>
             <tr>
-                <form method="get" action="Authors">
+                <form method="get" action="Publishers">
                 <td style="padding-right:755px">
                 </td>
                 <td>
@@ -30,15 +30,15 @@
                 <thead>
                     <tr>
                         <th class="text-primary text-center">
-                            <a href="@Url.Action("Authors", new { sortBy = "FirstName", sortOrder = ViewBag.SortOrder == "FirstName_Asc" ? "FirstName_Desc" : "FirstName_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                First Name
-                                @if (ViewBag.SortBy == "FirstName")
+                            <a href="@Url.Action("Publishers", new { sortBy = "PublisherName", sortOrder = ViewBag.SortOrder == "PublisherName_Asc" ? "PublisherName_Desc" : "PublisherName_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
+                                Publisher Name
+                                @if (ViewBag.SortBy == "PublisherName")
                                 {
-                                    @if (ViewBag.SortOrder == "FirstName_Asc")
+                                    @if (ViewBag.SortOrder == "PublisherName_Asc")
                                     {
                                         <i class="fas fa-arrow-up"></i>
                                     }
-                                    else if (ViewBag.SortOrder == "FirstName_Desc")
+                                    else if (ViewBag.SortOrder == "PublisherName_Desc")
                                     {
                                         <i class="fas fa-arrow-down"></i>
                                     }
@@ -50,15 +50,15 @@
                             </a>
                         </th>
                         <th class="text-primary text-center">
-                            <a href="@Url.Action("Authors", new { sortBy = "LastName", sortOrder = ViewBag.SortOrder == "LastName_Asc" ? "LastName_Desc" : "LastName_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Last Name
-                                @if (ViewBag.SortBy == "LastName")
+                            <a href="@Url.Action("Publishers", new { sortBy = "PhoneNumber", sortOrder = ViewBag.SortOrder == "PhoneNumber_Asc" ? "PhoneNumber_Desc" : "PhoneNumber_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
+                                Phone Number
+                                @if (ViewBag.SortBy == "PhoneNumber")
                                 {
-                                    @if (ViewBag.SortOrder == "LastName_Asc")
+                                    @if (ViewBag.SortOrder == "PhoneNumber_Asc")
                                     {
                                         <i class="fas fa-arrow-up"></i>
                                     }
-                                    else if (ViewBag.SortOrder == "LastName_Desc")
+                                    else if (ViewBag.SortOrder == "PhoneNumber_Desc")
                                     {
                                         <i class="fas fa-arrow-down"></i>
                                     }
@@ -70,15 +70,15 @@
                             </a>
                         </th>
                         <th class="text-primary text-center">
-                            <a href="@Url.Action("Authors", new { sortBy = "DateOfBirth", sortOrder = ViewBag.SortOrder == "DateOfBirth_Asc" ? "DateOfBirth_Desc" : "DateOfBirth_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Date of Birth
-                                @if (ViewBag.SortBy == "DateOfBirth")
+                            <a href="@Url.Action("Publishers", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
+                                Email
+                                @if (ViewBag.SortBy == "Email")
                                 {
-                                    @if (ViewBag.SortOrder == "DateOfBirth_Asc")
+                                    @if (ViewBag.SortOrder == "Email_Asc")
                                     {
                                         <i class="fas fa-arrow-up"></i>
                                     }
-                                    else if (ViewBag.SortOrder == "DateOfBirth_Desc")
+                                    else if (ViewBag.SortOrder == "Email_Desc")
                                     {
                                         <i class="fas fa-arrow-down"></i>
                                     }
@@ -93,29 +93,26 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var author in Model)
+                    @foreach (var publisher in Model)
                     {
                         <tr>
-                            <td class="text-center">@author.FirstName</td>
-                            <td class="text-center">@author.LastName</td>
-                            <td class="text-center">@author.DateOfBirth.ToShortDateString()</td>
+                            <td class="text-center">@publisher.PublisherName</td>
+                            <td class="text-center">@publisher.PhoneNumber</td>
+                            <td class="text-center">@publisher.Email</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                    <a asp-controller="Author" asp-action="UpdateAuthor" asp-route-id ="@author.AuthorId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-author-id="@author.AuthorId" data-author-name="@($"{author.FirstName} {author.LastName}")">Delete</button>
-                                </div>            
+                                    <a asp-controller="Publisher" asp-action="UpdatePublisher" asp-route-id="@publisher.PublisherId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-publisher-id="@publisher.PublisherId" data-publisher-name="@publisher.PublisherName">Delete</button>
+                                </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <a asp-action="CreateAuthor" class="btn btn-primary">Add Author</a>
+            <a asp-action="CreatePublisher" class="btn btn-primary">Add Publisher</a>
         </div>
     </div>
 </div>
-
-
-
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -128,11 +125,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete the user with Name <strong id="authorName"></strong>?
+                Are you sure you want to delete the publisher with Name <strong id="publisherName"></strong>?
             </div>
             <div class="modal-footer">
-                <form id="deleteForm" method="post" asp-action="DeleteAuthor">
-                    <input type="hidden" name="Id" id="authorId" value="" />
+                <form id="deleteForm" method="post" asp-action="DeletePublisher">
+                    <input type="hidden" name="Id" id="publisherId" value="" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
@@ -141,15 +138,13 @@
     </div>
 </div>
 
-
 <script>
     $('#deleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
-        var authorId = button.data('author-id')
-        var authorName = button.data('author-name')
+        var publisherId = button.data('publisher-id')
+        var publisherName = button.data('publisher-name')
         var modal = $(this)
-        modal.find('#authorId').val(authorId)
-        modal.find('#authorName').text(authorName)
+        modal.find('#publisherId').val(publisherId)
+        modal.find('#publisherName').text(publisherName)
     })
 </script>
-

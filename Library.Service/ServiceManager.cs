@@ -16,6 +16,7 @@ namespace Library.Service
 
         private readonly Lazy<IAuthentificationService> _authentificationService;
         private readonly Lazy<IAuthorService> _authorService;
+        private readonly Lazy<IPublisherService> _publisherService;
 
 
 
@@ -24,11 +25,15 @@ namespace Library.Service
         {
             _authentificationService = new Lazy<IAuthentificationService>(() => new AuthenticationService(usermanager, mapper, signInManager));
             _authorService = new Lazy<IAuthorService>(() => new AuthorService(reposiotryManager, mapper));
+            _publisherService = new Lazy<IPublisherService>(() => new PublisherService(reposiotryManager, mapper));
+
 
 
         }
         public IAuthentificationService AuthenticationService => _authentificationService.Value;
 
         public IAuthorService AuthorService => _authorService.Value;
+
+        public IPublisherService PublisherService => _publisherService.Value;
     }
 }

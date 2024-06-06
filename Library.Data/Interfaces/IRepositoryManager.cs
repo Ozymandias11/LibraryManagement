@@ -10,6 +10,7 @@ namespace Library.Data.NewFolder
     public interface IRepositoryManager
     {
         IAuthorRepository AuthorRepository { get; }
+        IPublisherRepository PublisherRepository { get; }
         Task SaveAsync();
     }
 }

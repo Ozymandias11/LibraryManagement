@@ -51,6 +51,55 @@ namespace LibraryManagement.Controllers
         }
 
 
+        public async Task<IActionResult> UpdateAuthor(Guid id)
+        {
+
+
+            var author = await _serviceManager.AuthorService.GetAuthor(id, false);
+
+
+            var authorViewModel = new AuthorViewModel()
+            {
+                AuthorId = author.AuthorId,
+                FirstName = author.FirstName,
+                LastName = author.LastName,
+                DateOfBirth = author.DateOfBirth
+            };
+
+            return  View(authorViewModel);
+
+
+
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAuthor(AuthorViewModel authorViewModel)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+
+            var authorDto = _mapper.Map<AuthorDto>(authorViewModel);
+            await _serviceManager.AuthorService.UpdateAuthor(authorDto, true);
+
+            TempData["SuccessMessage"] = "Author Updated Successfully";
+
+            return View(authorViewModel);
+
+
+
+
+
+        }
+
+
+
+
     }
 
 }

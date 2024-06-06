@@ -13,5 +13,6 @@ namespace Library.Service.Library.Interfaces
         Task<AuthorDto> GetAuthor(Guid id, bool trackChanges);  
         Task DeleteAuthor(Guid id, bool trackChanges);
         Task CreateAuthor(CreateAuthorDto author, bool trackChanges);
+        Task UpdateAuthor(AuthorDto author, bool trackChanges);
     }
 }

@@ -15,16 +15,20 @@ namespace Library.Data
     {
         private readonly RepositoryContext _repositoryContext;
         private readonly Lazy<IAuthorRepository> _authroRepository;
+        private readonly Lazy<IPublisherRepository> _publisherRepository;
        
 
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
             _authroRepository = new Lazy<IAuthorRepository>(() => new AuthorRepository(repositoryContext));
+            _publisherRepository = new Lazy<IPublisherRepository>(() => new PublisherRepository(repositoryContext));    
 
         }
 
         public IAuthorRepository AuthorRepository => _authroRepository.Value;
+
+        public IPublisherRepository PublisherRepository => _publisherRepository.Value;
 
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
        

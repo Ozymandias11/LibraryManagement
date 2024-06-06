@@ -45,9 +45,15 @@ namespace Library.Service.Library.Implementations
             return authorsDto;
         }
 
-        public Task<AuthorDto> GetAuthor(Guid id, bool trackChanges)
+        public async Task<AuthorDto> GetAuthor(Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var author = await _repositoryManager.AuthorRepository.GetAuthor(id, trackChanges);
+
+            var authorDto = _mapper.Map<AuthorDto>(author);
+
+            return authorDto;
+
+
         }
 
         public async Task CreateAuthor (CreateAuthorDto author, bool trackChanges)
@@ -57,6 +63,17 @@ namespace Library.Service.Library.Implementations
             _repositoryManager.AuthorRepository.CreateAuthor(authorEntity);
 
             await _repositoryManager.SaveAsync();
+
+        }
+
+        public async Task UpdateAuthor(AuthorDto author, bool trackChanges)
+        {
+            var authorEntity = await _repositoryManager.AuthorRepository.GetAuthor(author.AuthorId, trackChanges);
+
+            _mapper.Map(author, authorEntity);
+
+            await _repositoryManager.SaveAsync();
+
 
         }
     }

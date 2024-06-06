@@ -53,9 +53,25 @@ namespace LibraryManagement.MappingProfile
 
             // Authors
             CreateMap<Author, AuthorDto>();
-            CreateMap<AuthorDto, AuthorViewModel>();  
+
+            CreateMap<AuthorDto, Author>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<AuthorDto, AuthorViewModel>().ReverseMap();  
             CreateMap<CreateAuthorViewModel, CreateAuthorDto>();
             CreateMap<CreateAuthorDto, Author>();
+
+            //publsihers
+
+            CreateMap<Publisher, PublisherDto>();   
+
+            CreateMap<PublisherDto, Publisher>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));  
+
+            CreateMap<PublisherDto, PublisherViewModel>().ReverseMap();
+            CreateMap<CreatePublisherViewModel, CreatePublisherDto>();
+            CreateMap<CreatePublisherDto, Publisher>();
+
 
 
 

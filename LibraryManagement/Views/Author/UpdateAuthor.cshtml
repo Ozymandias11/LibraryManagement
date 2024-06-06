@@ -1,0 +1,72 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.AuthorViewModel
+
+<div class="container-fluid mt--7">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Author Information</h3>
+                        </div>
+                    </div>
+                </div>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+                <div class="card-body">
+                    <form id="author-form" asp-action="UpdateAuthor" asp-controller="Author" method="post">
+                        <input type="hidden" asp-for="AuthorId" />
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">First Name</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-first-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="true">@Model.FirstName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-first-name')"></i>
+                                            <input type="hidden" name="FirstName" id="hidden-first-name" value="@Model.FirstName" />
+                                        </div>
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Last Name</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-last-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="true">@Model.LastName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-last-name')"></i>
+                                            <input type="hidden" name="LastName" id="hidden-last-name" value="@Model.LastName" />
+                                        </div>
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Date of Birth</label>
+                                        <input asp-for="DateOfBirth" type="date" class="form-control" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" />
+                                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-end">
+                                <div class="col-auto">
+                                    <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
+                                    <a asp-controller="Author" asp-action="Authors" class="btn btn-neutral btn-lg mr-3">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
