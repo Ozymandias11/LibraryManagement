@@ -17,6 +17,11 @@ namespace Library.Data.Configuration
 
             builder.Property(bc => bc.NumberOfPages).IsRequired();
 
+            builder.Property(bc => bc.Status).IsRequired();
+
+            builder.Property(bc => bc.Edition).IsRequired();
+
+           
            
 
             builder.HasMany(bc => bc.Reservations)
@@ -26,6 +31,10 @@ namespace Library.Data.Configuration
             builder.HasMany(bc => bc.Shelves)
                 .WithOne(s => s.BookCopy)
                 .HasForeignKey(s => s.BookCopyId);
+
+            builder.HasOne(bc => bc.Publisher)
+                .WithMany()
+                .HasForeignKey(bc => bc.PublisherId);
 
            
 

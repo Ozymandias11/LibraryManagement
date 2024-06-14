@@ -1,0 +1,52 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.CategoryViewModel
+
+<div class="container-fluid mt--7">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Category Information</h3>
+                        </div>
+                    </div>
+                </div>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+                <div class="card-body">
+                    <form id="category-form" asp-action="UpdateCategory" asp-controller="Category" method="post">
+                        <input type="hidden" asp-for="CategoryId" />
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Category Title</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-title" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.Title</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-title')"></i>
+                                            <input type="hidden" name="Title" id="hidden-title" value="@Model.Title" />
+                                        </div>
+                                        <span asp-validation-for="Title" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-end">
+                                <div class="col-auto">
+                                    <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
+                                    <a asp-controller="Category" asp-action="Categories" class="btn btn-neutral btn-lg mr-3">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

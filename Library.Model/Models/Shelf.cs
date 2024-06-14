@@ -13,6 +13,7 @@ namespace Library.Model.Models
         public Guid RoomId { get; set; }
         public Guid ShelfId { get; set; }
         public int MaxCapacity { get; set; }    
+        public int ShelfNumber { get; set; }    
 
         public Room Room { get; set; } = null!;
 

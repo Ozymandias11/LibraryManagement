@@ -20,7 +20,6 @@ namespace Library.Data.Configuration
 
             builder.Property(b => b.PublishedYear).IsRequired();
 
-            builder.Property(b => b.Edition).IsRequired();
 
             builder.HasMany(b => b.Authors)
                 .WithOne(ba => ba.Book)

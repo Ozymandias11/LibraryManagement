@@ -45,6 +45,11 @@ namespace LibraryManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePublisher(CreatePublisherViewModel createPublisherViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(createPublisherViewModel);  
+            }
+
             var publisherDto = _mapper.Map<CreatePublisherDto>(createPublisherViewModel);
 
             await _serviceManager.PublisherService.CreatePublisher(publisherDto, false);

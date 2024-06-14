@@ -27,7 +27,12 @@ namespace Library.Data.Library.Implementations
        
 
         public void CreatePublisher(Publisher publisher) => Create(publisher);
-            
+
+        public async Task<IEnumerable<Publisher>> GetPublishersOfBook(Guid id, bool trackChanges) =>
+            await FindByCondition(p => p.Books.Any(bp => bp.BookId == id), trackChanges).ToListAsync();
+
+        public async Task<IEnumerable<Publisher>> GetPublishersById(IEnumerable<Guid> ids, bool trackChanges) => 
+            await FindByCondition(p => ids.Contains(p.PublisherId), trackChanges).ToListAsync();
        
     }
 }

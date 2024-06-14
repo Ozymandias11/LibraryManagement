@@ -72,11 +72,58 @@ namespace LibraryManagement.MappingProfile
             CreateMap<CreatePublisherViewModel, CreatePublisherDto>();
             CreateMap<CreatePublisherDto, Publisher>();
 
+            //books
+
+            CreateMap<Book, BookDto>();
+            CreateMap<BookDto, BookViewModel>();
 
 
+            CreateMap<BookDto, Book>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<UpdateBookViewModel, BookDto>();
+            CreateMap<CreateBookViewModel, CreateBookDto>();
+            CreateMap<CreateBookDto, Book>();
 
 
+            //categoreis
 
+            CreateMap<Category, CategoryDto>();
+
+
+            CreateMap<CategoryDto, CategoryViewModel>();
+
+            CreateMap<CreateCategoryViewModel, CreateCategoryDto>();
+            CreateMap<CreateCategoryDto, Category>();
+
+            CreateMap<CategoryViewModel, CategoryDto>();
+
+
+            //Rooms
+
+            CreateMap<Room, RoomDto>();
+            CreateMap<RoomDto, RoomViewModel>();    
+
+            //Shelves
+
+            CreateMap<Shelf, ShelfDto>();
+            CreateMap<ShelfDto , ShelfViewModel>();
+
+
+            //BookCopy
+
+
+            CreateMap<BookCopy, BookCopyDto>()
+                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.OriginalBook.Title))
+                .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.PublisherName));
+                
+            CreateMap<BookCopyDto, BookCopyViewModel>();
+
+            CreateMap<CreateBookCopyViewModel, CreateBookCopyDto>()
+            .ForMember(dest => dest.NumberOfPages, opt => opt.MapFrom(src => src.NumberOfPages))
+            .ForMember(dest => dest.Edition, opt => opt.MapFrom(src => src.Edition))
+            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+            .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
 
         }
     }

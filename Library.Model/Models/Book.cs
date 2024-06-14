@@ -11,7 +11,6 @@ namespace Library.Model.Models
         public Guid BookId { get; set; }
         public string? Title { get; set; }  
         public DateTime PublishedYear { get; set; }
-        public int Edition {  get; set; }
         public ICollection<BookAuthor>? Authors { get; set;}
         public ICollection<BookCategory>? Categories { get; set;}
         public ICollection<BookPublisher>? Publishers { get; set;}

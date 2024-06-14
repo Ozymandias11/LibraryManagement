@@ -1,0 +1,16 @@
+﻿@model LibraryManagement.ViewModels.NavigationMenuViewModel
+
+<li class="nav-item @(Model.Children.Any() ? "dropdown dropdown-toggle-centered" : "")">
+    <a class="nav-link @(Model.Children.Any() ? "dropdown-toggle" : "")" href="@(!Model.Children.Any() ? Url.Action(Model.ActionName, Model.ControllerName) : "#")" role="button" @(Model.Children.Any() ? "data-bs-toggle=\"dropdown\" aria-expanded=\"false\"" : "")>
+        @Model.Name
+    </a>
+    @if (Model.Children.Any())
+    {
+        <div class="dropdown-menu @(Model.ParentMenuId == null ? "" : "dropdown-menu-end")">
+            @foreach (var child in Model.Children)
+            {
+                @await Html.PartialAsync("_NavigationMenuItem", child)
+            }
+        </div>
+    }
+</li>

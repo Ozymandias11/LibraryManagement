@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Data.Library.Interfaces;
 using Library.Data.NewFolder;
 using Library.Model.Models;
 using Library.Service.Interfaces;
@@ -17,6 +18,11 @@ namespace Library.Service
         private readonly Lazy<IAuthentificationService> _authentificationService;
         private readonly Lazy<IAuthorService> _authorService;
         private readonly Lazy<IPublisherService> _publisherService;
+        private readonly Lazy<IBookService> _bookService;
+        private readonly Lazy<ICategoryService> _categoryService;
+        private readonly Lazy<IBookCopyService> _bookCopyService;
+        private readonly Lazy<IRoomService> _roomService;
+        private readonly Lazy<IShelfService> _shelfService;
 
 
 
@@ -26,7 +32,11 @@ namespace Library.Service
             _authentificationService = new Lazy<IAuthentificationService>(() => new AuthenticationService(usermanager, mapper, signInManager));
             _authorService = new Lazy<IAuthorService>(() => new AuthorService(reposiotryManager, mapper));
             _publisherService = new Lazy<IPublisherService>(() => new PublisherService(reposiotryManager, mapper));
-
+            _bookService = new Lazy<IBookService>(() => new BookService(reposiotryManager,mapper));
+            _categoryService = new Lazy<ICategoryService>(() => new CategoryService(reposiotryManager, mapper));
+            _bookCopyService = new Lazy<IBookCopyService>(() => new BookCopyService(reposiotryManager, mapper));
+            _roomService = new Lazy<IRoomService>(() => new RoomService(reposiotryManager, mapper));
+            _shelfService = new Lazy<IShelfService>(() => new ShelfService(reposiotryManager, mapper));
 
 
         }
@@ -35,5 +45,15 @@ namespace Library.Service
         public IAuthorService AuthorService => _authorService.Value;
 
         public IPublisherService PublisherService => _publisherService.Value;
+
+        public IBookService BookService => _bookService.Value;
+
+        public ICategoryService CategoryService => _categoryService.Value;
+
+        public IBookCopyService BookCopyService => _bookCopyService.Value;
+
+        public IRoomService RoomService => _roomService.Value;
+
+        public IShelfService ShelfService => _shelfService.Value;
     }
 }

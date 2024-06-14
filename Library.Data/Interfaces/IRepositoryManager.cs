@@ -11,6 +11,14 @@ namespace Library.Data.NewFolder
     {
         IAuthorRepository AuthorRepository { get; }
         IPublisherRepository PublisherRepository { get; }
+        IBookRepository BookRepository { get; }
+        IBookAuthorRepository BookAuthorRepository { get; }
+        IBookPublisherRepository BookPublisherRepository { get; }
+        ICategoryRepository CategoryRepository { get; }
+        IBookCategoryRepository BookCategoryRepository { get; }
+        IBookCopyRepository BookCopyRepository{ get; }
+        IRoomRepository RoomRepository { get; }
+        IShelfRepository ShelfRepository { get; }
         Task SaveAsync();
     }
 }

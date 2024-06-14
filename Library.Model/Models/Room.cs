@@ -11,7 +11,8 @@ namespace Library.Model.Models
         public Guid RoomId{ get; set; }
         public int Capacity { get; set; }
 
-       
+        public int RoomNumber { get; set; } 
+
         public ICollection<Employee>? Employees { get; set; }
         public ICollection<Shelf>? Shelves { get; set; }
 

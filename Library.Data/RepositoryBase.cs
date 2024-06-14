@@ -30,13 +30,24 @@ namespace Library.Data
         
         public void Delete(T entity)
         {
-            entity.DeletedDate = DateTime.Now;
-            _repositoryContext.Set<T>().Update(entity);
+
+            if(IsJunctionTable(typeof(T)))
+            {
+                _repositoryContext.Set<T>().Remove(entity);
+            }
+            else
+            {
+                entity.DeletedDate = DateTime.Now;
+                _repositoryContext.Set<T>().Update(entity);
+            }
+
+
         }
 
 
 
-        // trackChanges hepls us to speed up read-only queries
+        // trackChanges helps us to speed up read-only queries
+        // and do connected updates
         public IQueryable<T> FindAll(bool trackChanges) =>
             !trackChanges ?
             _repositoryContext.Set<T>().AsNoTracking() :
@@ -54,6 +65,24 @@ namespace Library.Data
            entity.UpdatedDate = DateTime.Now;
             _repositoryContext.Set<T>().Update(entity);
         }
-       
+
+        public void DetachEntities(IEnumerable<T> entities)
+        {
+            _repositoryContext.DetachEntries(entities);
+        }
+
+
+        //
+        private bool IsJunctionTable(Type entityType)
+        {
+            return entityType.Name.EndsWith("BookAuthor") ||
+                entityType.Name.EndsWith("BookPublisher") ||
+                entityType.Name.EndsWith("BookCategory");
+        }
+
+        public void AddRange(IEnumerable<T> entities)
+        {
+            _repositoryContext.Set<T>().AddRange(entities);
+        }
     }
 }

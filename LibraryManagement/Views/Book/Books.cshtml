@@ -1,0 +1,129 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.BookViewModel>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center mb-3">
+            <h2 class="text-primary mb-0">Books</h2>
+        </div>
+        <table>
+            <tr>
+                <form method="get" action="Books">
+                <td style="padding-right:755px">
+                </td>
+                <td>
+                    <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@ViewData["CurrentSearchString"]" aria-label="Search" aria-describedby="btnNavbarSearch" />
+                </td>
+                <td>
+                    <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
+                    <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
+                    <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
+                </td>
+                </form>
+            </tr>
+        </table>
+        <div class="table-responsive wide-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-primary text-center">
+                            <a href="@Url.Action("Books", new { sortBy = "Title", sortOrder = ViewBag.SortOrder == "Title_Asc" ? "Title_Desc" : "Title_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
+                                Title
+                                @if (ViewBag.SortBy == "Title")
+                                {
+                                    @if (ViewBag.SortOrder == "Title_Asc")
+                                    {
+                                        <i class="fas fa-arrow-up"></i>
+                                    }
+                                    else if (ViewBag.SortOrder == "Title_Desc")
+                                    {
+                                        <i class="fas fa-arrow-down"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort"></i>
+                                }
+                            </a>
+                        </th>
+                        <th class="text-primary text-center">
+                            <a href="@Url.Action("Books", new { sortBy = "PublishedYear", sortOrder = ViewBag.SortOrder == "PublishedYear_Asc" ? "PublishedYear_Desc" : "PublishedYear_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
+                                Published Year
+                                @if (ViewBag.SortBy == "PublishedYear")
+                                {
+                                    @if (ViewBag.SortOrder == "PublishedYear_Asc")
+                                    {
+                                        <i class="fas fa-arrow-up"></i>
+                                    }
+                                    else if (ViewBag.SortOrder == "PublishedYear_Desc")
+                                    {
+                                        <i class="fas fa-arrow-down"></i>
+                                    }
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort"></i>
+                                }
+                            </a>
+                        </th>
+                        <th class="text-primary text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    @foreach (var book in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@book.Title</td>
+                            <td class="text-center">@book.PublishedYear.ToShortDateString()</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center">
+                                    <a asp-controller="Book" asp-action="EditBook" asp-route-id="@book.BookId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-book-id="@book.BookId" data-book-title="@book.Title">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <a asp-action="CreateBook" class="btn btn-primary">Add Book</a>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the book titled <strong id="bookTitle"></strong>?
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="post" asp-action="DeleteBook">
+                    <input type="hidden" name="Id" id="bookId" value="" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#deleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var bookId = button.data('book-id')
+        var bookTitle = button.data('book-title')
+        var modal = $(this)
+        modal.find('#bookId').val(bookId)
+        modal.find('#bookTitle').text(bookTitle)
+    })
+</script>

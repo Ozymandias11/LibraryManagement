@@ -1,0 +1,75 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateBookCopyViewModel
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
+                <div class="card-body">
+                    <h2 class="text-primary text-center mb-4">Create Book Copy</h2>
+                    <form asp-action="CreateBookCopy" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="text-primary">Original Book:</label>
+                            <select asp-for="SelectedBookId" asp-items="@(new SelectList(Model.Books, "BookId", "Title"))" class="form-control" onchange="populatePublishers()">
+                                <option value="">Select a book</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-primary">Publisher:</label>
+                            <select asp-for="SelectedPublisherId" id="publishers" class="form-control" disabled>
+                                <option value="" disabled selected>Select a publisher</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-primary">Room:</label>
+                            <select asp-for="SelectedRoomId" asp-items="@(new SelectList(Model.Rooms, "RoomId", "RoomNumber"))" class="form-control" onchange="populateShelves()">
+                                <option value="">Select a room</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="text-primary">Shelf:</label>
+                            <select asp-for="SelectedShelfId" id="shelves" class="form-control" disabled>
+                                <option value="" disabled selected>Select a shelf</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="NumberOfPages" class="text-primary">Number of Pages:</label>
+                            <input asp-for="NumberOfPages" class="form-control" />
+                            <span asp-validation-for="NumberOfPages" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Status" class="text-primary">Status:</label>
+                            <select asp-for="Status" asp-items="@Html.GetEnumSelectList<Library.Model.Enums.Status>()" class="form-control">
+                                <option value="">Select a status</option>
+                            </select>
+                            <span asp-validation-for="Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Edition" class="text-primary">Edition:</label>
+                            <input asp-for="Edition" class="form-control" />
+                            <span asp-validation-for="Edition" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Quantity" class="text-primary">Quantity:</label>
+                            <input asp-for="Quantity" class="form-control" />
+                            <span asp-validation-for="Quantity" class="text-danger"></span>
+                        </div>
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">Create Book Copy</button>
+                            <a asp-controller="Book" asp-action="Index" class="btn btn-neutral btn-block btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var getPublishersUrl = Url.Action("GetPublishersForBook", "BookCopy");
+    var getShelvesUrl = Url.Action("GetShelvesForRoom", "BookCopy");
+}
+<script>
+    var getPublishersUrl = '@Html.Raw(getPublishersUrl)';
+    var getShelvesUrl = '@Html.Raw(getShelvesUrl)';
+</script>

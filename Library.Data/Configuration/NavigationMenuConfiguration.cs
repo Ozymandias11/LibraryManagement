@@ -126,7 +126,61 @@ namespace Library.Data.Configuration
                                  ControllerName = "Account",
                                  ActionName = "Profile",
                                  Permitted = true,
-                             }
+                             },
+                              new NavigationMenu
+                              {
+                                  Id = new Guid("d3208527-a5f5-4e33-88c8-1a30af0e97e1"),
+                                  Name = "Authors",
+                                  ParentMenuId = null,
+                                  ControllerName = "Author",
+                                  ActionName = "Authors",
+                                  Permitted = true,
+                              },
+                                new NavigationMenu
+                                {
+                                    Id = new Guid("936a8edd-a127-4344-af9a-93ed9a32537f"),
+                                    Name = "Categories",
+                                    ParentMenuId = null,
+                                    ControllerName = "Category",
+                                    ActionName = "Categories",
+                                    Permitted = true,
+                                },
+                                  new NavigationMenu
+                                  {
+                                      Id = new Guid("2eb40a9c-2565-4c2c-a832-feca78f4603b"),
+                                      Name = "Publishers",
+                                      ParentMenuId = null,
+                                      ControllerName = "Publisher",
+                                      ActionName = "Publishers",
+                                      Permitted = true,
+                                  },
+                                    new NavigationMenu
+                                    {
+                                        Id = new Guid("9b96f51e-3d27-4eeb-b491-b6a75d8f0a01"),
+                                        Name = "Books",
+                                        ParentMenuId = null,
+                                        ControllerName = null,
+                                        ActionName = null,
+                                        Permitted = true,
+                                    },
+                                      new NavigationMenu
+                                      {
+                                          Id = new Guid("d0c80121-b900-4515-8521-2737468ffa6a"),
+                                          Name = "Original Books",
+                                          ParentMenuId = new Guid("9b96f51e-3d27-4eeb-b491-b6a75d8f0a01"),
+                                          ControllerName = "Book",
+                                          ActionName = "Books",
+                                          Permitted = true,
+                                      },
+                                        new NavigationMenu
+                                        {
+                                            Id = new Guid("092ac460-2e13-4e44-b207-7d44e3f5ca8b"),
+                                            Name = "Book Copies",
+                                            ParentMenuId = new Guid("9b96f51e-3d27-4eeb-b491-b6a75d8f0a01"),
+                                            ControllerName = "BookCopy",
+                                            ActionName = "BookCopies",
+                                            Permitted = true,
+                                        }
 
                 );
 

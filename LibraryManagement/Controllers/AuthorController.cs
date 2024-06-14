@@ -36,6 +36,11 @@ namespace LibraryManagement.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAuthor(CreateAuthorViewModel createAuthorViewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(createAuthorViewModel); 
+            }
+
             var createAuhtorDto = _mapper.Map<CreateAuthorDto>(createAuthorViewModel);
 
             await _serviceManager.AuthorService.CreateAuthor(createAuhtorDto, false);

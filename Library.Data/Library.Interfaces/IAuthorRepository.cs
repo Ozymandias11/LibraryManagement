@@ -10,7 +10,9 @@ namespace Library.Data.Library.Interfaces
     public interface IAuthorRepository
     {
         Task<IEnumerable<Author>> GetAllAuthor(bool trackChanges);
-        Task<Author?> GetAuthor(Guid id, bool trackChanges);  
+        Task<Author?> GetAuthor(Guid id, bool trackChanges);
+        Task<IEnumerable<Author>> GetAuthorsOfBook(Guid id, bool trackChanges);
+        Task<IEnumerable<Author>> GetAuthorsById(IEnumerable<Guid> ids, bool trackChanges);
 
         void DeleteAuthor(Author author);
         void CreateAuthor(Author author);
