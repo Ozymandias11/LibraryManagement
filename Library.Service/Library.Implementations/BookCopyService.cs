@@ -40,13 +40,16 @@ namespace Library.Service.Library.Implementations
             await _repositoryManager.SaveAsync();
         }
 
-        public async Task<IEnumerable<BookCopyDto>> GetAllBookCopies(bool trackChanges)
+        public async Task<IEnumerable<BookCopyDto>> GetAllBookCopies(int page, int pageSize,bool trackChanges)
         {
-            var bookCopy = await _repositoryManager.BookCopyRepository.GetAllBookCopies(trackChanges);
+            var bookCopy = await _repositoryManager.BookCopyRepository.GetAllBookCopies(page, pageSize,trackChanges);
             var bookCopyDto = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopy);  
 
 
             return bookCopyDto;
         }
+
+        public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
+       
     }
 }

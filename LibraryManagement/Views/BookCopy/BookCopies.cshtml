@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Book Copies";
+    
 }
 
 <div class="card">
@@ -117,8 +118,32 @@
             </table>
             <a asp-action="CreateBookCopy" class="btn btn-primary">Add Book Copy</a>
         </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                @{
+                    var prevDisabled = Model.FirstOrDefault()?.CurrentPage == 1 ? "disabled" : "";
+                    var nextDisabled = Model.FirstOrDefault()?.CurrentPage == Model.FirstOrDefault()?.TotalPages ? "disabled" : "";
+                }
+                <li class="page-item @prevDisabled">
+                    <a class="page-link" href="@Url.Action("BookCopies", new { page = Model.FirstOrDefault()?.CurrentPage - 1, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">Previous</a>
+                </li>
+                @for (int i = 1; i <= Model.FirstOrDefault()?.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.FirstOrDefault()?.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("BookCopies", new { page = i, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">@i</a>
+                    </li>
+                }
+                <li class="page-item @nextDisabled">
+                    <a class="page-link" href="@Url.Action("BookCopies", new { page = Model.FirstOrDefault()?.CurrentPage + 1, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">Next</a>
+                </li>
+            </ul>
+        </nav>
+      
     </div>
 </div>
+
+
+
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">

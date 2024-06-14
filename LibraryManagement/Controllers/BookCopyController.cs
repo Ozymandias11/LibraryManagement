@@ -17,10 +17,20 @@ namespace LibraryManagement.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> BookCopies() 
+        public async Task<IActionResult> BookCopies(int page = 1, int pageSize = 10) 
         {
-            var bookCopies = await _serviceManager.BookCopyService.GetAllBookCopies(false);
+            var bookCopies = await _serviceManager.BookCopyService.GetAllBookCopies(page, pageSize,false);
             var bookCopyViewModel =  _mapper.Map<IEnumerable<BookCopyViewModel>>(bookCopies);
+
+            foreach(var bookCopyviewModel_1 in bookCopyViewModel)
+            {
+                bookCopyviewModel_1.CurrentPage = page;
+                bookCopyviewModel_1.PageSize = pageSize;
+                bookCopyviewModel_1.TotalCount = await _serviceManager.BookCopyService.GetTotalBookCopiesCount();
+            }
+
+
+         
 
             return View(bookCopyViewModel);
 

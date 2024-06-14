@@ -13,9 +13,12 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public Guid PublisherId { get; set; }
         public string PublisherName { get; set; } 
         public Guid OriginaBookId { get; set; }
-        public string BookTitle { get; set; } 
-
-
+        public string BookTitle { get; set; }
+        // items for paging
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalCount { get; set; }
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
 
     }
 }

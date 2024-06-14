@@ -41,11 +41,14 @@ namespace Library.Data.Library.Implementations
         public void DeleteBookCopy(BookCopy bookCopy) => Delete(bookCopy);  
       
 
-        public async Task<IEnumerable<BookCopy>> GetAllBookCopies(bool trackChanges)
+        public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize,bool trackChanges)
             => await FindAll(trackChanges)
             .Include(bc => bc.OriginalBook)
             .Include(bc => bc.Publisher)
-            .OrderBy(bc => bc.CreatedDate).ToListAsync();
+            .OrderBy(bc => bc.CreatedDate)
+            .Skip((page - 1) * pageSize)   
+            .Take(pageSize)
+            .ToListAsync();
         
             
         
@@ -53,6 +56,11 @@ namespace Library.Data.Library.Implementations
         public Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<int> GetTotalBookCopiesCount()
+        {
+           return await FindAll(false).CountAsync();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Library.Data.Library.Interfaces
 {
     public interface IBookCopyRepository
     {
-        Task<IEnumerable<BookCopy>> GetAllBookCopies(bool trackChanges);
+        Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges);
         Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges);
         
         void AddBookCopies(
@@ -17,6 +17,7 @@ namespace Library.Data.Library.Interfaces
             Guid PublisherId,
             IEnumerable<BookCopy> bookCopies);
         void DeleteBookCopy(BookCopy bookCopy);
+        Task<int> GetTotalBookCopiesCount();
 
     }
 }
