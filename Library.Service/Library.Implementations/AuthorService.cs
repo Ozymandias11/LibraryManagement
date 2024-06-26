@@ -29,7 +29,6 @@ namespace Library.Service.Library.Implementations
         {
             var Author = await _repositoryManager.AuthorRepository.GetAuthor(id, false);
 
-
             _repositoryManager.AuthorRepository.DeleteAuthor(Author);
 
             await _repositoryManager.SaveAsync();

@@ -29,9 +29,17 @@ namespace Library.Service.Library.Implementations
             await _repositoryManager.SaveAsync();
         }
 
-        public Task DeleteCategory(Guid id, bool trackChanges)
+        public async Task DeleteCategory(Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var category = await _repositoryManager.CategoryRepository.GetCategory(id, trackChanges);
+
+             _repositoryManager.CategoryRepository.DeleteCatgeory(category);
+
+            await _repositoryManager.SaveAsync();   
+
+
+
+
         }
 
         public async Task<IEnumerable<CategoryDto>> GetAllCategories(bool trackChanges)

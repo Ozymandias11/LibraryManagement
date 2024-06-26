@@ -73,6 +73,11 @@ namespace LibraryManagement.Controllers
             return RedirectToAction("Categories");
 
         }
+        public async Task<IActionResult> DeleteCategory(Guid id)
+        {
+            await _serviceManager.CategoryService.DeleteCategory(id, false);
+            return RedirectToAction("Categories");
+        }
 
     }
 }

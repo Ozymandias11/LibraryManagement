@@ -114,37 +114,18 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete the publisher with Name <strong id="publisherName"></strong>?
-            </div>
-            <div class="modal-footer">
-                <form id="deleteForm" method="post" asp-action="DeletePublisher">
-                    <input type="hidden" name="Id" id="publisherId" value="" />
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
+
+@await Html.PartialAsync("_DeleteConfirmationModal", ("publisher-id", "publisher-name", "DeletePublisher"))
+
+@section Scripts {
+<script src="~/js/deleteModal.js"></script>
 <script>
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var publisherId = button.data('publisher-id')
-        var publisherName = button.data('publisher-name')
-        var modal = $(this)
-        modal.find('#publisherId').val(publisherId)
-        modal.find('#publisherName').text(publisherName)
-    })
+    $.noConflict();
+    jQuery(document).ready(function ($) {
+        initializeDeleteModal('publisher-id', 'publisher-name');
+    });
 </script>
+}
+
+

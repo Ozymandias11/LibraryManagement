@@ -96,7 +96,6 @@ namespace Library.Service
             {
                 _loggerManager.LogWarn($"Login failed: incorrect password for user {loginViewModel.Email}");
 
-                _loggerManager.LogWarn($"Incorrect password for user {loginViewModel.Email}");
                 return IdentityResult.Failed(new IdentityError
                 {
                     Code = "IncorrectPassword",
