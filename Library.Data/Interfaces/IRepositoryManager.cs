@@ -19,6 +19,7 @@ namespace Library.Data.NewFolder
         IBookCopyRepository BookCopyRepository{ get; }
         IRoomRepository RoomRepository { get; }
         IShelfRepository ShelfRepository { get; }
+        IBookShelfRepository BookShelfRepository { get; }
         Task SaveAsync();
     }
 }

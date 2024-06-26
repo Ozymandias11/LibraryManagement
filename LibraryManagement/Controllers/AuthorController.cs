@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 using LibraryManagement.Migrations;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -11,14 +12,20 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public AuthorController(IServiceManager serviceManager, IMapper mapper)
+        private readonly ILoggerManager _loggerManager;
+        public AuthorController(
+            IServiceManager serviceManager, 
+            IMapper mapper,
+             ILoggerManager loggermanager)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
+            _loggerManager = loggermanager;
         }
 
         public async Task<IActionResult> Authors()
         {
+
             var authorDtos = await _serviceManager.AuthorService.GetAllAuthors(false);
             var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos);
             return View(authorsViewModel);

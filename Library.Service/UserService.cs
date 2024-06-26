@@ -76,7 +76,7 @@ namespace Library.Service
         }
 
 
-        //კოდის დუპლიკაციის მოსაგვარებლად quryBuidler-ы ან რამე მსგავს generic მეთოდს შევქმნი
+        //კოდის დუპლიკაციის მოსაგვარებლად quryBuidler-ის ან რამე მსგავს generic მეთოდს შევქმნი
         
         public async Task<IEnumerable<UserViewModelDto>> GetAllUsersSuper(string sortBy, string sortOrder)
         {

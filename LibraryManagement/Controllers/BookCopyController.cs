@@ -69,7 +69,7 @@ namespace LibraryManagement.Controllers
                 createBookCopyViewModel.SelectedPublisherId,
                 CreateBookCopyDto);
 
-            return View();
+            return RedirectToAction("BookCopies");
 
         }
 

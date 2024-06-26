@@ -2,6 +2,7 @@
 using Library.Model.Models;
 using Library.Service.Dto;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
@@ -23,14 +24,17 @@ namespace Library.Service
         private readonly UserManager<Employee> _userManager;
         private readonly SignInManager<Employee> _signInManager;
         private readonly IMapper _mapper;
+        private readonly ILoggerManager _loggerManager;
 
 
         public AuthenticationService(UserManager<Employee> userManager, 
-            IMapper mapper, SignInManager<Employee> signInManager)
+            IMapper mapper, SignInManager<Employee> signInManager,
+            ILoggerManager loggerManager)
         {
             _userManager = userManager;
             _mapper = mapper;
             _signInManager = signInManager;
+            _loggerManager = loggerManager; 
         }
 
         public async Task<bool> ConfirmEmailChange(string currentUserEmail,string token, string email)
@@ -62,10 +66,12 @@ namespace Library.Service
 
         public async Task<IdentityResult> LoginEmployee(LoginViewModelDto loginViewModel)
         {
+            _loggerManager.LogInfo($"Logging attempted for user {loginViewModel.Email}");
             var existingUser = await _userManager.FindByEmailAsync(loginViewModel.Email);
 
             if(existingUser == null)
             {
+                _loggerManager.LogWarn($"User not Found {loginViewModel.Email}");
                 return IdentityResult.Failed(new IdentityError
                 {
                     Code = "UserNotFound",
@@ -88,6 +94,9 @@ namespace Library.Service
 
             if (!result)
             {
+                _loggerManager.LogWarn($"Login failed: incorrect password for user {loginViewModel.Email}");
+
+                _loggerManager.LogWarn($"Incorrect password for user {loginViewModel.Email}");
                 return IdentityResult.Failed(new IdentityError
                 {
                     Code = "IncorrectPassword",
@@ -106,6 +115,8 @@ namespace Library.Service
                     Description = "Something went wrong please try again"
                 });
             }
+
+            _loggerManager.LogInfo($"Login succesfull for user {loginViewModel.Email}");
 
             return IdentityResult.Success;
 
@@ -134,6 +145,9 @@ namespace Library.Service
 
             if(result.Succeeded)
             {
+
+                _loggerManager.LogInfo($"user with email {registerViewModelDto.Email} has registered successfully");
+
                 employee.CreationDate = DateTime.Now;
                 await _userManager.AddToRoleAsync(employee, "default");
 
@@ -150,6 +164,8 @@ namespace Library.Service
 
         public async Task<IdentityResult> ResetPassword(ResetPasswordViewModelDto resetPasswordViewModel)
         {
+
+            
 
             var user = await _userManager.FindByEmailAsync(resetPasswordViewModel.email);
 
@@ -208,6 +224,9 @@ namespace Library.Service
 
         public async Task<string> ForgotPassword(string email)
         {
+
+            _loggerManager.LogInfo($"user {email} requested to change the password");
+            
             var user = await _userManager.FindByEmailAsync(email);
             var token  = await _userManager.GeneratePasswordResetTokenAsync(user);
 

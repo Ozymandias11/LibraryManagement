@@ -3,12 +3,19 @@ using Library.Data.Implementations;
 using Library.Data.Interfaces;
 using Library.Service;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 using LibraryManagement;
 using LibraryManagement.ServiceExtensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using NLog;
 using static System.Net.Mime.MediaTypeNames;
-
 var builder = WebApplication.CreateBuilder(args);
+
+
+//configuring logger service
+
+LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+"/nlog.config"));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -31,6 +38,8 @@ builder.Services.AddMailjetConfiguration(builder.Configuration);
 builder.Services.AddVonageConfiguration(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IVerificationCodeCacheService, VerificationCodeCacheService>();
+
+builder.Services.ConfigureLoggerService();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

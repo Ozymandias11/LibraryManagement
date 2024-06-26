@@ -1,5 +1,6 @@
 ﻿using Library.Model.Enums;
 using Library.Model.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManagement.ViewModels.Library.ViewModels
 {

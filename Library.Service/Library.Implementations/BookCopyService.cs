@@ -35,7 +35,9 @@ namespace Library.Service.Library.Implementations
                     Quantity = createBookCopyDto.Quantity,  
                 });
 
-            _repositoryManager.BookCopyRepository.AddBookCopies(originalBookId, PublisherId ,BookCopies);
+            _repositoryManager.BookCopyRepository.AddBookCopies(originalBookId, PublisherId ,BookCopies);   
+
+            
 
             await _repositoryManager.SaveAsync();
         }

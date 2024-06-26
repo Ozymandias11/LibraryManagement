@@ -50,13 +50,7 @@
                             <label asp-for="PublishedYear" class="text-primary">Published Year:</label>
                             <input asp-for="PublishedYear" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="PublishedYear" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Edition" class="text-primary">Edition:</label>
-                            <input asp-for="Edition" class="form-control" />
-                            <span asp-validation-for="Edition" class="text-danger"></span>
-                        </div>
-
+                        </div>                     
                         <div class="form-group">
                             <label for="authors" class="text-primary">Authors:</label>
                             <select id="authors" name="SelectedAuthorIds" class="form-control" multiple>
@@ -64,8 +58,8 @@
                                 {
                                     <option value="@author.AuthorId">@author.FirstName @author.LastName</option>
                                 }
-                                <span asp-validation-for="SelectedAuthorIds" class="text-danger"></span>
                             </select>
+                            <span asp-validation-for="SelectedAuthorIds" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="publishers" class="text-primary">Publishers:</label>
@@ -74,8 +68,8 @@
                                 {
                                     <option value="@publisher.PublisherId">@publisher.PublisherName</option>
                                 }
-                                <span asp-validation-for="SelectedPublisherIds" class="text-danger"></span>
                             </select>
+                            <span asp-validation-for="SelectedPublisherIds" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="Categories" class="text-primary">Categories:</label>
@@ -84,8 +78,8 @@
                                 {
                                     <option value="@category.CategoryId">@category.Title</option>
                                 }
-                                <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
                             </select>
+                            <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
                         </div>
 
 

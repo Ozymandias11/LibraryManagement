@@ -31,7 +31,7 @@ namespace Library.Data.Library.Implementations
                 modifiedBookCopies.Add(bookCopy);
             }
 
-            // Add the modified book copies to the collection
+           
             AddRange(modifiedBookCopies);
 
         }

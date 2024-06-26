@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Library.Model.Models;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 
 namespace LibraryManagement.ServiceExtensions
 {
@@ -59,6 +60,11 @@ namespace LibraryManagement.ServiceExtensions
             services.Configure<VonageSettings>(configuration.GetSection("VonageSettings"));
         }
 
+
+        public static void ConfigureLoggerService(this IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerManager, LoggerManager>(); 
+        }
 
     
       

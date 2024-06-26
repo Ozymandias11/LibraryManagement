@@ -5,6 +5,7 @@ using Library.Model.Models;
 using Library.Service.Interfaces;
 using Library.Service.Library.Implementations;
 using Library.Service.Library.Interfaces;
+using Library.Service.Logging;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -27,9 +28,9 @@ namespace Library.Service
 
 
         public ServiceManager( IRepositoryManager reposiotryManager, UserManager<Employee> usermanager, 
-            IMapper mapper, SignInManager<Employee> signInManager)
+            IMapper mapper, SignInManager<Employee> signInManager, ILoggerManager loggerManager)
         {
-            _authentificationService = new Lazy<IAuthentificationService>(() => new AuthenticationService(usermanager, mapper, signInManager));
+            _authentificationService = new Lazy<IAuthentificationService>(() => new AuthenticationService(usermanager, mapper, signInManager, loggerManager));
             _authorService = new Lazy<IAuthorService>(() => new AuthorService(reposiotryManager, mapper));
             _publisherService = new Lazy<IPublisherService>(() => new PublisherService(reposiotryManager, mapper));
             _bookService = new Lazy<IBookService>(() => new BookService(reposiotryManager,mapper));

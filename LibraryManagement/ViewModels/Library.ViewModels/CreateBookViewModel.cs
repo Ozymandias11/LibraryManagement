@@ -16,12 +16,15 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public IEnumerable<PublisherViewModel> Publishers { get; set; }
         public IEnumerable<CategoryViewModel> Categories { get; set; }
 
-       // [MinimumCount(1, ErrorMessage = "Please Select at least one Author")]
-        public IEnumerable<Guid> SelectedAuthorIds { get; set; } = new List<Guid>();
-      //  [MinimumCount(1, ErrorMessage = "Please Select at least one Publisher")]
-        public IEnumerable<Guid> SelectedPublisherIds { get; set; } = new List<Guid>();
-       // [MinimumCount(1, ErrorMessage = "Please Select at least one Category")]
-        public IEnumerable<Guid> SelectedCategoryIds{ get; set; } = new List<Guid>();
+
+        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+        public IEnumerable<Guid> SelectedAuthorIds { get; set; } 
+
+        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+        public IEnumerable<Guid> SelectedPublisherIds { get; set; } 
+
+        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+        public IEnumerable<Guid> SelectedCategoryIds{ get; set; }
 
 
     }
