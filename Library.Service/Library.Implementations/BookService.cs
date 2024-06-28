@@ -81,19 +81,7 @@ namespace Library.Service.Library.Implementations
                 books = books.Where(b => b.Title.Contains(searchString));
             }
 
-
-            switch (sortBy)
-            {
-                case "Title":
-                    books = sortOrder == "Title_Asc" ? books.OrderBy(b => b.Title) : books.OrderByDescending(b => b.Title);
-                    break;
-                case "PublishedYear":
-                    books = sortOrder == "PublishedYear_Asc" ? books.OrderBy(b => b.PublishedYear) : books.OrderByDescending(b => b.PublishedYear);
-                    break;
-                default:
-                    books = books.OrderBy(b => b.Title);
-                    break;
-            }
+            books = ApplySorting(books, sortBy, sortOrder);
 
             var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);    
             return booksDto;
@@ -216,6 +204,17 @@ namespace Library.Service.Library.Implementations
 
 
             await _repositoryManager.SaveAsync();
+        }
+
+        private IEnumerable<Book> ApplySorting(IEnumerable<Book> books, string sortBy, string sortOrder)
+        {
+
+           return books = sortBy switch
+            {
+                "Title" => sortOrder == "Title_Asc" ? books.OrderBy(b => b.Title) : books.OrderByDescending(b => b.Title),
+                "PublishedYear" => sortOrder == "PublishedYear_Asc" ? books.OrderBy(b => b.PublishedYear) : books.OrderByDescending(b => b.PublishedYear),
+                _ => books.OrderBy(b => b.Title),
+            };
         }
 
     }

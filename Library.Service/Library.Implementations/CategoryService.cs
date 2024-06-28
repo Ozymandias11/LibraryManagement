@@ -55,15 +55,7 @@ namespace Library.Service.Library.Implementations
                 categories = categories.Where(c => c.Title.Contains(searchString));
             }
 
-            switch (sortBy)
-            {
-                case "Title":
-                    categories = sortOrder == "Title_Asc" ? categories.OrderBy(c => c.Title) : categories.OrderByDescending(c => c.Title);
-                    break;
-                default:
-                    categories = categories.OrderBy(c => c.CreatedDate);
-                    break;
-            }
+            categories = ApplySorting(categories, sortBy, sortOrder);
 
 
             var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
@@ -83,6 +75,15 @@ namespace Library.Service.Library.Implementations
             _mapper.Map(categoryDto, categoryEntity);
 
             await _repositoryManager.SaveAsync();
+        }
+
+        private IEnumerable<Category> ApplySorting(IEnumerable<Category> categories, string sortBy, string sortOrder)
+        {
+            return categories = sortBy switch
+            {
+                "Title" => sortOrder == "Title_Asc" ? categories.OrderBy(c => c.Title) : categories.OrderByDescending(c => c.Title),
+                _ => categories.OrderBy(c => c.CreatedDate),
+            };
         }
     }
 }

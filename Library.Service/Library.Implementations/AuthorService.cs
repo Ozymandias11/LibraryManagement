@@ -52,22 +52,9 @@ namespace Library.Service.Library.Implementations
                                          a.LastName.Contains(searchString));
             }
 
+            authors = ApplySorting(authors, sortBy, sortOrder); 
 
-            switch (sortBy)
-            {
-                case "FirstName":
-                    authors = sortOrder == "FirstName_Asc" ? authors.OrderBy(a => a.FirstName) : authors.OrderByDescending(a => a.FirstName);
-                    break;
-                case "LastName":
-                    authors = sortOrder == "LastName_Asc" ? authors.OrderBy(a => a.LastName) : authors.OrderByDescending(a => a.LastName);
-                    break;
-                case "DateOfBirth":
-                    authors = sortOrder == "DateOfBirth_Asc" ? authors.OrderBy(a => a.DateOfBirth) : authors.OrderByDescending(a => a.DateOfBirth);
-                    break;
-                default:
-                    authors = authors.OrderBy(a => a.CreatedDate);
-                    break;
-            }
+
 
             var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);  
             return authorsDto;
@@ -103,6 +90,18 @@ namespace Library.Service.Library.Implementations
             await _repositoryManager.SaveAsync();
 
 
+        }
+
+        private IEnumerable<Author> ApplySorting(IEnumerable<Author> authors, string sortBy, string sortOrder)
+        {
+
+            return authors = sortBy switch
+            {
+                "FirstName" => sortOrder == "FirstName_Asc" ? authors.OrderBy(a => a.FirstName) : authors.OrderByDescending(a => a.FirstName),
+                "LastName" => sortOrder == "LastName_Asc" ? authors.OrderBy(a => a.LastName) : authors.OrderByDescending(a => a.LastName),
+                "DateOfBirth" => sortOrder == "DateOfBirth_Asc" ? authors.OrderBy(a => a.DateOfBirth) : authors.OrderByDescending(a => a.DateOfBirth),
+                _ => authors.OrderBy(a => a.CreatedDate),
+            };
         }
     }
 }

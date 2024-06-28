@@ -19,7 +19,7 @@ namespace Library.Service.Library.Implementations
 
         public PublisherService(IRepositoryManager repositoryManager, IMapper mapper)
         {
-            _repositoryManager = repositoryManager; 
+            _repositoryManager = repositoryManager;
             _mapper = mapper;
         }
 
@@ -45,36 +45,22 @@ namespace Library.Service.Library.Implementations
         }
 
         public async Task<IEnumerable<PublisherDto>> GetAllPublishers(
-            string sortBy, 
-            string sortOrder, 
-            string searchString, 
+            string sortBy,
+            string sortOrder,
+            string searchString,
             bool trackChanges)
         {
             var publishers = await _repositoryManager.PublisherRepository.GetAllPublisher(trackChanges);
 
-            if(!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 publishers = publishers.Where(p => p.PublisherName.Contains(searchString) ||
                                             p.Email.Contains(searchString));
             }
 
-            switch (sortBy)
-            {
-                case "PublisherName":
-                    publishers = sortOrder == "PublisherName_Asc" ? publishers.OrderBy(p => p.PublisherName) : publishers.OrderByDescending(p => p.PublisherName);  
-                    break;
-                case "PhoneNumber":
-                    publishers = sortOrder == "PhoneNumber_Asc" ? publishers.OrderBy(p => p.PhoneNumber) : publishers.OrderByDescending(p => p.PhoneNumber);
-                    break;
-                case "Email":
-                    publishers = sortOrder == "Email_Asc" ? publishers.OrderBy(p => p.Email) : publishers.OrderByDescending(p => p.Email);
-                    break;
-                default:
-                    publishers = publishers.OrderBy(p => p.CreatedDate);
-                    break;  
-            }
+            publishers = ApplySorting(publishers, sortBy, sortOrder);
 
-            var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers); 
+            var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers);
 
             return publishersDto;
 
@@ -99,5 +85,18 @@ namespace Library.Service.Library.Implementations
             await _repositoryManager.SaveAsync();
 
         }
+
+        private IEnumerable<Model.Models.Publisher> ApplySorting(IEnumerable<Model.Models.Publisher> publishers, string sortBy, string sortOrder)
+        {
+
+            return publishers = sortBy switch
+            {
+                "PublisherName" => sortOrder == "PublisherName_Asc" ? publishers.OrderBy(p => p.PublisherName) : publishers.OrderByDescending(p => p.PublisherName),
+                "PhoneNumber" => sortOrder == "PhoneNumber_Asc" ? publishers.OrderBy(p => p.PhoneNumber) : publishers.OrderByDescending(p => p.PhoneNumber),
+                "Email" => sortOrder == "Email_Asc" ? publishers.OrderBy(p => p.Email) : publishers.OrderByDescending(p => p.Email),
+                _ => publishers.OrderBy(p => p.CreatedDate),
+            };
+        }
+
     }
 }
