@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<LibraryManagement.ViewModels.UserVeiwModel>
 
 @{
-    ViewData["Title"] = "Users";
+     ViewData["Title"] = "Users";
+     ViewData["ActionUrl"] = "DeletedUsers";
+     ViewData["ActionName"] = "DeletedUsers";
 }
 
 
@@ -13,68 +15,18 @@
         </div>
         <table>
             <tr>
-                <form method="get" action="DeletedUsers">
-
-                <td style="padding-right:755px">
-                </td>
-                <td>
-                    <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@ViewData["CurrentSearchString"]" aria-label="Search" aria-describedby="btnNavbarSearch" />
-                </td>
-                <td>
-                    <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
-                    <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
-                    <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
-                </td>
-                </form>
+                @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
             </tr>
         </table>
         <div class="table-responsive wide-table">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("DeletedUsers", new { sortBy = "Email", sortOrder = ViewBag.SortOrder == "Email_Asc" ? "Email_Desc" : "Email_Asc",SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Email
-                                @if (ViewBag.SortBy == "Email")
-                                {
-                                    @if (ViewBag.SortOrder == "Email_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "Email_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
+                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("Email", "Email"))
                         <th class="text-primary text-center">Phone Number</th>
                         <th class="text-primary text-center">Roles</th>
                         <th class="text-primary text-center">Email Confirmed</th>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("DeletedUsers", new { sortBy = "RegistrationDate", sortOrder = ViewBag.SortOrder == "RegistrationDate_Asc" ? "RegistrationDate_Desc" : "RegistrationDate_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Registration Date
-                                @if (ViewBag.SortBy == "RegistrationDate")
-                                {
-                                    @if (ViewBag.SortOrder == "RegistrationDate_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "RegistrationDate_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
+                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("RegistrationDate", "RegistrationDate"))
                         <th class="text-primary text-center">Delete Date</th>
                     </tr>
                 </thead>

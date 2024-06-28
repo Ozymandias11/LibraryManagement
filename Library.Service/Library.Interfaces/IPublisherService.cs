@@ -9,7 +9,10 @@ namespace Library.Service.Library.Interfaces
 {
     public interface IPublisherService
     {
-        Task<IEnumerable<PublisherDto>> GetAllPublishers(bool trackChanges);
+        Task<IEnumerable<PublisherDto>> GetAllPublishers(
+            string sortBy,
+            string sortOrder,
+            string searchString, bool trackChanges);
         Task<PublisherDto> GetPublisher(Guid id, bool trackChanges);
         Task CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges);
         Task DeletePublisher(Guid guid, bool trackChanges);

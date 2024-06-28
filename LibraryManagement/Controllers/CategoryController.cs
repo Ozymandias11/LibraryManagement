@@ -18,9 +18,13 @@ namespace LibraryManagement.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Categories()
+        public async Task<IActionResult> Categories(string sortBy, string sortOrder, string searchString)
         {
-            var categories = await _serviceManager.CategoryService.GetAllCategories(false);
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewData["CurrentSearchString"] = searchString;
+
+            var categories = await _serviceManager.CategoryService.GetAllCategories(sortBy, sortOrder, searchString,false);
             var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
             return View(categoryViewModel);
         }

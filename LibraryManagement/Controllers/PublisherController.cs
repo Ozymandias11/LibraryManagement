@@ -16,9 +16,14 @@ namespace LibraryManagement.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Publishers()
+        public async Task<IActionResult> Publishers(string sortBy, string sortOrder, string searchString)
         {
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(false);
+
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewData["CurrentSearchString"] = searchString;
+
+            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(sortBy,sortOrder,searchString,false);
 
             var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
 

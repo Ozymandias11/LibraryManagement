@@ -31,16 +31,16 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> CreateBook()
         {
             // Get Authors
-            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors(false);
+            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
             var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto);
 
             //Get Publishers
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(false);
+            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","","",false);
             var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
 
             //Get Categories
 
-            var categoryDto = await _serviceManager.CategoryService.GetAllCategories(false);
+            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
             var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto);
 
 
@@ -88,15 +88,15 @@ namespace LibraryManagement.Controllers
             
             //fetching data to display all possible options
 
-            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors(false);
+            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
             var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto);
 
             
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(false);
+            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","", "",false);
             var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
 
             
-            var categoryDto = await _serviceManager.CategoryService.GetAllCategories(false);
+            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
             var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto);
 
             //Get Current authors, publishers and categories

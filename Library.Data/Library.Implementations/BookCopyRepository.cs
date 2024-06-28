@@ -38,20 +38,43 @@ namespace Library.Data.Library.Implementations
        
 
 
-        public void DeleteBookCopy(BookCopy bookCopy) => Delete(bookCopy);  
-      
+        public void DeleteBookCopy(BookCopy bookCopy) => Delete(bookCopy);
 
-        public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize,bool trackChanges)
-            => await FindAll(trackChanges)
-            .Include(bc => bc.OriginalBook)
-            .Include(bc => bc.Publisher)
-            .OrderBy(bc => bc.CreatedDate)
-            .Skip((page - 1) * pageSize)   
-            .Take(pageSize)
-            .ToListAsync();
-        
-            
-        
+
+
+        public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges)
+        {
+            // First, fetch all data without grouping
+            var query = FindAll(trackChanges)
+                .Include(bc => bc.OriginalBook)
+                .Include(bc => bc.Publisher);
+
+            // Fetch all book copies
+            var allBookCopies = await query.ToListAsync();
+
+            // Perform grouping and pagination in memory
+            var groupedBookCopies = allBookCopies
+                .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
+                .Select(g => new BookCopy
+                {
+                    BookCopyId = g.First().BookCopyId,
+                    OriginalBook = g.First().OriginalBook,
+                    Publisher = g.First().Publisher,
+                    Edition = g.Key.Edition,
+                    NumberOfPages = g.First().NumberOfPages,
+                    Status = g.First().Status,
+                    Quantity = g.Count()
+                })
+                .OrderBy(bc => bc.OriginalBook.Title)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return groupedBookCopies;
+        }
+
+
+
 
         public Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges)
         {
@@ -60,7 +83,10 @@ namespace Library.Data.Library.Implementations
 
         public async Task<int> GetTotalBookCopiesCount()
         {
-           return await FindAll(false).CountAsync();
+            var allBookCopies = await FindAll(false).ToListAsync();
+            return allBookCopies
+                .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
+                .Count();
         }
     }
 }

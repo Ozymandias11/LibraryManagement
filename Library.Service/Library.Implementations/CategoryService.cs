@@ -42,9 +42,30 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllCategories(bool trackChanges)
+        public async Task<IEnumerable<CategoryDto>> GetAllCategories(
+            string sortBy, 
+            string sortOrder, 
+            string searchString,
+            bool trackChanges)
         {
             var categories = await _repositoryManager.CategoryRepository.GetAllCategories(trackChanges);
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                categories = categories.Where(c => c.Title.Contains(searchString));
+            }
+
+            switch (sortBy)
+            {
+                case "Title":
+                    categories = sortOrder == "Title_Asc" ? categories.OrderBy(c => c.Title) : categories.OrderByDescending(c => c.Title);
+                    break;
+                default:
+                    categories = categories.OrderBy(c => c.CreatedDate);
+                    break;
+            }
+
+
             var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
             return categoreisDto;
         }

@@ -37,9 +37,38 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<AuthorDto>> GetAllAuthors(bool trackChanges)
+        public async Task<IEnumerable<AuthorDto>> GetAllAuthors(
+            string sortBy,
+            string sortOrder,
+            string searchString,
+            bool trackChanges)
         {
             var authors = await _repositoryManager.AuthorRepository.GetAllAuthor(trackChanges);
+
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                authors = authors.Where(a => a.FirstName.Contains(searchString) ||
+                                         a.LastName.Contains(searchString));
+            }
+
+
+            switch (sortBy)
+            {
+                case "FirstName":
+                    authors = sortOrder == "FirstName_Asc" ? authors.OrderBy(a => a.FirstName) : authors.OrderByDescending(a => a.FirstName);
+                    break;
+                case "LastName":
+                    authors = sortOrder == "LastName_Asc" ? authors.OrderBy(a => a.LastName) : authors.OrderByDescending(a => a.LastName);
+                    break;
+                case "DateOfBirth":
+                    authors = sortOrder == "DateOfBirth_Asc" ? authors.OrderBy(a => a.DateOfBirth) : authors.OrderByDescending(a => a.DateOfBirth);
+                    break;
+                default:
+                    authors = authors.OrderBy(a => a.CreatedDate);
+                    break;
+            }
+
             var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);  
             return authorsDto;
         }

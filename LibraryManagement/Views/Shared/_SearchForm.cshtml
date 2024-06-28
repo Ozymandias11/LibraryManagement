@@ -1,0 +1,13 @@
+﻿@model string
+
+<form method="get" action="@ViewData["ActionUrl"]">
+    <td style="padding-right:755px"></td>
+    <td>
+        <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@Model" aria-label="Search" aria-describedby="btnNavbarSearch" />
+    </td>
+    <td>
+        <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
+        <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
+        <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
+    </td>
+</form>

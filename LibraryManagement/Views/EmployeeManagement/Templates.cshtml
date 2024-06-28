@@ -1,66 +1,40 @@
 ﻿@model IEnumerable<LibraryManagement.ViewModels.EmailTemplateViewModel>
-
 @{
     ViewData["Title"] = "Email Templates";
+    ViewData["ActionUrl"] = "Templates";
+    ViewData["ActionName"] = "Templates";
     bool showSuccessMessage = ViewBag.SuccessMessage != null;
 }
-
-<div class="container mt-2">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card bg-secondary shadow border-0">
-                <div class="card-body px-lg-5 py-lg-5">
-                    <div class="text-center mb-4">
-                        <h2 class="text-primary mb-0">Email Templates</h2>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <a href="@Url.Action("Templates", new { sortBy = "TemplateName", sortOrder = ViewBag.SortOrder == "TemplateName_Asc" ? "TemplateName_Desc" : "TemplateName_Asc" })" class="text-primary">
-                                            Template Name
-                                            @if (ViewBag.SortBy == "TemplateName")
-                                            {
-                                                @if (ViewBag.SortOrder == "TemplateName_Asc")
-                                                {
-                                                    <i class="fas fa-arrow-up"></i>
-                                                }
-                                                else if (ViewBag.SortOrder == "TemplateName_Desc")
-                                                {
-                                                    <i class="fas fa-arrow-down"></i>
-                                                }
-                                            }
-                                            else
-                                            {
-                                                <i class="fas fa-sort"></i>
-                                            }
-                                        </a>
-                                    </th>
-                                    <th class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var template in Model)
-                                {
-                                    <tr>
-                                        <td>@template.TemplateName</td>
-                                        <td class="text-center">
-                                            <a asp-action="EditTemplate" asp-route-id="@template.Id" class="btn btn-primary btn-sm">Edit</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="text-end">
-                        <a  asp-controller = "Home" asp-action="Index" class="btn btn-neutral btn-lg">Cancel</a>
-                    </div>
-                </div>
-            </div>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center mb-3">
+            <h2 class="text-primary mb-0">Email Templates</h2>
+        </div>
+        <table>
+            <tr>
+                @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
+            </tr>
+        </table>
+        <div class="table-responsive wide-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("TemplateName", "TemplateName"))
+                        <th class="text-primary text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    @foreach (var template in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@template.TemplateName</td>
+                            <td class="text-center">
+                                <a asp-action="EditTemplate" asp-route-id="@template.Id" class="btn btn-primary btn-sm">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
-
-

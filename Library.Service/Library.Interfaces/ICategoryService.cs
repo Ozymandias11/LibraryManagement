@@ -9,7 +9,11 @@ namespace Library.Service.Library.Interfaces
 {
    public interface ICategoryService
     {
-        Task<IEnumerable<CategoryDto>> GetAllCategories(bool trackChanges);
+        Task<IEnumerable<CategoryDto>> GetAllCategories(
+            string sortBy, 
+            string sortOrder, 
+            string searchString, 
+            bool trackChanges);
         Task<CategoryDto> GetCategory(Guid id, bool trackChanges); 
         Task CreateCategory(CreateCategoryDto categoryDto, bool trackChanges);
         Task DeleteCategory(Guid id, bool trackChanges);

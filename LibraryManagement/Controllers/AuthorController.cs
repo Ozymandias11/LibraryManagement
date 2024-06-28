@@ -23,10 +23,14 @@ namespace LibraryManagement.Controllers
             _loggerManager = loggermanager;
         }
 
-        public async Task<IActionResult> Authors()
+        public async Task<IActionResult> Authors(string sortBy, string sortOrder, string searchString)
         {
 
-            var authorDtos = await _serviceManager.AuthorService.GetAllAuthors(false);
+            ViewBag.SortBy = sortBy;    
+            ViewBag.SortOrder = sortOrder;
+            ViewData["CurrentSearchString"] = searchString;
+
+            var authorDtos = await _serviceManager.AuthorService.GetAllAuthors(sortBy, sortOrder, searchString,false);
             var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos);
             return View(authorsViewModel);
 

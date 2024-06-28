@@ -1,0 +1,30 @@
+﻿@model Tuple<string, string>
+
+@{
+    string column = Model.Item1;
+    string displayName = Model.Item2;
+    string sortOrder = ViewBag.SortOrder;
+    string sortBy = ViewBag.SortBy;
+    string currentSearchString = ViewData["CurrentSearchString"] as string;
+}
+
+<th class="text-primary text-center">
+    <a href="@Url.Action(ViewData["ActionName"].ToString(), new { sortBy = column, sortOrder = sortOrder == column + "_Asc" ? column + "_Desc" : column + "_Asc", SearchString = currentSearchString })" class="text-primary">
+        @displayName
+        @if (sortBy == column)
+        {
+            if (sortOrder == column + "_Asc")
+            {
+                <i class="fas fa-arrow-up"></i>
+            }
+            else if (sortOrder == column + "_Desc")
+            {
+                <i class="fas fa-arrow-down"></i>
+            }
+        }
+        else
+        {
+            <i class="fas fa-sort"></i>
+        }
+    </a>
+</th>

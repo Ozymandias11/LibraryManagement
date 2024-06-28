@@ -9,7 +9,7 @@ namespace Library.Service.Library.Interfaces
 {
     public interface IAuthorService
     {
-        Task<IEnumerable<AuthorDto>> GetAllAuthors(bool trackChanges);
+        Task<IEnumerable<AuthorDto>> GetAllAuthors(string sortBy, string sortOrder, string searchString,bool trackChanges);
         Task<AuthorDto> GetAuthor(Guid id, bool trackChanges);  
         Task DeleteAuthor(Guid id, bool trackChanges);
         Task CreateAuthor(CreateAuthorDto author, bool trackChanges);

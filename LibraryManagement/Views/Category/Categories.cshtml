@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Categories";
+    ViewData["ActionUrl"] = "Categories";
+    ViewData["ActionName"] = "Categories";
 }
 
 <div class="card">
@@ -11,44 +13,15 @@
         </div>
         <table>
             <tr>
-                <form method="get" action="Categories">
-                <td style="padding-right:755px">
-                </td>
-                <td>
-                    <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@ViewData["CurrentSearchString"]" aria-label="Search" aria-describedby="btnNavbarSearch" />
-                </td>
-                <td>
-                    <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
-                    <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
-                    <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
-                </td>
-                </form>
+                @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
+
             </tr>
         </table>
         <div class="table-responsive wide-table">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("Categories", new { sortBy = "Title", sortOrder = ViewBag.SortOrder == "Title_Asc" ? "Title_Desc" : "Title_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Title
-                                @if (ViewBag.SortBy == "Title")
-                                {
-                                    @if (ViewBag.SortOrder == "Title_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "Title_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
+                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("Title", "Title"))
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>

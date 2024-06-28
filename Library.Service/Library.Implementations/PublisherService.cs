@@ -44,9 +44,35 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<PublisherDto>> GetAllPublishers(bool trackChanges)
+        public async Task<IEnumerable<PublisherDto>> GetAllPublishers(
+            string sortBy, 
+            string sortOrder, 
+            string searchString, 
+            bool trackChanges)
         {
             var publishers = await _repositoryManager.PublisherRepository.GetAllPublisher(trackChanges);
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                publishers = publishers.Where(p => p.PublisherName.Contains(searchString) ||
+                                            p.Email.Contains(searchString));
+            }
+
+            switch (sortBy)
+            {
+                case "PublisherName":
+                    publishers = sortOrder == "PublisherName_Asc" ? publishers.OrderBy(p => p.PublisherName) : publishers.OrderByDescending(p => p.PublisherName);  
+                    break;
+                case "PhoneNumber":
+                    publishers = sortOrder == "PhoneNumber_Asc" ? publishers.OrderBy(p => p.PhoneNumber) : publishers.OrderByDescending(p => p.PhoneNumber);
+                    break;
+                case "Email":
+                    publishers = sortOrder == "Email_Asc" ? publishers.OrderBy(p => p.Email) : publishers.OrderByDescending(p => p.Email);
+                    break;
+                default:
+                    publishers = publishers.OrderBy(p => p.CreatedDate);
+                    break;  
+            }
 
             var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers); 
 
