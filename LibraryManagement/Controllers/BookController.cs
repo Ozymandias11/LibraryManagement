@@ -32,16 +32,16 @@ namespace LibraryManagement.Controllers
         {
             // Get Authors
             var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
-            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto);
+            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
 
             //Get Publishers
             var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","","",false);
-            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
+            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
 
             //Get Categories
 
             var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
-            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto);
+            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
 
 
             var createBookViewModel = new CreateBookViewModel()
@@ -89,15 +89,15 @@ namespace LibraryManagement.Controllers
             //fetching data to display all possible options
 
             var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
-            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto);
+            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
 
             
             var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","", "",false);
-            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
+            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
 
             
             var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
-            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto);
+            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
 
             //Get Current authors, publishers and categories
             var bookAuthors = await _serviceManager.BookService.GetBookAuthors(id, false);

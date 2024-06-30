@@ -88,7 +88,7 @@ namespace LibraryManagement.MappingProfile
 
             //categoreis
 
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>().ReverseMap();
 
 
             CreateMap<CategoryDto, CategoryViewModel>();

@@ -10,5 +10,6 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         [Required(ErrorMessage = "The Last Name is Required")]
         public string? LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Library.Data.NewFolder;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -25,19 +27,26 @@ namespace Library.Service.Library.Implementations
             _mapper = mapper;
         }
 
-        public async Task DeleteAuthor(Guid id, bool trackChanges)
+        public async Task<Result> DeleteAuthor(Guid id, bool trackChanges)
         {
             var Author = await _repositoryManager.AuthorRepository.GetAuthor(id, false);
+
+            if(Author == null)
+            {
+                return Result.Fail(new NotFoundError("Author", id));
+            }
+
 
             _repositoryManager.AuthorRepository.DeleteAuthor(Author);
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok();
 
 
         }
 
-        public async Task<IEnumerable<AuthorDto>> GetAllAuthors(
+        public async Task<Result<IEnumerable<AuthorDto>>> GetAllAuthors(
             string sortBy,
             string sortOrder,
             string searchString,
@@ -57,12 +66,18 @@ namespace Library.Service.Library.Implementations
 
 
             var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);  
-            return authorsDto;
+            return Result.Ok(authorsDto);
         }
 
-        public async Task<AuthorDto> GetAuthor(Guid id, bool trackChanges)
+        public async Task<Result<AuthorDto>> GetAuthor(Guid id, bool trackChanges)
         {
             var author = await _repositoryManager.AuthorRepository.GetAuthor(id, trackChanges);
+
+            if(author == null)
+            {
+                return Result.Fail(new NotFoundError("Author", id));
+            }
+
 
             var authorDto = _mapper.Map<AuthorDto>(author);
 
@@ -71,7 +86,7 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task CreateAuthor (CreateAuthorDto author, bool trackChanges)
+        public async Task<Result> CreateAuthor (CreateAuthorDto author, bool trackChanges)
         {
             var authorEntity = _mapper.Map<Author>(author);
 
@@ -79,15 +94,24 @@ namespace Library.Service.Library.Implementations
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok();
+
         }
 
-        public async Task UpdateAuthor(AuthorDto author, bool trackChanges)
+        public async Task<Result> UpdateAuthor(AuthorDto author, bool trackChanges)
         {
             var authorEntity = await _repositoryManager.AuthorRepository.GetAuthor(author.AuthorId, trackChanges);
+
+            if(authorEntity == null )
+            {
+                return Result.Fail(new NotFoundError("Author", author.AuthorId));
+            }
 
             _mapper.Map(author, authorEntity);
 
             await _repositoryManager.SaveAsync();
+
+            return Result.Ok(); 
 
 
         }

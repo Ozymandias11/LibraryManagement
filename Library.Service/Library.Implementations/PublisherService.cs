@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Library.Data.NewFolder;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace Library.Service.Library.Implementations
         }
 
 
-        public async Task CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges)
+        public async Task<Result> CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges)
         {
             var publisherEntity = _mapper.Map<Model.Models.Publisher>(createPublisherDto);
 
@@ -32,19 +34,28 @@ namespace Library.Service.Library.Implementations
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok();
+
         }
 
-        public async Task DeletePublisher(Guid id, bool trackChanges)
+        public async Task<Result> DeletePublisher(Guid id, bool trackChanges)
         {
             var publisher = await _repositoryManager.PublisherRepository.GetPublisher(id, trackChanges);
+
+            if(publisher == null)
+            {
+                return Result.Fail(new NotFoundError("Publisher", id));
+            }
 
             _repositoryManager.PublisherRepository.DeletePublisher(publisher);
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok(); 
+
         }
 
-        public async Task<IEnumerable<PublisherDto>> GetAllPublishers(
+        public async Task<Result<IEnumerable<PublisherDto>>> GetAllPublishers(
             string sortBy,
             string sortOrder,
             string searchString,
@@ -62,13 +73,19 @@ namespace Library.Service.Library.Implementations
 
             var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers);
 
-            return publishersDto;
+            return Result.Ok(publishersDto);
 
         }
 
-        public async Task<PublisherDto> GetPublisher(Guid id, bool trackChanges)
+        public async Task<Result<PublisherDto>> GetPublisher(Guid id, bool trackChanges)
         {
             var publisher = await _repositoryManager.PublisherRepository.GetPublisher(id, trackChanges);
+
+
+            if(publisher == null)
+            {
+                return Result.Fail(new NotFoundError("Publisher", id));
+            }
 
             var publisherDto = _mapper.Map<PublisherDto>(publisher);
 
@@ -76,14 +93,20 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task UpdatePublisher(PublisherDto publisherDto, bool trackChanges)
+        public async Task<Result> UpdatePublisher(PublisherDto publisherDto, bool trackChanges)
         {
             var publisherEntity = await _repositoryManager.PublisherRepository.GetPublisher(publisherDto.PublisherId, trackChanges);
+
+            if(publisherEntity == null)
+            {
+                return Result.Fail(new NotFoundError("Publisher", publisherDto.PublisherId));
+            }
 
             _mapper.Map(publisherDto, publisherEntity);
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok(); 
         }
 
         private IEnumerable<Model.Models.Publisher> ApplySorting(IEnumerable<Model.Models.Publisher> publishers, string sortBy, string sortOrder)

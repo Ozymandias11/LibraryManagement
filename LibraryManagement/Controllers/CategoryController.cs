@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
@@ -12,10 +13,15 @@ namespace LibraryManagement.Controllers
 
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public CategoryController(IServiceManager serviceManager, IMapper mapper)
+        private readonly ILoggerManager _loggerManager;
+        public CategoryController(
+            IServiceManager serviceManager, 
+            IMapper mapper,
+            ILoggerManager loggerManager)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
+            _loggerManager = loggerManager; 
         }
 
         public async Task<IActionResult> Categories(string sortBy, string sortOrder, string searchString)
@@ -25,7 +31,14 @@ namespace LibraryManagement.Controllers
             ViewData["CurrentSearchString"] = searchString;
 
             var categories = await _serviceManager.CategoryService.GetAllCategories(sortBy, sortOrder, searchString,false);
-            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categories);
+
+            if (categories.IsFailed)
+            {
+                _loggerManager.LogError($"Error getting all Categories:  {string.Join(", ", categories.Errors.Select(e => e.Message))}");
+                return View("Error");   
+            }
+
+            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categories.Value);
             return View(categoryViewModel);
         }
 
@@ -44,7 +57,16 @@ namespace LibraryManagement.Controllers
             }
 
             var createCategoryDto = _mapper.Map<CreateCategoryDto>(categoryViewModel);
-            await _serviceManager.CategoryService.CreateCategory(createCategoryDto, false);
+
+            var result = await _serviceManager.CategoryService.CreateCategory(createCategoryDto, false);
+
+            if (result.IsFailed)
+            {
+                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Catgeory";
+                _loggerManager.LogError($"An error occured while createing Category {errorMessage}");
+                categoryViewModel.ErrorMessage = errorMessage;
+            }
+
             return RedirectToAction("Categories");
         }
 
@@ -52,10 +74,15 @@ namespace LibraryManagement.Controllers
         {
             var category = await _serviceManager.CategoryService.GetCategory(id, false);
 
+            if (category.IsFailed)
+            {
+                _loggerManager.LogError($"The category with id {id} was not found");
+            }
+
             var categoryViewModel = new CategoryViewModel()
             {
-                CategoryId = category.CategoryId,
-                Title = category.Title
+                CategoryId = category.Value.CategoryId,
+                Title = category.Value.Title
             };
 
             return View(categoryViewModel);

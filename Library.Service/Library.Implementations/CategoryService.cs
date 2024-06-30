@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Library.Data.NewFolder;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using Microsoft.VisualBasic;
 using System;
@@ -21,28 +23,39 @@ namespace Library.Service.Library.Implementations
             _repositoryManager  = repositoryManager;    
             _mapper = mapper;
         }
-        public async Task CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
+        public async Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
         {
             var categoryEntity = _mapper.Map<Category>(categoryDto);
             _repositoryManager.CategoryRepository.CreateCategory(categoryEntity);
 
             await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
         }
 
-        public async Task DeleteCategory(Guid id, bool trackChanges)
+        public async Task<Result> DeleteCategory(Guid id, bool trackChanges)
         {
             var category = await _repositoryManager.CategoryRepository.GetCategory(id, trackChanges);
 
+            if(category == null)
+            {
+                return Result.Fail(new NotFoundError("Category", id));
+            }
+
+
+
              _repositoryManager.CategoryRepository.DeleteCatgeory(category);
 
-            await _repositoryManager.SaveAsync();   
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
 
 
 
 
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllCategories(
+        public async Task<Result<IEnumerable<CategoryDto>>> GetAllCategories(
             string sortBy, 
             string sortOrder, 
             string searchString,
@@ -59,22 +72,37 @@ namespace Library.Service.Library.Implementations
 
 
             var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
-            return categoreisDto;
+            return Result.Ok(categoreisDto);
         }
 
-        public async Task<CategoryDto> GetCategory(Guid id, bool trackChanges)
+        public async Task<Result<CategoryDto>> GetCategory(Guid id, bool trackChanges)
         {
             var category = await _repositoryManager.CategoryRepository.GetCategory(id, trackChanges);
+
+            if(category == null)
+            {
+                return Result.Fail(new NotFoundError("Category", id));
+            }
+
             var categoryDto = _mapper.Map<CategoryDto>(category);
             return categoryDto;
         }
 
-        public async Task UpdateCategory(CategoryDto categoryDto, bool trackChanges)
+        public async Task<Result> UpdateCategory(CategoryDto categoryDto, bool trackChanges)
         {
             var categoryEntity = await _repositoryManager.CategoryRepository.GetCategory(categoryDto.CategoryId, trackChanges);
+
+            if(categoryEntity == null)
+            {
+                return Result.Fail(new NotFoundError("Category",  categoryDto.CategoryId)); 
+            }
+
+
             _mapper.Map(categoryDto, categoryEntity);
 
             await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
         }
 
         private IEnumerable<Category> ApplySorting(IEnumerable<Category> categories, string sortBy, string sortOrder)

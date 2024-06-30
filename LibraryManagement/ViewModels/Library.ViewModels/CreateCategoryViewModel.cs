@@ -6,5 +6,6 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
     {
         [Required(ErrorMessage = "Category Title is Required")]
         public string? Title { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

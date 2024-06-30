@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
+using Library.Service.Logging;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,15 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public PublisherController(IServiceManager serviceManager, IMapper mapper)
+        private readonly ILoggerManager _loggerManager;
+        public PublisherController(
+            IServiceManager serviceManager, 
+            IMapper mapper,
+            ILoggerManager loggerManager)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
+            _loggerManager = loggerManager;
         }
 
         public async Task<IActionResult> Publishers(string sortBy, string sortOrder, string searchString)
@@ -25,7 +31,13 @@ namespace LibraryManagement.Controllers
 
             var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(sortBy,sortOrder,searchString,false);
 
-            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto);
+            if (publisherDto.IsFailed)
+            {
+                _loggerManager.LogError($"Error getting all Categories:  {string.Join(", ", publisherDto.Errors.Select(e => e.Message))}");
+                return View("Error");
+            }
+
+            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
 
             return View(publisherViewModel);
 
@@ -57,7 +69,15 @@ namespace LibraryManagement.Controllers
 
             var publisherDto = _mapper.Map<CreatePublisherDto>(createPublisherViewModel);
 
-            await _serviceManager.PublisherService.CreatePublisher(publisherDto, false);
+            var result = await _serviceManager.PublisherService.CreatePublisher(publisherDto, false);
+
+            if (result.IsFailed)
+            {
+                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Publisher";
+                _loggerManager.LogError($"An error occured while createing publisher {errorMessage}");
+                createPublisherViewModel.ErrorMessage = errorMessage;
+            }
+
 
             return RedirectToAction("Publishers");   
 
@@ -67,12 +87,18 @@ namespace LibraryManagement.Controllers
         {
             var publisher = await _serviceManager.PublisherService.GetPublisher(id, false);
 
+            if (publisher.IsFailed)
+            {
+                _loggerManager.LogError($"The publisher with id {id} was not found");
+            }
+
+
             var publisherViewModel = new PublisherViewModel()
             {
-                PublisherId = publisher.PublisherId,
-                PublisherName = publisher.PublisherName,
-                Email = publisher.Email,
-                PhoneNumber = publisher.PhoneNumber
+                PublisherId = publisher.Value.PublisherId,
+                PublisherName = publisher.Value.PublisherName,
+                Email = publisher.Value.Email,
+                PhoneNumber = publisher.Value.PhoneNumber
             };
 
             return View(publisherViewModel);

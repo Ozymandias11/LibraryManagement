@@ -31,7 +31,14 @@ namespace LibraryManagement.Controllers
             ViewData["CurrentSearchString"] = searchString;
 
             var authorDtos = await _serviceManager.AuthorService.GetAllAuthors(sortBy, sortOrder, searchString,false);
-            var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos);
+
+            if (authorDtos.IsFailed)
+            {
+                _loggerManager.LogError($"Error getting all authors:  {string.Join(", ", authorDtos.Errors.Select(e => e.Message))}");
+                return View("Error");
+            }
+
+            var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos.Value);
             return View(authorsViewModel);
 
         }
@@ -54,7 +61,16 @@ namespace LibraryManagement.Controllers
 
             var createAuhtorDto = _mapper.Map<CreateAuthorDto>(createAuthorViewModel);
 
-            await _serviceManager.AuthorService.CreateAuthor(createAuhtorDto, false);
+            var result = await _serviceManager.AuthorService.CreateAuthor(createAuhtorDto, false);
+
+            if (result.IsFailed)
+            {
+                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Author";
+                _loggerManager.LogError($"An error occured while createing author {errorMessage}");
+                createAuthorViewModel.ErrorMessage = errorMessage;
+
+                return View(createAuthorViewModel);
+            }
 
             return RedirectToAction("Authors");
 
@@ -73,13 +89,18 @@ namespace LibraryManagement.Controllers
 
             var author = await _serviceManager.AuthorService.GetAuthor(id, false);
 
+            if (author.IsFailed)
+            {
+                _loggerManager.LogError($"The Author with id {id} was not found");
+            }
+
 
             var authorViewModel = new AuthorViewModel()
             {
-                AuthorId = author.AuthorId,
-                FirstName = author.FirstName,
-                LastName = author.LastName,
-                DateOfBirth = author.DateOfBirth
+                AuthorId = author.Value.AuthorId,
+                FirstName = author.Value.FirstName,
+                LastName = author.Value.LastName,
+                DateOfBirth = author.Value.DateOfBirth
             };
 
             return  View(authorViewModel);

@@ -1,4 +1,5 @@
-﻿using Library.Service.Dto.Library.Dto;
+﻿using FluentResults;
+using Library.Service.Dto.Library.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Library.Service.Library.Interfaces
 {
     public interface IPublisherService
     {
-        Task<IEnumerable<PublisherDto>> GetAllPublishers(
+        Task<Result<IEnumerable<PublisherDto>>> GetAllPublishers(
             string sortBy,
             string sortOrder,
             string searchString, bool trackChanges);
-        Task<PublisherDto> GetPublisher(Guid id, bool trackChanges);
-        Task CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges);
-        Task DeletePublisher(Guid guid, bool trackChanges);
-        Task UpdatePublisher(PublisherDto publisherDto, bool trackChanges);
+        Task<Result<PublisherDto>> GetPublisher(Guid id, bool trackChanges);
+        Task<Result> CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges);
+        Task<Result> DeletePublisher(Guid guid, bool trackChanges);
+        Task<Result> UpdatePublisher(PublisherDto publisherDto, bool trackChanges);
     }
 }
