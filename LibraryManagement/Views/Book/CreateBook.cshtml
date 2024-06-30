@@ -1,36 +1,5 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateBookViewModel
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#authors').select2({
-                placeholder: 'Select authors',
-                multiple: true,
-                allowClear: true
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#publishers').select2({
-                placeholder: 'Select Publishers',
-                multiple: true,
-                allowClear: true
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#Categories').select2({
-                placeholder: 'Select Categories',
-                multiple: true,
-                allowClear: true
-            });
-        });
-    </script>
-}
 
 
 <div class="container">
@@ -111,3 +80,8 @@
 
 
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src ="~/js/custom-selects.js"></script>
+}
