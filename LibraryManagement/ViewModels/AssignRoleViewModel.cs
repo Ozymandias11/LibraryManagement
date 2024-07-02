@@ -1,4 +1,4 @@
-﻿using LibraryManagement.Validators;
+﻿
 using System.ComponentModel.DataAnnotations;
 
 namespace LibraryManagement.ViewModels
@@ -8,7 +8,7 @@ namespace LibraryManagement.ViewModels
 
         public string Id { get; set; }
 
-        [RequireAtLeastOneRole(ErrorMessage = "Please select at least one Role")]
+      //  [RequireAtLeastOneRole(ErrorMessage = "Please select at least one Role")]
         public ICollection<string>? SelectedRoles { get; set; }
         public ICollection<String>? CurrentRoles { get; set; }
 

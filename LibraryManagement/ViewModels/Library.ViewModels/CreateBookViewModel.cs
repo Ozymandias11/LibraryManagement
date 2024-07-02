@@ -17,13 +17,13 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public IEnumerable<CategoryViewModel> Categories { get; set; }
 
 
-        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+       // [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
         public IEnumerable<Guid> SelectedAuthorIds { get; set; } 
 
-        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+      //  [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
         public IEnumerable<Guid> SelectedPublisherIds { get; set; } 
 
-        [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
+       // [MinimumCount(1, ErrorMessage = "Please select at least one Author")]
         public IEnumerable<Guid> SelectedCategoryIds{ get; set; }
 
 

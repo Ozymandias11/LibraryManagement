@@ -4,6 +4,13 @@
     ViewData["Title"] = "Authors";
     ViewData["ActionUrl"] = "Authors";
     ViewData["ActionName"] = "Authors";
+
+    var sortableColumns = new[]
+    {
+        ("First Name", "FirstName"),
+        ("Last Name", "LastName"),
+        ("Date of Birth", "DateOfBirth")
+    };
 }
 
 <div class="card">
@@ -20,9 +27,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("FirstName", "FirstName"))
-                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("LastName", "LastName"))
-                        @await Html.PartialAsync("_SortableHeader", Tuple.Create("DateOfBirth", "DateOfBirth"))
+                        @await Html.PartialAsync("_SortableHeader", sortableColumns)
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>

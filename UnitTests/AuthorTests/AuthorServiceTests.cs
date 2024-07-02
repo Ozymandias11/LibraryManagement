@@ -31,18 +31,18 @@ namespace UnitTests.AuthorTests
             _authorService = new AuthorService(_mockRepositoryManager.Object, _mockMapper.Object);
         }
 
-        //[Fact]
-        //public async Task GetAllAuhtors_ShouldReturnError_WhenReposiotryFails()
-        //{
-        //    _mockRepositoryManager.Setup(r => r.AuthorRepository.GetAllAuthor(It.IsAny<bool>())).ThrowsAsync(new Exception("Repository failed"));
+        [Fact]
+        public async Task GetAllAuhtors_ShouldReturnError_WhenReposiotryFails()
+        {
+            _mockRepositoryManager.Setup(r => r.AuthorRepository.GetAllAuthor(It.IsAny<bool>())).ThrowsAsync(new Exception("Repository failed"));
 
-        //    var result = await _authorService.GetAllAuthors(null, null, null, false);
+            var result = await _authorService.GetAllAuthors(null, null, null, false);
 
-        //    result.IsFailed.Should().BeTrue();
-        //    result.Errors.Should().ContainSingle()
-        //        .Which.Message.Should().Be("Repository failed");
+            result.IsFailed.Should().BeTrue();
+            result.Errors.Should().ContainSingle()
+                .Which.Message.Should().Be("Repository failed");
 
-        //}
+        }
 
 
     }

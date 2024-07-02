@@ -2,7 +2,16 @@
 
 @{
     ViewData["Title"] = "Book Copies";
-    
+    ViewData["ActionUrl"] = "BookCopies";
+    ViewData["ActionName"] = "BookCopies";
+    ViewData["CurrentPage"] = Model.FirstOrDefault()?.CurrentPage ?? 1;
+    var sortableColumns = new[]
+    {
+        ("BookTitle", "BookTitle"),
+        ("PublisherName", "PublisherName"),
+        ("Edition", "Edition")
+
+    };
 }
 
 <div class="card">
@@ -12,84 +21,14 @@
         </div>
         <table>
             <tr>
-                <form method="get" action="BookCopies">
-                <td style="padding-right:755px">
-                </td>
-                <td>
-                    <input class="form-control" type="text" placeholder="Search for..." name="SearchString" value="@ViewData["CurrentSearchString"]" aria-label="Search" aria-describedby="btnNavbarSearch" />
-                </td>
-                <td>
-                    <input type="hidden" name="sortBy" value="@ViewBag.SortBy" />
-                    <input type="hidden" name="sortOrder" value="@ViewBag.SortOrder" />
-                    <input style="margin-left: 10px;" type="submit" value="Search" class="btn btn-primary" />
-                </td>
-                </form>
+                @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
             </tr>
         </table>
         <div class="table-responsive wide-table">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("BookCopies", new { sortBy = "BookTitle", sortOrder = ViewBag.SortOrder == "Title_Asc" ? "Title_Desc" : "Title_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Book Title
-                                @if (ViewBag.SortBy == "BookTitle")
-                                {
-                                    @if (ViewBag.SortOrder == "Title_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "Title_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("BookCopies", new { sortBy = "PublisherName", sortOrder = ViewBag.SortOrder == "Publisher_Asc" ? "Publisher_Desc" : "Publisher_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Publisher
-                                @if (ViewBag.SortBy == "PublisherName")
-                                {
-                                    @if (ViewBag.SortOrder == "Publisher_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "Publisher_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
-                        <th class="text-primary text-center">
-                            <a href="@Url.Action("BookCopies", new { sortBy = "Edition", sortOrder = ViewBag.SortOrder == "Edition_Asc" ? "Edition_Desc" : "Edition_Asc", SearchString = ViewData["CurrentSearchString"] })" class="text-primary">
-                                Edition
-                                @if (ViewBag.SortBy == "Edition")
-                                {
-                                    @if (ViewBag.SortOrder == "Edition_Asc")
-                                    {
-                                        <i class="fas fa-arrow-up"></i>
-                                    }
-                                    else if (ViewBag.SortOrder == "Edition_Desc")
-                                    {
-                                        <i class="fas fa-arrow-down"></i>
-                                    }
-                                }
-                                else
-                                {
-                                    <i class="fas fa-sort"></i>
-                                }
-                            </a>
-                        </th>
+                        @await Html.PartialAsync("_SortableHeader", sortableColumns)
                         <th class="text-primary text-center">Number of Pages</th>
                         <th class="text-primary text-center">Status</th>
                         <th class="text-primary text-center">Quantity</th>
@@ -108,8 +47,8 @@
                             <td class="text-center">@bookCopy.Quantity</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                    <a asp-controller="BookCopy" asp-action="EditBookCopy" asp-route-id="@bookCopy.BookCopyId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-book-copy-id="@bookCopy.BookCopyId" data-book-title="@bookCopy.BookTitle">Delete</button>
+                                 @*    <a asp-controller="BookCopy" asp-action="EditBookCopy" asp-route-id="@bookCopy.BookCopyId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-book-copy-id="@bookCopy.BookCopyId" data-book-title="@bookCopy.BookTitle">Delete</button> *@
                                 </div>
                             </td>
                         </tr>
@@ -118,26 +57,14 @@
             </table>
             <a asp-action="CreateBookCopy" class="btn btn-primary">Add Book Copy</a>
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                @{
-                    var prevDisabled = Model.FirstOrDefault()?.CurrentPage == 1 ? "disabled" : "";
-                    var nextDisabled = Model.FirstOrDefault()?.CurrentPage == Model.FirstOrDefault()?.TotalPages ? "disabled" : "";
-                }
-                <li class="page-item @prevDisabled">
-                    <a class="page-link" href="@Url.Action("BookCopies", new { page = Model.FirstOrDefault()?.CurrentPage - 1, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">Previous</a>
-                </li>
-                @for (int i = 1; i <= Model.FirstOrDefault()?.TotalPages; i++)
-                {
-                    <li class="page-item @(i == Model.FirstOrDefault()?.CurrentPage ? "active" : "")">
-                        <a class="page-link" href="@Url.Action("BookCopies", new { page = i, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">@i</a>
-                    </li>
-                }
-                <li class="page-item @nextDisabled">
-                    <a class="page-link" href="@Url.Action("BookCopies", new { page = Model.FirstOrDefault()?.CurrentPage + 1, pageSize = Model.FirstOrDefault()?.PageSize, sortBy = ViewBag.SortBy, sortOrder = ViewBag.SortOrder, searchString = ViewData["CurrentSearchString"] })">Next</a>
-                </li>
-            </ul>
-        </nav>
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.FirstOrDefault()?.CurrentPage ?? 1,
+                 TotalPages: Model.FirstOrDefault()?.TotalPages ?? 1,
+                 PageSize: Model.FirstOrDefault()?.PageSize ?? 2,
+                 SortBy: ViewBag.SortBy,
+                 SortOrder: ViewBag.SortOrder,
+                 SearchString: ViewData["CurrentSearchString"] as string
+                 ))
       
     </div>
 </div>

@@ -30,27 +30,7 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> CreateBook()
         {
-            // Get Authors
-            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
-            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
-
-            //Get Publishers
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","","",false);
-            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
-
-            //Get Categories
-
-            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
-            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
-
-
-            var createBookViewModel = new CreateBookViewModel()
-            {
-                Authors = authorViewModel,
-                Publishers = publisherViewModel,
-                Categories = categoryViewModel,
-            };
-            return View(createBookViewModel);
+            return View(await PopulateCreateBookViewModel());
         }
 
 
@@ -59,6 +39,7 @@ namespace LibraryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
+                createBookViewModel = await PopulateCreateBookViewModel();
                 return View(createBookViewModel);
             }
 
@@ -113,7 +94,6 @@ namespace LibraryManagement.Controllers
                 Authors = authorViewModel,
                 Publishers = publisherViewModel,
                 Categories = categoryViewModel,
-                // can also be done with automapper
                 SelectedAuthorIds = bookAuthors.Select(ba => ba.AuthorId),
                 SelectedPublisherIds = bookPublishers.Select(ba => ba.PublisherId),
                 SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId),   
@@ -154,6 +134,20 @@ namespace LibraryManagement.Controllers
 
            
 
+        }
+
+        private async Task<CreateBookViewModel> PopulateCreateBookViewModel(CreateBookViewModel model = null)
+        {
+            var authorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "", false);
+            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
+            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
+
+            var viewModel = model ?? new CreateBookViewModel();
+            viewModel.Authors = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDto.Value);
+            viewModel.Publishers = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
+            viewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
+
+            return viewModel;
         }
 
 

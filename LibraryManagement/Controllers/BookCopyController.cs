@@ -17,9 +17,28 @@ namespace LibraryManagement.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> BookCopies(int page = 1, int pageSize = 10) 
+        public async Task<IActionResult> BookCopies(
+            string sortBy,
+            string sortOrder,
+            string searchString, 
+            int page = 1,
+            int pageSize = 2) 
         {
-            var bookCopies = await _serviceManager.BookCopyService.GetAllBookCopies(page, pageSize,false);
+
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.isPaginated = true;
+            ViewData["CurrentSearchString"] = searchString;
+            ViewData["CurrentPage"] = page;
+
+            var bookCopies = await _serviceManager.BookCopyService.GetAllBookCopies(
+                sortBy,
+                sortOrder,
+                searchString
+                ,page,
+                pageSize
+                ,false);
+
             var bookCopyViewModel =  _mapper.Map<IEnumerable<BookCopyViewModel>>(bookCopies);
 
             foreach(var bookCopyviewModel_1 in bookCopyViewModel)

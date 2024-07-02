@@ -1,30 +1,34 @@
-﻿@model Tuple<string, string>
-
+﻿@model IEnumerable<(string displayName, string column)>
 @{
-    string column = Model.Item1;
-    string displayName = Model.Item2;
-    string sortOrder = ViewBag.SortOrder;
-    string sortBy = ViewBag.SortBy;
-    string currentSearchString = ViewData["CurrentSearchString"] as string;
+    var sortBy = ViewBag.SortBy;
+    var sortOrder = ViewBag.SortOrder;
+    var currentSearchString = ViewData["CurrentSearchString"] as string;
+    var actionName = ViewData["ActionName"] as string;
+    var currentPage = ViewBag.CurrentPage ?? 1;
 }
 
-<th class="text-primary text-center">
-    <a href="@Url.Action(ViewData["ActionName"].ToString(), new { sortBy = column, sortOrder = sortOrder == column + "_Asc" ? column + "_Desc" : column + "_Asc", SearchString = currentSearchString })" class="text-primary">
-        @displayName
-        @if (sortBy == column)
-        {
-            if (sortOrder == column + "_Asc")
+@foreach (var (displayName, column) in Model)
+{
+    <th class="text-primary text-center">
+        @{
+            string nextSortOrder = (sortBy != column || sortOrder == column + "_Default") ? column + "_Asc" :
+            (sortOrder == column + "_Asc") ? column + "_Desc" : column + "_Default";
+
+            var routeValues = new Dictionary<string, object>
+                {
+                    ["sortBy"] = column,
+                    ["sortOrder"] = nextSortOrder,
+                    ["SearchString"] = currentSearchString
+                };
+
+            if (ViewBag.IsPaginated == true)
             {
-                <i class="fas fa-arrow-up"></i>
-            }
-            else if (sortOrder == column + "_Desc")
-            {
-                <i class="fas fa-arrow-down"></i>
+                routeValues["page"] = currentPage;
             }
         }
-        else
-        {
-            <i class="fas fa-sort"></i>
-        }
-    </a>
-</th>
+        <a href="@Url.Action(actionName, routeValues)" class="text-primary">
+            @displayName
+            <i class="fas fa-@(sortBy == column ? (sortOrder == column + "_Asc" ? "arrow-up" : sortOrder == column + "_Desc" ? "arrow-down" : "sort") : "sort")"></i>
+        </a>
+    </th>
+}
