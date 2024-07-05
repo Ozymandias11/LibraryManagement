@@ -180,7 +180,25 @@ namespace Library.Data.Configuration
                                             ControllerName = "BookCopy",
                                             ActionName = "BookCopies",
                                             Permitted = true,
-                                        }
+                                        },
+                                          new NavigationMenu
+                                          {
+                                              Id = new Guid("f513d8d7-b945-40d2-b679-2c2bbdd24f25"),
+                                              Name = "Reservations",
+                                              ParentMenuId = null,
+                                              ControllerName = null,
+                                              ActionName = null,
+                                              Permitted = true,
+                                          },
+                                           new NavigationMenu
+                                           {
+                                               Id = new Guid("10dc9edc-913d-4dda-a6ff-fe9065d575ee"),
+                                               Name = "Customers",
+                                               ParentMenuId = new Guid("f513d8d7-b945-40d2-b679-2c2bbdd24f25"),
+                                               ControllerName = "Customer",
+                                               ActionName = "Customers",
+                                               Permitted = true,
+                                           }
 
                 );
 

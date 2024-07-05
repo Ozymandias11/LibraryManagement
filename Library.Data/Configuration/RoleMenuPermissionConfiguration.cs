@@ -176,7 +176,20 @@ namespace Library.Data.Configuration
                                             Id = Guid.NewGuid(),
                                             RoleId = librarianRoleId,
                                             NavigationMenuId = new Guid("092ac460-2e13-4e44-b207-7d44e3f5ca8b")
-                                        }
+                                        },
+                                          new RoleMenuPermission
+                                          {
+                                              Id = Guid.NewGuid(),
+                                              RoleId = librarianRoleId,
+                                              NavigationMenuId = new Guid("f513d8d7-b945-40d2-b679-2c2bbdd24f25")
+                                          },
+                                            new RoleMenuPermission
+                                            {
+                                                Id = Guid.NewGuid(),
+                                                RoleId = librarianRoleId,
+                                                NavigationMenuId = new Guid("10dc9edc-913d-4dda-a6ff-fe9065d575ee")
+                                            }
+
 
 
 

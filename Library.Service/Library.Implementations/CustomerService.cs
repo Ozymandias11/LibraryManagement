@@ -48,9 +48,28 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<CustomerDto>> GetAllCustomers(bool trackChanges)
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomers(
+            string sortBy,
+            string sortOrder,
+            string searchString,
+            int page,
+            int pageSize,
+            bool trackChanges)
         {
-            var customers = await _repositoryManager.CustomerRepository.GetAllCustomers(trackChanges);
+            var customers = await _repositoryManager.CustomerRepository.GetAllCustomers(page, pageSize, trackChanges);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(c => c.FirstName.Contains(searchString) ||
+                                                 c.LastName.Contains(searchString) ||
+                                                 c.Email.Contains(searchString));
+            }
+
+
+            customers = ApplySorting(customers, sortBy, sortOrder);
+
+
+
             var customerDtos = _mapper.Map<IEnumerable<CustomerDto>>(customers);
             return customerDtos;    
         }
@@ -72,6 +91,9 @@ namespace Library.Service.Library.Implementations
 
         }
 
+        public async Task<int> GetTotalCustomersCount() => await _repositoryManager.CustomerRepository.GetTotalCustomersCount();
+      
+
         public async Task<Result> UpdateCustomer(CustomerDto customerDto, bool trackChanges)
         {
             var customerEntity = await _repositoryManager.CustomerRepository.GetCustomer(customerDto.CustomerId, trackChanges);
@@ -88,6 +110,20 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
 
 
+        }
+
+        private IEnumerable<Customer> ApplySorting(IEnumerable<Customer> customers, string sortBy, string sortOrder) 
+        {
+            return customers = sortBy switch
+            {
+                "LastName" => sortOrder == "LastName_Asc" ? customers.OrderBy(c => c.LastName) :
+                                                            customers.OrderByDescending(c => c.LastName),
+                "FirstName" => sortOrder == "FirstName_Asc" ? customers.OrderBy(c => c.FirstName) :
+                                                              customers.OrderByDescending(c => c.FirstName),
+                "Email" => sortOrder == "Email_Asc" ? customers.OrderBy(c => c.Email) :
+                                                            customers.OrderByDescending(c => c.Email),
+                _ => customers.OrderBy(c => c.CreatedDate)
+            };
         }
     }
 }

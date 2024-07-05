@@ -11,5 +11,11 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public string? PhoneNumber { get; set; }
 
         public string? Address { get; set; }
+
+        // properties for paging 
+        public int CurrentPage { get; set; }
+        public int PageSize { get; set; }
+        public int TotalCount { get; set; }
+        public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
     }
 }

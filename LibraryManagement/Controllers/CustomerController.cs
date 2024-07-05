@@ -19,10 +19,43 @@ namespace LibraryManagement.Controllers
             _loggerManager = loggerManager; 
         }
 
-        public async Task<IActionResult> Customers() 
+        public async Task<IActionResult> Customers(
+            string sortBy,
+            string sortOrder,
+            string searchString,
+            int page = 1,
+            int pageSize = 10) 
         {
-            var customerDtos = await _serviceManager.CustomerService.GetAllCustomers(false);
+
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.isPaginated = true;
+            ViewData["CurrentSearchString"] = searchString;
+            ViewData["CurrentPage"] = page;
+
+            var customerDtos = await _serviceManager.CustomerService.GetAllCustomers(
+                sortBy, 
+                sortOrder, 
+                searchString,
+                page,
+                pageSize,
+                false);
+
             var customerViewModels = _mapper.Map<IEnumerable<CustomerViewModel>>(customerDtos);
+
+            foreach (var customer in customerViewModels)
+            {
+                customer.CurrentPage = page;
+                customer.PageSize = pageSize;
+                customer.TotalCount = await _serviceManager.CustomerService.GetTotalCustomersCount();
+            }
+
+
+           
+
+
+
+
             return View(customerViewModels);
         }
 

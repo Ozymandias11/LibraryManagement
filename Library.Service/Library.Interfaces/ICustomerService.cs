@@ -10,10 +10,17 @@ namespace Library.Service.Library.Interfaces
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<CustomerDto>> GetAllCustomers(bool trackChanges);
+        Task<IEnumerable<CustomerDto>> GetAllCustomers(
+            string sortBy,
+            string sortOrder,
+            string searchString,
+            int page,
+            int pageSize,
+            bool trackChanges);
         Task<Result<CustomerDto>> GetCustomer(Guid id, bool trackChanges);  
         Task<Result> CreateCustomer(CreateCustomerDto customer, bool trackChanges);
         Task<Result> DeleteCustomer(Guid id, bool trackChanges);    
         Task<Result> UpdateCustomer(CustomerDto customerDto , bool trackChanges);
+        Task<int> GetTotalCustomersCount();
     }
 }
