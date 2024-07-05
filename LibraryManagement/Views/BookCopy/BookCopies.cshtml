@@ -32,6 +32,8 @@
                         <th class="text-primary text-center">Number of Pages</th>
                         <th class="text-primary text-center">Status</th>
                         <th class="text-primary text-center">Quantity</th>
+                        <th class="text-primary text-center">Room</th>
+                        <th class="text-primary text-center">Shelf</th>
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
@@ -45,6 +47,8 @@
                             <td class="text-center">@bookCopy.NumberOfPages</td>
                             <td class="text-center">@bookCopy.Status</td>
                             <td class="text-center">@bookCopy.Quantity</td>
+                            <td class="text-center">@bookCopy.RoomNumber</td>
+                            <td class="text-center">@bookCopy.ShelfNumber</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
                                  @*    <a asp-controller="BookCopy" asp-action="EditBookCopy" asp-route-id="@bookCopy.BookCopyId" class="btn btn-primary btn-sm mr-2">Edit</a>
@@ -60,7 +64,7 @@
         @await Html.PartialAsync("_Pagination", (
                  CurrentPage: Model.FirstOrDefault()?.CurrentPage ?? 1,
                  TotalPages: Model.FirstOrDefault()?.TotalPages ?? 1,
-                 PageSize: Model.FirstOrDefault()?.PageSize ?? 2,
+                 PageSize: Model.FirstOrDefault()?.PageSize ?? 10,
                  SortBy: ViewBag.SortBy,
                  SortOrder: ViewBag.SortOrder,
                  SearchString: ViewData["CurrentSearchString"] as string

@@ -47,7 +47,11 @@ namespace Library.Data.Library.Implementations
             // First, fetch all data without grouping
             var query = FindAll(trackChanges)
                 .Include(bc => bc.OriginalBook)
-                .Include(bc => bc.Publisher);
+                .Include(bc => bc.Publisher)
+                .Include(bc => bc.Shelves)
+                  .ThenInclude(bcs => bcs.Shelf)
+                   .ThenInclude(s => s.Room);
+
 
             // Fetch all book copies
             var allBookCopies = await query.ToListAsync();
@@ -63,7 +67,8 @@ namespace Library.Data.Library.Implementations
                     Edition = g.Key.Edition,
                     NumberOfPages = g.First().NumberOfPages,
                     Status = g.First().Status,
-                    Quantity = g.Count()
+                    Quantity = g.Count(),
+                    Shelves = g.SelectMany(bc => bc.Shelves).ToList()
                 })
                 .OrderBy(bc => bc.OriginalBook.Title)
                 .Skip((page - 1) * pageSize)

@@ -22,7 +22,7 @@ namespace LibraryManagement.Controllers
             string sortOrder,
             string searchString, 
             int page = 1,
-            int pageSize = 2) 
+            int pageSize = 10) 
         {
 
             ViewBag.SortBy = sortBy;

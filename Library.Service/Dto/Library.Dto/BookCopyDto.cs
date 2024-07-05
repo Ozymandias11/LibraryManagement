@@ -19,6 +19,8 @@ namespace Library.Service.Dto.Library.Dto
         public string PublisherName { get; set; }
         public string BookTitle { get; set; }
         public Guid OriginaBookId { get; set; }
+        public int RoomNumber { get; set; }
+        public int ShelfNumber { get; set; }
     }
 
 }

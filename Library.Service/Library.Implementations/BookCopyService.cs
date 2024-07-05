@@ -73,7 +73,17 @@ namespace Library.Service.Library.Implementations
 
             bookCopy = ApplySorting(bookCopy, sortBy, sortOrder);   
 
-            var bookCopyDto = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopy);  
+            var bookCopyDto = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopy);
+
+            foreach (var dto in bookCopyDto)
+            {
+                var bookCopyShelf = bookCopy.FirstOrDefault(bc => bc.BookCopyId == dto.BookCopyId)?.Shelves.FirstOrDefault();
+                if (bookCopyShelf != null)
+                {
+                    dto.RoomNumber = bookCopyShelf.Shelf.Room.RoomNumber;
+                    dto.ShelfNumber  = bookCopyShelf.Shelf.ShelfNumber;
+                }
+            }
 
 
             return bookCopyDto;
