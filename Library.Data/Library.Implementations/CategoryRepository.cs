@@ -19,10 +19,10 @@ namespace Library.Data.Library.Implementations
        
 
         public void DeleteCatgeory(Category category) => Delete(category);
-        
+
 
         public async Task<IEnumerable<Category>> GetAllCategories(bool trackChanges) =>
-            await FindAll(trackChanges).OrderBy(a => a.CreatedDate).ToListAsync();
+            await FindByCondition(c => c.DeletedDate == null, trackChanges).ToListAsync();
 
         public async Task<IEnumerable<Category>> GetCategoriesById(IEnumerable<Guid> ids, bool trackChanges) =>
             await FindByCondition(c => ids.Contains(c.CategoryId), trackChanges).ToListAsync();

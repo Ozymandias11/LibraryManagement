@@ -19,8 +19,6 @@ namespace Library.Data.Configuration
 
             builder.Property(c => c.LastName).IsRequired();
 
-            builder.Property(c => c.Address).IsRequired();
-
 
             builder.Property(c => c.Email)
                 .IsRequired()
@@ -29,13 +27,16 @@ namespace Library.Data.Configuration
 
             builder.Property(c => c.PhoneNumber)
                 .IsRequired()
-                .HasAnnotation("RegularExpression", @"^\+\d{1,3}\s?\(?\d{1,4}\)?[\s.-]?\d{1,10}$")
-                .HasAnnotation("RegularExpressionErrorMessage", "Invalid phone number format");
+                .HasMaxLength(9)
+                .HasAnnotation("RegularExpression", @"^5\d{8}$");
 
 
             builder.HasMany(c => c.Reservations)
                 .WithOne(r => r.Customer)
                 .HasForeignKey(r => r.CustomerID);
+
+            builder.OwnsOne(c => c.Address);
+           
 
 
 

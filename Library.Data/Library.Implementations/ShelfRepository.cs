@@ -15,6 +15,10 @@ namespace Library.Data.Library.Implementations
         {
         }
 
+        public async Task<Shelf?> GetShelf(Guid roomId, Guid shelfId, bool trackChanges)
+            => await FindByCondition(s => s.RoomId == roomId && s.ShelfId == shelfId, trackChanges).FirstOrDefaultAsync();
+      
+
         public async Task<IEnumerable<Shelf>> GetShelves(Guid roomId, bool trackChanges) => 
             await FindByCondition(s => s.RoomId == roomId, trackChanges).ToListAsync();
             

@@ -24,6 +24,7 @@ namespace Library.Service
         private readonly Lazy<IBookCopyService> _bookCopyService;
         private readonly Lazy<IRoomService> _roomService;
         private readonly Lazy<IShelfService> _shelfService;
+        private readonly Lazy<ICustomerService> _customerService;
 
 
 
@@ -38,6 +39,7 @@ namespace Library.Service
             _bookCopyService = new Lazy<IBookCopyService>(() => new BookCopyService(reposiotryManager, mapper));
             _roomService = new Lazy<IRoomService>(() => new RoomService(reposiotryManager, mapper));
             _shelfService = new Lazy<IShelfService>(() => new ShelfService(reposiotryManager, mapper));
+            _customerService = new Lazy<ICustomerService>(() => new CustomerService(reposiotryManager, mapper));
 
 
         }
@@ -56,5 +58,7 @@ namespace Library.Service
         public IRoomService RoomService => _roomService.Value;
 
         public IShelfService ShelfService => _shelfService.Value;
+
+        public ICustomerService CustomerService => _customerService.Value;
     }
 }

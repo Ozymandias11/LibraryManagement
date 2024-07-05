@@ -29,7 +29,7 @@
                                     <div class="form-group focused">
                                         <label class="form-control-label">First Name</label>
                                         <div class="d-flex align-items-center">
-                                            <p id="input-first-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="true">@Model.FirstName</p>
+                                            <p id="input-first-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.FirstName</p>
                                             <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-first-name')"></i>
                                             <input type="hidden" name="FirstName" id="hidden-first-name" value="@Model.FirstName" />
                                         </div>
@@ -40,7 +40,7 @@
                                     <div class="form-group focused">
                                         <label class="form-control-label">Last Name</label>
                                         <div class="d-flex align-items-center">
-                                            <p id="input-last-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="true">@Model.LastName</p>
+                                            <p id="input-last-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.LastName</p>
                                             <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-last-name')"></i>
                                             <input type="hidden" name="LastName" id="hidden-last-name" value="@Model.LastName" />
                                         </div>

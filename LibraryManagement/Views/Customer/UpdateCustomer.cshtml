@@ -1,0 +1,125 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.UpdateCustomerViewModel
+
+<div class="container-fluid mt--7">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Customer Information</h3>
+                        </div>
+                    </div>
+                </div>
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                }
+                <div class="card-body">
+                    <form id="customer-form" asp-action="UpdateCustomer" asp-controller="Customer" method="post">
+                        <input type="hidden" asp-for="CustomerId" />
+                        <div class="pl-lg-4">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">First Name</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-first-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.FirstName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-first-name')"></i>
+                                            <input type="hidden" name="FirstName" id="hidden-first-name" value="@Model.FirstName" />
+                                        </div>
+                                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Last Name</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-last-name" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.LastName</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-last-name')"></i>
+                                            <input type="hidden" name="LastName" id="hidden-last-name" value="@Model.LastName" />
+                                        </div>
+                                        <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Email</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-email" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.Email</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-email')"></i>
+                                            <input type="hidden" name="Email" id="hidden-email" value="@Model.Email" />
+                                        </div>
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Phone Number</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-phone-number" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.PhoneNumber</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-phone-number')"></i>
+                                            <input type="hidden" name="PhoneNumber" id="hidden-phone-number" value="@Model.PhoneNumber" />
+                                        </div>
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h6 class="heading-small text-muted mb-4">Address</h6>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Street</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-street" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.Address.Street</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-street')"></i>
+                                            <input type="hidden" name="Address.Street" id="hidden-street" value="@Model.Address.Street" />
+                                        </div>
+                                        <span asp-validation-for="Address.Street" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">City</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-city" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.Address.City</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-city')"></i>
+                                            <input type="hidden" name="Address.City" id="hidden-city" value="@Model.Address.City" />
+                                        </div>
+                                        <span asp-validation-for="Address.City" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group focused">
+                                        <label class="form-control-label">Zip Code</label>
+                                        <div class="d-flex align-items-center">
+                                            <p id="input-zipcode" class="form-control form-control-alternative mb-0 mr-2 placeholder" contenteditable="false">@Model.Address.ZipCode</p>
+                                            <i class="fas fa-edit text-primary edit-icon" onclick="makeEditable('input-zipcode')"></i>
+                                            <input type="hidden" name="Address.ZipCode" id="hidden-zipcode" value="@Model.Address.ZipCode" />
+                                        </div>
+                                        <span asp-validation-for="Address.ZipCode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row justify-content-end">
+                                <div class="col-auto">
+                                    <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
+                                    <a asp-controller="Customer" asp-action="Customers" class="btn btn-neutral btn-lg mr-3">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,6 +19,7 @@ namespace Library.Data.Library.Implementations
             var BookCopyShelf = new BookCopyShelf
             {
                 BookCopyId = bookCopy.BookCopyId,
+                RoomId = shelf.RoomId,
                 ShelfId = shelf.ShelfId
             };
 

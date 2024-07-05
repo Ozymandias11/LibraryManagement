@@ -1,4 +1,6 @@
-﻿namespace LibraryManagement.ViewModels.Library.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace LibraryManagement.ViewModels.Library.ViewModels
 {
     public class UpdateBookViewModel
     {
@@ -8,7 +10,7 @@
         public int Edition { get; set; }
         public IEnumerable<AuthorViewModel> Authors { get; set; }
         public IEnumerable<PublisherViewModel> Publishers { get; set; }
-        public IEnumerable<CategoryViewModel> Categories{ get; set; }
+        public IEnumerable<CategoryViewModel> Categories { get; set; }
 
         public IEnumerable<Guid> SelectedAuthorIds { get; set; } = new List<Guid>();
         public IEnumerable<Guid> SelectedPublisherIds { get; set; } = new List<Guid>();

@@ -86,6 +86,8 @@ namespace LibraryManagement.Controllers
             await _serviceManager.BookCopyService.CreateBookCopy(
                 createBookCopyViewModel.SelectedBookId,
                 createBookCopyViewModel.SelectedPublisherId,
+                createBookCopyViewModel.SelectedShelfId,
+                createBookCopyViewModel.SelectedRoomId,
                 CreateBookCopyDto);
 
             return RedirectToAction("BookCopies");

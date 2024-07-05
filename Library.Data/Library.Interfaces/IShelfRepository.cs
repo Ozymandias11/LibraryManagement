@@ -10,5 +10,6 @@ namespace Library.Data.Library.Interfaces
    public interface IShelfRepository
     {
         Task<IEnumerable<Shelf>> GetShelves(Guid roomId, bool trackChanges);
+        Task<Shelf?> GetShelf(Guid roomId, Guid shelfId, bool trackChanges); 
     }
 }

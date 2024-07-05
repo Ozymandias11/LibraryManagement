@@ -11,7 +11,6 @@
                 multiple: true,
                 allowClear: true
             });
-
             // Initialize with selected authors
             var selectedAuthors = @Html.Raw(Json.Serialize(Model.SelectedAuthorIds));
             $('#authors').val(selectedAuthors).trigger('change');
@@ -24,7 +23,6 @@
                 multiple: true,
                 allowClear: true
             });
-
             // Initialize with selected publishers
             var selectedPublishers = @Html.Raw(Json.Serialize(Model.SelectedPublisherIds));
             $('#publishers').val(selectedPublishers).trigger('change');
@@ -38,7 +36,6 @@
                 multiple: true,
                 allowClear: true
             });
-
             // Initialize with selected publishers
             var selectedCategories = @Html.Raw(Json.Serialize(Model.SelectedCategoryIds));
             $('#categories').val(selectedCategories).trigger('change');
@@ -155,7 +152,7 @@
                                 <input type="hidden" name="Publishers" value="@publisher.PublisherId" />
                             }
 
-                            @foreach(var CATEGORY in Model.Categories)
+                            @foreach (var CATEGORY in Model.Categories)
                             {
                                 <input type="hidden" name="Categories" value="@CATEGORY.CategoryId" />
                             }

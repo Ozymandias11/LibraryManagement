@@ -24,18 +24,32 @@ namespace Library.Service.Library.Implementations
         public async Task CreateBookCopy(
             Guid originalBookId,
             Guid PublisherId, 
+            Guid ShelfId,
+            Guid RoomId,
             CreateBookCopyDto createBookCopyDto)
         {
             var BookCopies = Enumerable.Range(0, createBookCopyDto.Quantity)
                 .Select(_ => new BookCopy
                 {
                     NumberOfPages = createBookCopyDto.NumberOfPages,
-                    Status = createBookCopyDto.Status,  
-                    Edition = createBookCopyDto.Edition,    
-                    Quantity = createBookCopyDto.Quantity,  
-                });
+                    Status = createBookCopyDto.Status,
+                    Edition = createBookCopyDto.Edition,
+                    Quantity = createBookCopyDto.Quantity,
+                })
+                .ToList();
 
-            _repositoryManager.BookCopyRepository.AddBookCopies(originalBookId, PublisherId ,BookCopies);   
+            _repositoryManager.BookCopyRepository.AddBookCopies(originalBookId, PublisherId ,BookCopies);
+
+            // temporary solution
+
+            await _repositoryManager.SaveAsync();
+
+            var shelf = await _repositoryManager.ShelfRepository.GetShelf(RoomId, ShelfId, false);
+
+            foreach(var bookCopy in BookCopies)
+            {
+                _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopy, shelf);
+            }
 
             
 

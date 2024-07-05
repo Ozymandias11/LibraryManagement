@@ -125,6 +125,19 @@ namespace LibraryManagement.MappingProfile
             .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
             .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.Quantity));
 
+            //Customers
+
+            CreateMap<Customer, CustomerDto>();
+            CreateMap<CustomerDto, Customer>()
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<CustomerDto, CustomerViewModel>()
+           .ForMember(dest => dest.Address, opt => opt.MapFrom(src =>
+               $"{src.Address.City}, {src.Address.Street}, {src.Address.ZipCode}"));
+
+            CreateMap<CreateCustomerViewModel, CreateCustomerDto>();
+            CreateMap<CreateCustomerDto, Customer>();
+            CreateMap<UpdateCustomerViewModel,  CustomerDto>(); 
         }
     }
 }

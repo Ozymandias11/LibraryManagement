@@ -66,18 +66,18 @@ namespace LibraryManagement.Controllers
         {
             var book = await _serviceManager.BookService.GetBook(id, false);
 
-            
+
             //fetching data to display all possible options
 
-            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "",false);
+            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("","","",false);
             var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
 
-            
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("","", "",false);
+
+            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
             var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
 
-            
-            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "",false);
+
+            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
             var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
 
             //Get Current authors, publishers and categories
@@ -94,9 +94,10 @@ namespace LibraryManagement.Controllers
                 Authors = authorViewModel,
                 Publishers = publisherViewModel,
                 Categories = categoryViewModel,
+                // can also be done with automapper
                 SelectedAuthorIds = bookAuthors.Select(ba => ba.AuthorId),
                 SelectedPublisherIds = bookPublishers.Select(ba => ba.PublisherId),
-                SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId),   
+                SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId),
             };
 
 
@@ -109,7 +110,26 @@ namespace LibraryManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View();
+                // Repopulate dropdowns
+                var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "", false);
+                updateBookViewModel.Authors = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
+
+                var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
+                updateBookViewModel.Publishers = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
+
+                var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
+                updateBookViewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
+
+                // Get current selections (if any)
+                var bookAuthors = await _serviceManager.BookService.GetBookAuthors(updateBookViewModel.BookId, false);
+                var bookPublishers = await _serviceManager.BookService.GetBookPublishers(updateBookViewModel.BookId, false);
+                var bookCategories = await _serviceManager.BookService.GetBookCategories(updateBookViewModel.BookId, false);
+
+                updateBookViewModel.SelectedAuthorIds = bookAuthors.Select(ba => ba.AuthorId);
+                updateBookViewModel.SelectedPublisherIds = bookPublishers.Select(ba => ba.PublisherId);
+                updateBookViewModel.SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId);
+
+                return View(updateBookViewModel);
             }
 
             var bookDto = _mapper.Map<BookDto>(updateBookViewModel);

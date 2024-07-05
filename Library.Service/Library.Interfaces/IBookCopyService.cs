@@ -19,6 +19,8 @@ namespace Library.Service.Library.Interfaces
         Task CreateBookCopy(
             Guid originalBookId,
             Guid PublisherId,
+            Guid shelfId,
+            Guid roomId,
             CreateBookCopyDto createBookCopyDto);
         Task<int> GetTotalBookCopiesCount();
 
