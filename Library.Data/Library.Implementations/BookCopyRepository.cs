@@ -44,38 +44,44 @@ namespace Library.Data.Library.Implementations
 
         public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges)
         {
-            // First, fetch all data without grouping
+
+
             var query = FindAll(trackChanges)
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
                 .Include(bc => bc.Shelves)
-                  .ThenInclude(bcs => bcs.Shelf)
-                   .ThenInclude(s => s.Room);
+            .ThenInclude(bcs => bcs.Shelf)
+            .ThenInclude(s => s.Room);
 
-
-            // Fetch all book copies
-            var allBookCopies = await query.ToListAsync();
-
-            // Perform grouping and pagination in memory
-            var groupedBookCopies = allBookCopies
-                .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
-                .Select(g => new BookCopy
-                {
-                    BookCopyId = g.First().BookCopyId,
-                    OriginalBook = g.First().OriginalBook,
-                    Publisher = g.First().Publisher,
-                    Edition = g.Key.Edition,
-                    NumberOfPages = g.First().NumberOfPages,
-                    Status = g.First().Status,
-                    Quantity = g.Count(),
-                    Shelves = g.SelectMany(bc => bc.Shelves).ToList()
-                })
-                .OrderBy(bc => bc.OriginalBook.Title)
+            // First, get the distinct combinations
+            var distinctCombos = await query
+                .Select(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
+                .Distinct()
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
-            return groupedBookCopies;
+            // Then, for each combination, get the first book copy and count
+            var results = new List<BookCopy>();
+            foreach (var combo in distinctCombos)
+            {
+                var bookCopies = await query
+                    .Where(bc => bc.OriginaBookId == combo.OriginaBookId &&
+                                 bc.PublisherId == combo.PublisherId &&
+                                 bc.Edition == combo.Edition)
+                    .ToListAsync();
+
+                if (bookCopies.Any())
+                {
+                    var firstCopy = bookCopies.First();
+                    firstCopy.Quantity = bookCopies.Count;
+                    results.Add(firstCopy);
+                }
+            }
+
+            return results.OrderBy(bc => bc.OriginalBook.Title);
+
+
         }
 
 

@@ -5,6 +5,7 @@ using Library.Service;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement;
+using LibraryManagement.ActionFilters;
 using LibraryManagement.ServiceExtensions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using NLog;
@@ -38,6 +39,7 @@ builder.Services.AddMailjetConfiguration(builder.Configuration);
 builder.Services.AddVonageConfiguration(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IVerificationCodeCacheService, VerificationCodeCacheService>();
+builder.Services.AddScoped<ValidationFilterAttribute>();
 
 builder.Services.ConfigureLoggerService();
 

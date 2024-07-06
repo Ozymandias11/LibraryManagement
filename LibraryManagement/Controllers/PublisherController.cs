@@ -2,6 +2,7 @@
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
+using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,12 +61,9 @@ namespace LibraryManagement.Controllers
 
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePublisher(CreatePublisherViewModel createPublisherViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(createPublisherViewModel);  
-            }
 
             var publisherDto = _mapper.Map<CreatePublisherDto>(createPublisherViewModel);
 
@@ -106,13 +104,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdatePublisher(PublisherViewModel publisherViewModel) 
         {
-            if (!ModelState.IsValid)
-            {
-
-            }
-
             var publisherDto = _mapper.Map<PublisherDto>(publisherViewModel);
 
             await _serviceManager.PublisherService.UpdatePublisher(publisherDto, true);

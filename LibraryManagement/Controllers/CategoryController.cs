@@ -2,6 +2,7 @@
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
+using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
@@ -49,12 +50,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCategory(CreateCategoryViewModel categoryViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(categoryViewModel);
-            }
 
             var createCategoryDto = _mapper.Map<CreateCategoryDto>(categoryViewModel);
 
@@ -90,12 +88,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCategory(CategoryViewModel categoryViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                View();
-            }
 
             var categoryDto = _mapper.Map<CategoryDto>(categoryViewModel);
 

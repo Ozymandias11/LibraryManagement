@@ -2,6 +2,7 @@
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
+using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,12 +51,6 @@ namespace LibraryManagement.Controllers
                 customer.TotalCount = await _serviceManager.CustomerService.GetTotalCustomersCount();
             }
 
-
-           
-
-
-
-
             return View(customerViewModels);
         }
 
@@ -66,14 +61,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCustomer(CreateCustomerViewModel createCustomerViewModel) 
         { 
-            if(!ModelState.IsValid)
-            {
-                return View(createCustomerViewModel);
-            }
-
-
             var createCustomerDto = _mapper.Map<CreateCustomerDto>(createCustomerViewModel);    
 
             var result = await _serviceManager.CustomerService.CreateCustomer(createCustomerDto, false);
@@ -122,12 +112,9 @@ namespace LibraryManagement.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateCustomer(UpdateCustomerViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
 
             var customerDto = _mapper.Map<CustomerDto>(model);
 
