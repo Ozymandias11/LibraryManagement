@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
+using Library.Service.Library.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
@@ -12,12 +13,14 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _loggerManager;
-        public CustomerController(IServiceManager serviceManager, IMapper mapper, ILoggerManager loggerManager)
+       // private readonly ILoggerManager _loggerManager;
+       private readonly IResultHandlerService _resultHandlerService;
+        public CustomerController(IServiceManager serviceManager, IMapper mapper, IResultHandlerService resultHandlerService)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
-            _loggerManager = loggerManager; 
+            _resultHandlerService = resultHandlerService;   
+           // _loggerManager = loggerManager; 
         }
 
         public async Task<IActionResult> Customers(
@@ -68,12 +71,7 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.CustomerService.CreateCustomer(createCustomerDto, false);
 
-            if (result.IsFailed)
-            {
-                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creatingc customer";
-                _loggerManager.LogError($"An error occured while createing customer {errorMessage}");
-             //   createCustomerViewModel.ErrorMessage = errorMessage;
-            }
+            _resultHandlerService.HandleResult(result, "Creating customer");
 
             return RedirectToAction("Customers");
 
@@ -82,7 +80,8 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
-            await _serviceManager.CustomerService.DeleteCustomer(id, false);
+            var result = await _serviceManager.CustomerService.DeleteCustomer(id, false);
+            _resultHandlerService.HandleResult(result, $"Deleting customer with id {id}");
             return RedirectToAction("Customers");
         }
 
@@ -90,20 +89,11 @@ namespace LibraryManagement.Controllers
         {
             var GetcustomerResult = await _serviceManager.CustomerService.GetCustomer(id, false);
 
-            if (GetcustomerResult.IsFailed)
-            {
-                _loggerManager.LogError($"The Customer with id {id} was not found");
-            }
+            _resultHandlerService.HandleResult(GetcustomerResult, $"getting customer with id {id}");
 
-            var updateCustomerViewModel = new UpdateCustomerViewModel()
-            {
-                CustomerId = id,
-                FirstName = GetcustomerResult.Value.FirstName,
-                LastName = GetcustomerResult.Value.LastName,
-                Email = GetcustomerResult.Value.Email,
-                PhoneNumber = GetcustomerResult.Value.PhoneNumber,
-                Address = GetcustomerResult.Value.Address
-            };
+
+            var updateCustomerViewModel = _mapper.Map<UpdateCustomerViewModel>(GetcustomerResult.Value);
+           
 
             return View(updateCustomerViewModel);
 
@@ -118,8 +108,9 @@ namespace LibraryManagement.Controllers
 
             var customerDto = _mapper.Map<CustomerDto>(model);
 
-            await _serviceManager.CustomerService.UpdateCustomer(customerDto, true);
+            var result = await _serviceManager.CustomerService.UpdateCustomer(customerDto, true);
 
+            _resultHandlerService.HandleResult(result, $"updating customer with id {model.CustomerId}");
 
             TempData["SuccessMessage"] = "customer Updated Successfully";
 

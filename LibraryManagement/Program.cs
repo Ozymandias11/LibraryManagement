@@ -3,6 +3,8 @@ using Library.Data.Implementations;
 using Library.Data.Interfaces;
 using Library.Service;
 using Library.Service.Interfaces;
+using Library.Service.Library.Implementations;
+using Library.Service.Library.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement;
 using LibraryManagement.ActionFilters;
@@ -40,6 +42,7 @@ builder.Services.AddVonageConfiguration(builder.Configuration);
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IVerificationCodeCacheService, VerificationCodeCacheService>();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<IResultHandlerService, ResultHandlerService>();    
 
 builder.Services.ConfigureLoggerService();
 

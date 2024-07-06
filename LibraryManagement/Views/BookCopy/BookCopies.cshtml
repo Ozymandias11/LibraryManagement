@@ -51,8 +51,17 @@
                             <td class="text-center">@bookCopy.ShelfNumber</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                 @*    <a asp-controller="BookCopy" asp-action="EditBookCopy" asp-route-id="@bookCopy.BookCopyId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-book-copy-id="@bookCopy.BookCopyId" data-book-title="@bookCopy.BookTitle">Delete</button> *@
+                                    <button class="btn btn-sm btn-primary me-2" data-toggle="modal" data-target="#addQuantityModal"
+                                            data-book-id="@bookCopy.OriginaBookId"
+                                            data-publisher-id="@bookCopy.PublisherId"
+                                            data-room-id="@bookCopy.RoomId"
+                                            data-shelf-id="@bookCopy.ShelfId"
+                                            data-number-of-pages="@bookCopy.NumberOfPages"
+                                            data-edition="@bookCopy.Edition"
+                                            data-status="@bookCopy.Status"
+                                            data-book-title="@bookCopy.BookTitle">
+                                        +
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -72,5 +81,19 @@
       
     </div>
 </div>
+
+@await Html.PartialAsync("_AddQuantityModal", new LibraryManagement.ViewModels.Library.ViewModels.CreateBookCopyViewModel())
+
+@section Scripts {
+    <script src="~/js/addQuantityModal.js"></script>
+    <script>
+        $.noConflict();
+        jQuery(document).ready(function ($) {
+            initializeAddQuantityModal();
+        });
+    </script>
+}
+
+
 
 

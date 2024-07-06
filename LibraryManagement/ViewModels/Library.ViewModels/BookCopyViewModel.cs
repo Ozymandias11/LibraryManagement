@@ -16,11 +16,14 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public string BookTitle { get; set; }
         public int RoomNumber { get; set; }
         public int ShelfNumber { get; set; }
+        public Guid RoomId { get; set; }
+        public Guid ShelfId { get; set; }
         // items for paging
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
         public int TotalPages => (int)Math.Ceiling(TotalCount / (double)PageSize);
+
 
     }
 }

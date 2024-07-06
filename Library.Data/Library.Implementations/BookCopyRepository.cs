@@ -28,6 +28,7 @@ namespace Library.Data.Library.Implementations
             {
                 bookCopy.PublisherId = PublisherId;
                 bookCopy.OriginaBookId = originalBookId;
+                bookCopy.CreatedDate = DateTime.Now;
                 modifiedBookCopies.Add(bookCopy);
             }
 

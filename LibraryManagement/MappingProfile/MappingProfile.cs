@@ -137,7 +137,7 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<CreateCustomerViewModel, CreateCustomerDto>();
             CreateMap<CreateCustomerDto, Customer>();
-            CreateMap<UpdateCustomerViewModel,  CustomerDto>(); 
+            CreateMap<UpdateCustomerViewModel,  CustomerDto>().ReverseMap(); 
         }
     }
 }

@@ -80,8 +80,10 @@ namespace Library.Service.Library.Implementations
                 var bookCopyShelf = bookCopy.FirstOrDefault(bc => bc.BookCopyId == dto.BookCopyId)?.Shelves.FirstOrDefault();
                 if (bookCopyShelf != null)
                 {
+                    dto.RoomId = bookCopyShelf.Shelf.Room.RoomId;
                     dto.RoomNumber = bookCopyShelf.Shelf.Room.RoomNumber;
                     dto.ShelfNumber  = bookCopyShelf.Shelf.ShelfNumber;
+                    dto.ShelfId = bookCopyShelf.Shelf.ShelfId;
                 }
             }
 
