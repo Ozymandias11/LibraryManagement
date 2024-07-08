@@ -15,5 +15,6 @@ namespace Library.Service.Interfaces
        IRoomService RoomService { get; }
        IShelfService ShelfService { get; }
        ICustomerService CustomerService { get; }
+       IReservationService ReservationService { get; }
     }
 }

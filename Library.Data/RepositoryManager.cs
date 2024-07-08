@@ -26,6 +26,7 @@ namespace Library.Data
         private readonly Lazy<IShelfRepository> _shelfRepository;
         private readonly Lazy<IBookShelfRepository> _bookCopyShelfRepository;
         private readonly Lazy<ICustomerRepository> _customerRepository;
+        private readonly Lazy<IReservationRepository> _reservationRepository;
        
 
         public RepositoryManager(RepositoryContext repositoryContext)
@@ -44,6 +45,7 @@ namespace Library.Data
             _shelfRepository = new Lazy<IShelfRepository>(() => new ShelfRepository(repositoryContext));
             _bookCopyShelfRepository = new Lazy<IBookShelfRepository>(() => new BookShelfRepository(repositoryContext));   
             _customerRepository = new Lazy<ICustomerRepository>(() => new CustomerRepository(repositoryContext));
+            _reservationRepository = new Lazy<IReservationRepository>(() => new ReservationRepository(repositoryContext)); 
         }
 
         public IAuthorRepository AuthorRepository => _authroRepository.Value;
@@ -69,6 +71,8 @@ namespace Library.Data
         public IBookShelfRepository BookShelfRepository => _bookCopyShelfRepository.Value;
 
         public ICustomerRepository CustomerRepository => _customerRepository.Value;
+
+        public IReservationRepository ReservationRepository => _reservationRepository.Value;
 
         public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
        

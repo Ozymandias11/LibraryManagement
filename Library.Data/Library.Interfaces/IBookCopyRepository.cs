@@ -18,6 +18,13 @@ namespace Library.Data.Library.Interfaces
             IEnumerable<BookCopy> bookCopies);
         void DeleteBookCopy(BookCopy bookCopy);
         Task<int> GetTotalBookCopiesCount();
+        Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(
+            Guid originalBookId,
+            string edition,
+            Guid publisherId,
+            int quantity
+            );
+
 
     }
 }

@@ -24,9 +24,6 @@ namespace Library.Data.Configuration
            
            
 
-            builder.HasMany(bc => bc.Reservations)
-                .WithOne(r => r.BookCopy)
-                .HasForeignKey(r => r.BookCopyID);
 
             builder.HasMany(bc => bc.Shelves)
                 .WithOne(s => s.BookCopy)
@@ -35,6 +32,10 @@ namespace Library.Data.Configuration
             builder.HasOne(bc => bc.Publisher)
                 .WithMany()
                 .HasForeignKey(bc => bc.PublisherId);
+
+            builder.HasMany(bc => bc.ReservationItems)
+                .WithOne(ri => ri.BookCopy)
+                .HasForeignKey(ri => ri.BookCopyID);
 
            
 

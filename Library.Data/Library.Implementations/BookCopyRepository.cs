@@ -41,7 +41,14 @@ namespace Library.Data.Library.Implementations
 
         public void DeleteBookCopy(BookCopy bookCopy) => Delete(bookCopy);
 
-
+        public async Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
+          => await FindByCondition(bc => bc.OriginaBookId == originalBookId &&
+                                   bc.Edition == edition &&
+                                   bc.PublisherId == publisherId &&
+                                   bc.Status == Model.Enums.Status.Available,
+                                   trackChanges: false)
+                                   .Take(quantity)
+                                   .ToListAsync();
 
         public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges)
         {

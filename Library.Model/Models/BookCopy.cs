@@ -20,6 +20,7 @@ namespace Library.Model.Models
         public Book? OriginalBook { get; set; }
         public ICollection<Reservation>? Reservations { get; set; }
         public ICollection<BookCopyShelf>? Shelves { get; set; }
+        public ICollection<ReservationItem>? ReservationItems { get; set; }
         
 
 

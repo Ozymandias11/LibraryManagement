@@ -1,0 +1,176 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateReservationViewModel
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
+                <div class="card-body">
+                    <h2 class="text-primary text-center mb-4">Create Reservation</h2>
+                    <form asp-action="CreateReservation" method="post" id="reservationForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="CustomerID" class="text-primary">Customer ID:</label>
+                            <input asp-for="CustomerID" class="form-control" />
+                            <span asp-validation-for="CustomerID" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="CheckoutTime" class="text-primary">Checkout Time:</label>
+                            <input asp-for="CheckoutTime" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                            <span asp-validation-for="CheckoutTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SupposedReturnDate" class="text-primary">Supposed Return Date:</label>
+                            <input asp-for="SupposedReturnDate" type="date" class="form-control" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
+                            <span asp-validation-for="SupposedReturnDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="EmployeeId" class="text-primary">Employee ID:</label>
+                            <input asp-for="EmployeeId" class="form-control" />
+                            <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                        </div>
+
+                        <h4 class="text-primary mt-4">Book Copy Reservations</h4>
+                        <div id="bookCopySummary" class="mb-3">
+                            <!-- Summary of added book copies will appear here -->
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addBookCopyModal">Add Book Copy</button>
+
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">Create Reservation</button>
+                            <a asp-controller="Reservation" asp-action="Reservations" class="btn btn-neutral btn-block btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for adding book copies -->
+<div class="modal fade" id="addBookCopyModal" tabindex="-1" role="dialog" aria-labelledby="addBookCopyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBookCopyModalLabel">Add Book Copy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="text-primary">Original Book:</label>
+                    <select id="modalOriginalBookId" class="form-control" required>
+                        <option value="">Select a book</option>
+                        @foreach (var book in Model.AllBooks)
+                        {
+                            <option value="@book.Id">@book.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Edition:</label>
+                    <input id="modalEdition" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Publisher:</label>
+                    <select id="modalPublisherId" class="form-control" required disabled>
+                        <option value="">Select a publisher</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Quantity:</label>
+                    <input type="number" id="modalQuantity" class="form-control" required min="1" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addBookCopy()">Add Book Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+
+    <script>
+        let bookCopies = [];
+
+        $(document).ready(function() {
+            $('#modalOriginalBookId').select2({
+                dropdownParent: $('#addBookCopyModal')
+            });
+
+            $('#modalOriginalBookId').on('change', function() {
+                var bookId = $(this).val();
+                if (bookId) {
+                    $.ajax({
+                        url: '@Url.Action("GetPublishersForBook", "Reservation")',
+                        type: 'GET',
+                        data: { bookId: bookId },
+                        success: function(publishers) {
+                            var $publisherSelect = $('#modalPublisherId');
+                            $publisherSelect.empty().append($('<option></option>').val('').text('Select a publisher'));
+                            $.each(publishers, function(i, publisher) {
+                                $publisherSelect.append($('<option></option>').val(publisher.id).text(publisher.name));
+                            });
+                            $publisherSelect.prop('disabled', false);
+                        },
+                        error: function() {
+                            alert('Failed to load publishers.');
+                        }
+                    });
+                } else {
+                    $('#modalPublisherId').empty().prop('disabled', true);
+                }
+            });
+        });
+
+        function addBookCopy() {
+            const bookCopy = {
+                OriginalBookId: document.getElementById('modalOriginalBookId').value,
+                OriginalBookTitle: $("#modalOriginalBookId option:selected").text(),
+                Edition: document.getElementById('modalEdition').value,
+                PublisherId: document.getElementById('modalPublisherId').value,
+                PublisherName: $("#modalPublisherId option:selected").text(),
+                Quantity: document.getElementById('modalQuantity').value
+            };
+
+            bookCopies.push(bookCopy);
+            updateBookCopySummary();
+            $('#addBookCopyModal').modal('hide');
+            clearModalInputs();
+        }
+
+        function updateBookCopySummary() {
+            const summary = document.getElementById('bookCopySummary');
+            summary.innerHTML = '';
+            bookCopies.forEach((copy, index) => {
+                const copyElement = document.createElement('div');
+                copyElement.className = 'border p-2 mb-2';
+                copyElement.innerHTML = `
+                    <strong>Book ${index + 1}:</strong> ${copy.OriginalBookTitle}, Edition: ${copy.Edition}, Publisher: ${copy.PublisherName}, Quantity: ${copy.Quantity}
+                    <button type="button" class="btn btn-danger btn-sm float-right" onclick="removeBookCopy(${index})">Remove</button>
+                    <input type="hidden" name="BookCopyReservations[${index}].OriginalBookId" value="${copy.OriginalBookId}" />
+                    <input type="hidden" name="BookCopyReservations[${index}].Edition" value="${copy.Edition}" />
+                    <input type="hidden" name="BookCopyReservations[${index}].PublisherId" value="${copy.PublisherId}" />
+                    <input type="hidden" name="BookCopyReservations[${index}].Quantity" value="${copy.Quantity}" />
+                `;
+                summary.appendChild(copyElement);
+            });
+        }
+
+        function removeBookCopy(index) {
+            bookCopies.splice(index, 1);
+            updateBookCopySummary();
+        }
+
+        function clearModalInputs() {
+            $('#modalOriginalBookId').val('').trigger('change');
+            document.getElementById('modalEdition').value = '';
+            $('#modalPublisherId').val('').prop('disabled', true);
+            document.getElementById('modalQuantity').value = '';
+        }
+    </script>
+}

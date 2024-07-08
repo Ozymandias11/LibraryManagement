@@ -1,0 +1,90 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.ReservationViewModel>
+
+@{
+    ViewData["Title"] = "Reservations";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center mb-3">
+            <h2 class="text-primary mb-0">Reservations</h2>
+        </div>
+        <div class="table-responsive wide-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th class="text-primary text-center">Reservation ID</th>
+                        <th class="text-primary text-center">Customer ID</th>
+                        <th class="text-primary text-center">Checkout Time</th>
+                        <th class="text-primary text-center">Supposed Return Date</th>
+                        <th class="text-primary text-center">Actual Return Date</th>
+                        <th class="text-primary text-center">Return Customer ID</th>
+                        <th class="text-primary text-center">Is Late</th>
+                        <th class="text-primary text-center">Employee ID</th>
+                        <th class="text-primary text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@reservation.ReservationId</td>
+                            <td class="text-center">@reservation.CustomerID</td>
+                            <td class="text-center">@reservation.CheckoutTime</td>
+                            <td class="text-center">@reservation.SupposedReturnDate</td>
+                            <td class="text-center">@reservation.ActualReturnDate?.ToShortDateString()</td>
+                            <td class="text-center">@reservation.ReturnCustomerId</td>
+                            <td class="text-center">@reservation.IsLate</td>
+                            <td class="text-center">@reservation.EmployeeId</td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center">
+                                    <a asp-controller="Reservation" asp-action="Edit" asp-route-id="@reservation.ReservationId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-reservation-id="@reservation.ReservationId">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        @if (reservation.ReservationItems != null && reservation.ReservationItems.Any())
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <table class="table table-sm table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Reservation Item ID</th>
+                                                <th>Book Copy ID</th>
+                                                <th>Actual Return Date</th>
+                                                <th>Book Title</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in reservation.ReservationItems)
+                                            {
+                                                <tr>
+                                                    <td>@item.ReservationItemId</td>
+                                                    <td>@item.BookCopyID</td>
+                                                    <td>@item.ActualReturnDate?.ToShortDateString()</td>
+                                                    <td>@item.BookTitle</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <a asp-action="CreateReservation" class="btn btn-primary">Add Reservation</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/deleteModal.js"></script>
+    <script>
+        $.noConflict();
+        jQuery(document).ready(function ($) {
+            initializeDeleteModal('reservation-id');
+        });
+    </script>
+}
