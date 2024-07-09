@@ -27,10 +27,8 @@ namespace Library.Data.Configuration
 
             builder.Property(r => r.ActualReturnDate).IsRequired(false);
 
-            // generated column IsLate
-            builder.Property(r => r.IsLate)
-                    .HasComputedColumnSql("CASE WHEN [ActualReturnDate] IS NULL THEN CAST(NULL AS BIT) " +
-                    "ELSE CAST(CASE WHEN [ActualReturnDate] > [SupposedReturnDate] THEN 1 ELSE 0 END AS BIT) END");
+
+           
 
 
 

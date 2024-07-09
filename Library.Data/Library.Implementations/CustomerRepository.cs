@@ -25,8 +25,12 @@ namespace Library.Data.Library.Implementations
             await FindByCondition(c => c.DeletedDate == null, trackChanges)
                   .Skip((page - 1) * pageSize)
                   .Take(pageSize)
-                 .ToListAsync();
-             
+                  .ToListAsync();
+
+        public async Task<IEnumerable<Customer>> GetAllCustomersUnfiltered(bool trackChanges)
+            => await FindByCondition(c => c.DeletedDate == null, trackChanges)
+                  .ToListAsync();
+       
 
         public async Task<Customer?> GetCustomer(Guid id, bool trackChanges) =>
             await FindByCondition(c => c.CustomerId == id, trackChanges).FirstOrDefaultAsync();

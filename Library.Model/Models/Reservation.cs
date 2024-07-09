@@ -14,11 +14,11 @@ namespace Library.Model.Models
         public DateTime SupposedReturnDate { get; set; }
         public DateTime? ActualReturnDate { get; set; }
         public Guid? ReturnCustomerId { get; set; }
-        public bool IsLate { get; set; }
-        public string EmployeeId { get; set; }
+        public bool IsLate => SupposedReturnDate < DateTime.Now && ActualReturnDate == null;
+        public string? EmployeeId { get; set; }
         public Customer? Customer { get; set; }
         public Employee? Employee { get; set; }
-        public ICollection<ReservationItem> ReservationItems { get; set; }
+        public ICollection<ReservationItem>? ReservationItems { get; set; }
 
 
     }

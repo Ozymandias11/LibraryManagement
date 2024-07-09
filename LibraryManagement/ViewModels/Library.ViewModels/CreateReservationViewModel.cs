@@ -8,5 +8,6 @@
         public string? EmployeeId { get; set; }
         public IEnumerable<BookCopyReservationRequestViewModel>? BookCopyReservations { get; set; }
         public IEnumerable<BookDropdownViewModel>? AllBooks{ get; set; }
+        public IEnumerable<CustomerDropDownViewModel>? AllCustomers { get; set; }
     }
 }

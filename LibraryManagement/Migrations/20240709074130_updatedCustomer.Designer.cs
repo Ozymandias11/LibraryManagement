@@ -4,6 +4,7 @@ using Library.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManagement.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    partial class RepositoryContextModelSnapshot : ModelSnapshot
+    [Migration("20240709074130_updatedCustomer")]
+    partial class updatedCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,7 +336,7 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("9cfbef8f-d5fc-4dd8-9dcb-75c84a68a53e"),
+                            Id = new Guid("372f1787-7d9f-4046-93c9-a804c0cb2a3c"),
                             Body = "Dear @@userName@@,<br><br>Please click the following link to verify your email address:<br><br>@@resetLink@@<br><br>If you didn't request this verification, please ignore this email.<br><br>Best regards,<br>The Team",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             From = "noreply@example.com",
@@ -343,7 +346,7 @@ namespace LibraryManagement.Migrations
                         },
                         new
                         {
-                            Id = new Guid("9d0e72fa-628a-46a7-9c3b-dedbfeafc407"),
+                            Id = new Guid("fa127862-d096-4844-8ea4-7fcc5163d7f5"),
                             Body = "Dear @@userName@@,<br><br>Thank you for registering with our application. To complete your registration, please click the following link to verify your email address:<br><br><a href='@@resetLink@@'>Verify Email</a><br><br>If you did not request this verification, please ignore this email.<br><br>Best regards,<br>The Team",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             From = "noreply@example.com",
@@ -353,7 +356,7 @@ namespace LibraryManagement.Migrations
                         },
                         new
                         {
-                            Id = new Guid("533e70cd-218d-4942-bdfa-d0c89139f76b"),
+                            Id = new Guid("713f8fd5-3c20-49f0-b7cb-b173a227bafa"),
                             Body = "Dear @@userName@@,<br><br>We have received a request to change the email address associated with your account. If you made this request, please click the following link to verify your new email address:<br><br><a href='@@resetLink@@'>Verify New Email</a><br><br>If you did not request this change, please ignore this email and your email address will remain the same.<br><br>Best regards,<br>The Team",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             From = "natchkebiadima1@gmail.com",
@@ -363,7 +366,7 @@ namespace LibraryManagement.Migrations
                         },
                         new
                         {
-                            Id = new Guid("862e75f5-64db-4ae1-a1c8-f0fe2a0690f2"),
+                            Id = new Guid("d0f4ba3e-0641-43d8-90ab-24a67248fb4e"),
                             Body = "Dear @@userName@@,<br><br>We have received a request to change the email address associated with your account If you made this request, no further action is required. Please verify your new email address using the link sent to it.<br><br>If you did not request this change, please contact us immediately to secure your account.<br><br>Best regards,<br>The Team",
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             From = "natchkebiadima1@gmail.com",
@@ -465,19 +468,19 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5805853b-bd4b-4278-8f68-81538b256f1d",
+                            Id = "7148d475-bace-4745-b6ee-dc247ae80ce9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4f998e47-5763-43be-93af-dd9dc307978d",
-                            CreationDate = new DateTime(2024, 7, 9, 11, 13, 7, 803, DateTimeKind.Utc).AddTicks(1822),
+                            ConcurrencyStamp = "ee4459ae-9e5e-4e9d-a505-5c0896df521c",
+                            CreationDate = new DateTime(2024, 7, 9, 7, 41, 30, 79, DateTimeKind.Utc).AddTicks(8165),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "nachkebiadima2@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
                             LastName = "Admin",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEPtaxRUdu/ucaoIY+RuI/4fneiTLZOQXbObv/mI5jOrId+b1g0J2JFY4hs53zZnVZQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOmRPEiyl2Wdzn3jBdmJc1y/EzBiLHscfD384bgyNO1lYWDyPfawlLfVk/dFnHNZRg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "05380dff-d85e-4348-b57b-8c25cf3fc0a5",
+                            SecurityStamp = "8cb7211a-5504-4c6d-81b4-3dfde6c872c3",
                             TwoFactorEnabled = false,
                             UserName = "nachkebiadima2@gmail.com"
                         });
@@ -753,6 +756,11 @@ namespace LibraryManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsLate")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("bit")
+                        .HasComputedColumnSql("CASE WHEN [ActualReturnDate] IS NULL THEN CAST(NULL AS BIT) ELSE CAST(CASE WHEN [ActualReturnDate] > [SupposedReturnDate] THEN 1 ELSE 0 END AS BIT) END");
+
                     b.Property<Guid?>("ReturnCustomerId")
                         .HasColumnType("uniqueidentifier");
 
@@ -839,175 +847,175 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ddc94b3c-fe8e-44c3-b287-c1c2bb8a127a"),
+                            Id = new Guid("fc9f1cc0-315e-47e9-a91e-1c442ae9e688"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("bf7fed55-6c0a-4559-8add-139cd98bd876"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("8da23c9f-1266-4814-8952-5de9c7dde86e"),
+                            Id = new Guid("e780bf1e-773d-406b-89ae-5d4c81fdf60b"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("b86538b2-c245-40fe-be8b-ff64cdc62637"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("77172803-3b3b-4e65-b878-dd1a33aa2a41"),
+                            Id = new Guid("df66e694-bc6f-4318-9641-72218570a2d7"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("81a3994d-37ee-4833-a978-de19e7364514"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("9d22fa21-3963-443e-a28a-f3d56e373ee3"),
+                            Id = new Guid("e8ba80bc-7b1d-4e21-944f-37ecfcf362b4"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("1c48f4be-67d9-4201-93ca-6fbaead68f59"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("cdb45905-586e-42dd-852d-5a38b98d0af3"),
+                            Id = new Guid("c531e4d3-8aa6-4e4d-9f4f-e7a8c2533470"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("919bd644-16d7-483a-a6f7-aea8aa198ffd"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("12bb9b60-a4a0-429b-bc23-46342516c541"),
+                            Id = new Guid("e34f4aad-7ae2-4d8f-aa5c-a0c398fa57e4"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("62c3dd88-8cdd-47b6-b212-053623fe245c"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("c7104201-c275-4fef-a143-b1e3c6f21bc4"),
+                            Id = new Guid("7cfb5053-ed3b-46d8-84d8-28309fd5401d"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("c555643a-c44b-4fb8-8fd0-cf5066b9efb9"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("4f49cd3f-9c35-4ff8-9aa1-9778a85f713a"),
+                            Id = new Guid("1ed780eb-178e-45c7-b1a9-9fd00c860938"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("8eb1fb90-24bc-4644-9139-74b6f425a83c"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("b091d890-9d81-42a7-b239-c0441d3e43a7"),
+                            Id = new Guid("e27f4708-52d5-4653-b32a-0b83b84338b8"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("d35d1f1e-95ee-494c-96da-448d8677426e"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("59e61cec-199d-4404-bd28-9ba028cf7d9e"),
+                            Id = new Guid("6b4027f4-1a00-4f7f-a3c7-46afacc8d74d"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("eae6aca3-47a8-4c61-bda4-52686144336f"),
+                            Id = new Guid("0e0ddaac-2fe4-426a-8e89-377daa67157d"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("a9090a3e-7f8e-4884-808e-9d93e091b587"),
+                            Id = new Guid("2de276ee-3418-4101-9266-be6e4a1ef601"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
                             RoleId = "b8b819da-4f16-4d09-9d10-7da416f2fb4b"
                         },
                         new
                         {
-                            Id = new Guid("b7c77dda-3460-4a24-b1c7-5076b0884678"),
+                            Id = new Guid("610b4a99-8a41-4e55-802b-51db14b311e4"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("17a08e70-686e-4049-9746-b565a0fe8924"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("0df45556-7d2f-478e-8567-5f7c1b5ee13e"),
+                            Id = new Guid("6a22df49-5dc5-420c-9910-87b26b52410e"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7"),
                             RoleId = "2a2e8e85-49f0-45ef-97c5-3151d1b91306"
                         },
                         new
                         {
-                            Id = new Guid("bdb8d27e-6efc-4aba-b5a8-a3e61759d860"),
+                            Id = new Guid("fbdf6085-7813-4efa-8900-5fe0ae09f473"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("7e639f49-a365-4388-b5ef-eaa4761378a8"),
+                            Id = new Guid("dacf93c4-8f36-44d1-8834-18d3b33755ba"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7"),
                             RoleId = "b8b819da-4f16-4d09-9d10-7da416f2fb4b"
                         },
                         new
                         {
-                            Id = new Guid("90a28fd9-7c46-40bc-8e30-0827dd66de31"),
+                            Id = new Guid("b1a47a40-130f-42fa-8f41-46b2dda71c10"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("5f866173-a55c-4ac8-93df-18aa625de1d7"),
                             RoleId = "7984b858-30e3-4e98-a37e-a960b1b0bbee"
                         },
                         new
                         {
-                            Id = new Guid("f80854ff-4a17-4183-88bd-acfe370abe6e"),
+                            Id = new Guid("c61b4b8e-debe-4c83-8e4b-5b4601f925a6"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("d3208527-a5f5-4e33-88c8-1a30af0e97e1"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("0df5e37e-5187-4f91-8c7e-bfb3a73012ac"),
+                            Id = new Guid("8bf21a3f-770b-4c7a-b393-bf526b326e6f"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("936a8edd-a127-4344-af9a-93ed9a32537f"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("f0ebe81c-0411-469e-a18f-90957e716881"),
+                            Id = new Guid("8004fa05-0f5e-4aba-b6d7-7355da278c2e"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("2eb40a9c-2565-4c2c-a832-feca78f4603b"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("4c4c9470-c3f6-4310-b34e-c130b4346fda"),
+                            Id = new Guid("20f8fc11-cc69-4d40-8a56-c27a017468f9"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("9b96f51e-3d27-4eeb-b491-b6a75d8f0a01"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("38a1d6d5-e820-49cd-a88c-1b0b4062370e"),
+                            Id = new Guid("f3d2f0cb-1d2f-4dad-b1ba-bd5e512f06bf"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("d0c80121-b900-4515-8521-2737468ffa6a"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("8b2e91fb-ab7f-4ee9-acdc-bbd393daec09"),
+                            Id = new Guid("7590201a-67e1-43bb-aa0b-5fe27f6b5a88"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("092ac460-2e13-4e44-b207-7d44e3f5ca8b"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("228f84bc-147e-45fb-ad74-6dd09652a440"),
+                            Id = new Guid("ddef9b79-4105-4959-9cdf-7f19d8d90599"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("f513d8d7-b945-40d2-b679-2c2bbdd24f25"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
                         },
                         new
                         {
-                            Id = new Guid("3042a975-d4d8-4d2c-8e51-cac2ec67905a"),
+                            Id = new Guid("4d305925-18a2-4355-9e82-8e03c001dd97"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             NavigationMenuId = new Guid("10dc9edc-913d-4dda-a6ff-fe9065d575ee"),
                             RoleId = "4ca481bb-5e65-4a13-8a4c-c75e93e0ac45"
@@ -1154,31 +1162,31 @@ namespace LibraryManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ab37f695-1362-4e3a-85a5-9ac07799e28d",
+                            Id = "f7712c12-649a-47a1-afb0-27ee4e30fddf",
                             Name = "Librarian",
                             NormalizedName = "LIBRARIAN"
                         },
                         new
                         {
-                            Id = "b253a083-8fc2-43fe-99ab-e297f5daee79",
+                            Id = "3ce18327-03ba-4beb-a04b-325d83988210",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "117d75b7-8a4d-49a3-ba8c-0c42eaef7e04",
+                            Id = "a4544569-050b-4d1b-a7ce-2bca605924cb",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "00954a47-1778-434b-8b2b-aea70c23655b",
+                            Id = "78ae55ea-9b2a-477b-8133-e13a1db8313f",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
-                            Id = "716dce07-3df5-4bbd-9149-0dcf87bf3db7",
+                            Id = "04f9bb6a-8381-44fe-ad6e-8ea0d699c7dd",
                             Name = "Default",
                             NormalizedName = "DEFAULT"
                         });

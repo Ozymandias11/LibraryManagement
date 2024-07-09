@@ -10,7 +10,13 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
                             <label asp-for="CustomerID" class="text-primary">Customer ID:</label>
-                            <input asp-for="CustomerID" class="form-control" />
+                            <select asp-for="CustomerID" class="form-control customer-select" required>
+                                <option value="">Select a customer</option>
+                                @foreach (var customer in Model.AllCustomers)
+                                {
+                                    <option value="@customer.Id">@customer.CustomerPersonalId : @customer.FirstName,@customer.lastName</option>
+                                }
+                            </select>
                             <span asp-validation-for="CustomerID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -73,7 +79,7 @@
                 </div>
                 <div class="form-group">
                     <label class="text-primary">Publisher:</label>
-                    <select id="modalPublisherId" class="form-control" required disabled>
+                    <select id="modalPublisherId" class="form-control" required>
                         <option value="">Select a publisher</option>
                     </select>
                 </div>
@@ -97,35 +103,61 @@
     <script>
         let bookCopies = [];
 
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            $('.customer-select').select2({
+                placeholder: "Search for a customer",
+                allowClear: true
+            });
+
             $('#modalOriginalBookId').select2({
                 dropdownParent: $('#addBookCopyModal')
             });
 
-            $('#modalOriginalBookId').on('change', function() {
-                var bookId = $(this).val();
-                if (bookId) {
-                    $.ajax({
-                        url: '@Url.Action("GetPublishersForBook", "Reservation")',
-                        type: 'GET',
-                        data: { bookId: bookId },
-                        success: function(publishers) {
-                            var $publisherSelect = $('#modalPublisherId');
-                            $publisherSelect.empty().append($('<option></option>').val('').text('Select a publisher'));
-                            $.each(publishers, function(i, publisher) {
-                                $publisherSelect.append($('<option></option>').val(publisher.id).text(publisher.name));
-                            });
-                            $publisherSelect.prop('disabled', false);
-                        },
-                        error: function() {
-                            alert('Failed to load publishers.');
-                        }
-                    });
-                } else {
-                    $('#modalPublisherId').empty().prop('disabled', true);
-                }
+            $('#modalPublisherId').select2({
+                dropdownParent: $('#addBookCopyModal')
             });
+
+            $('#modalOriginalBookId').on('change', function () {
+                populatePublishers();
+            });
+
         });
+
+
+        function populatePublishers() {
+            var selectedBookId = $("#modalOriginalBookId").val();
+            if (selectedBookId) {
+                $.ajax({
+                    url: '/BookCopy/GetPublishersUrl',
+                    type: 'GET',
+                    success: function (getPublishersUrl) {
+                        $.ajax({
+                            url: getPublishersUrl,
+                            data: { bookId: selectedBookId },
+                            type: 'GET',
+                            success: function (data) {
+                                var publisherSelect = $("#modalPublisherId");
+                                publisherSelect.empty();
+                                publisherSelect.prop("disabled", false);
+                                publisherSelect.append($("<option>").val("").text("Select a publisher"));
+                                $.each(data, function (index, publisher) {
+                                    publisherSelect.append($("<option>").val(publisher.publisherId).text(publisher.publisherName));
+                                });
+                            },
+                            error: function () {
+                                alert("Error occurred while fetching publishers.");
+                            }
+                        });
+                    },
+                    error: function () {
+                        alert("Error occurred while fetching the publishers URL.");
+                    }
+                });
+            } else {
+
+            }
+        }
 
         function addBookCopy() {
             const bookCopy = {
@@ -174,3 +206,25 @@
         }
     </script>
 }
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .select2-selection--single {
+        height: 38px !important;
+        padding: 6px 12px !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 0.25rem !important;
+    }
+
+    .select2-selection__arrow {
+        height: 36px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 24px !important;
+    }
+</style>

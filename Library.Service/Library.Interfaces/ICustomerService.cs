@@ -17,6 +17,7 @@ namespace Library.Service.Library.Interfaces
             int page,
             int pageSize,
             bool trackChanges);
+        Task<IEnumerable<CustomerDto>> GetAllCustomersUnfiltered(bool trackChanges);
         Task<Result<CustomerDto>> GetCustomer(Guid id, bool trackChanges);  
         Task<Result> CreateCustomer(CreateCustomerDto customer, bool trackChanges);
         Task<Result> DeleteCustomer(Guid id, bool trackChanges);    

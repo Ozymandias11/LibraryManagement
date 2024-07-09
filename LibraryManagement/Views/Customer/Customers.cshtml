@@ -27,6 +27,7 @@
                     <tr>
                         @await Html.PartialAsync("_SortableHeader", sortableColumns)
                         <th class="text-primary text-center">Phone Number</th>
+                        <th class="text-primary text-center">ID</th>
                         <th class="text-primary text-center">Address</th>
                         <th class="text-primary text-center">Actions</th>
                     </tr>
@@ -39,6 +40,7 @@
                             <td class="text-center">@customer.FirstName</td>
                             <td class="text-center">@customer.Email</td>
                             <td class="text-center">@customer.PhoneNumber</td>
+                            <td class="text-center">@customer.CustomerPersonalId</td>
                             <td class="text-center">@customer.Address.ToString()</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">

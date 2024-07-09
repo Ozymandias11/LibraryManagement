@@ -19,6 +19,12 @@ namespace Library.Data.Configuration
 
             builder.Property(c => c.LastName).IsRequired();
 
+            builder.Property(c => c.CustomerPersonalId)
+                .IsRequired()
+                .HasMaxLength(11)
+                .IsFixedLength();
+               
+
 
             builder.Property(c => c.Email)
                 .IsRequired()

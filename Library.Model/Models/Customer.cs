@@ -13,7 +13,7 @@ namespace Library.Model.Models
         public string? LastName { get; set;}
         public string? Email {  get; set; }
         public string? PhoneNumber { get; set;}
-
+        public string? CustomerPersonalId { get; set; } 
         public required Address Address { get; set; }   
 
         public ICollection<Reservation>? Reservations { get; set; }

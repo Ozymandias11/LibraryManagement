@@ -146,8 +146,15 @@ namespace LibraryManagement.MappingProfile
             CreateMap<ReservationItem, ReservationItemDto>();
             CreateMap<ReservationItemDto, ReservationItemViewModel>();
 
-            CreateMap<BookDto, BookDropdownViewModel>();
+            CreateMap<CreateReservationViewModel, CreateReservationDto>();
+            CreateMap<CreateReservationDto, Reservation>();
+            CreateMap<BookDto, BookDropdownViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.BookId));
 
+            CreateMap<BookCopyReservationRequestViewModel, BookCopyReservationRequest>();
+
+            CreateMap<CustomerDto, CustomerDropDownViewModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CustomerId));
         }
     }
 }

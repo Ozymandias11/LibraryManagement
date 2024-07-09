@@ -74,6 +74,14 @@ namespace Library.Service.Library.Implementations
             return customerDtos;    
         }
 
+        public async Task<IEnumerable<CustomerDto>> GetAllCustomersUnfiltered(bool trackChanges)
+        {
+            var customers = await _repositoryManager.CustomerRepository.GetAllCustomersUnfiltered(trackChanges);
+            var customersDto = _mapper.Map<IEnumerable<CustomerDto>>(customers);
+            return customersDto;
+
+        }
+
         public async Task<Result<CustomerDto>> GetCustomer(Guid id, bool trackChanges)
         {
             var customer = await _repositoryManager.CustomerRepository.GetCustomer(id, trackChanges);

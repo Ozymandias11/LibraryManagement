@@ -12,6 +12,7 @@ namespace Library.Service.Dto.Library.Dto
        string LastName,
        string Email,
        string PhoneNumber,
-       Address Address);
+       Address Address,
+       string CustomerPersonalId);
    
 }

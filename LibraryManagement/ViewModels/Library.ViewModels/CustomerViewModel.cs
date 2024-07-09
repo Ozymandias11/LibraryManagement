@@ -11,6 +11,7 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public string? PhoneNumber { get; set; }
 
         public string? Address { get; set; }
+        public string? CustomerPersonalId { get; set; } 
 
         // properties for paging 
         public int CurrentPage { get; set; }
