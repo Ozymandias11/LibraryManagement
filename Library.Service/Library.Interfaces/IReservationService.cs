@@ -13,5 +13,6 @@ namespace Library.Service.Library.Interfaces
         Task<IEnumerable<ReservationDto>> GetAllReservations(bool trackChanges);
         Task<Result<ReservationDetailsDto>> GetReservation(Guid id, bool trackChanges);
         Task<Result> CreateReservation(CreateReservationDto createReservationDto);
+        Task<(bool isAvailable, string message)> CheckBookCopyAvailability(Guid originalBookId, string edition, Guid PublisherId, int quantity);
     }
 }

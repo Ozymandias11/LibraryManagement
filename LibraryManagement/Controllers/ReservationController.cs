@@ -85,6 +85,14 @@ namespace LibraryManagement.Controllers
             return BadRequest("Invalid book ID");
         }
 
+        public async Task<IActionResult> CheckBookCopyAvailability(Guid originalBookId, string edition, Guid PublisherId, int quantity)
+        {
+            var result = await _serviceManager.ReservationService.CheckBookCopyAvailability(originalBookId, edition, PublisherId, quantity);
+
+            return Json(new { isAvailable = result.isAvailable, message = result.message });
+
+        }
+
 
 
 

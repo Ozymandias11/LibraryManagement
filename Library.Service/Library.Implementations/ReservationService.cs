@@ -25,6 +25,22 @@ namespace Library.Service.Library.Implementations
             _mapper = mapper;
             _loggerManager = loggerManager;
         }
+
+        public async Task<(bool isAvailable, string message)> CheckBookCopyAvailability(Guid originalBookId, string edition, Guid PublisherId, int quantity)
+        {
+            var availableCopies = await _repositoryManager.BookCopyRepository.GetAllAvailableBookCopies(originalBookId, edition, PublisherId, quantity);
+
+            if(availableCopies.Count() >= quantity)
+            {
+                return (true, $"{availableCopies.Count()} copies available");
+            }
+            else
+            {
+                return (false, $"only {availableCopies.Count()} copies available");
+            }
+
+        }
+
         public async Task<Result> CreateReservation(CreateReservationDto createReservationDto)
         {
             var reservation = _mapper.Map<Reservation>(createReservationDto);

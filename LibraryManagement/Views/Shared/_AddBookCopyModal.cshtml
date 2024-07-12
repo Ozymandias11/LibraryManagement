@@ -1,0 +1,43 @@
+﻿<div class="modal fade" id="addBookCopyModal" tabindex="-1" role="dialog" aria-labelledby="addBookCopyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBookCopyModalLabel">Add Book Copy</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="text-primary">Original Book:</label>
+                    <select id="modalOriginalBookId" class="form-control" required>
+                        <option value="">Select a book</option>
+                        @foreach (var book in Model.AllBooks)
+                        {
+                            <option value="@book.Id">@book.Title</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Edition:</label>
+                    <input id="modalEdition" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Publisher:</label>
+                    <select id="modalPublisherId" class="form-control" required>
+                        <option value="">Select a publisher</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="text-primary">Quantity:</label>
+                    <input type="number" id="modalQuantity" class="form-control" required min="1" />
+                </div>
+                <div id="availabilityStatus" class="mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addBookCopy()">Add Book Copy</button>
+            </div>
+        </div>
+    </div>
+</div>
