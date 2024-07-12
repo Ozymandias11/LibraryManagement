@@ -137,11 +137,13 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<CreateCustomerViewModel, CreateCustomerDto>();
             CreateMap<CreateCustomerDto, Customer>();
-            CreateMap<UpdateCustomerViewModel,  CustomerDto>().ReverseMap(); 
+            CreateMap<UpdateCustomerViewModel,  CustomerDto>().ReverseMap();
 
             //Reservations
 
-            CreateMap<Reservation, ReservationDto>();   
+            CreateMap<Reservation, ReservationDto>()
+                .ForMember(dest => dest.CustomerPersonalID, opt => opt.MapFrom(src => src.Customer.CustomerPersonalId))
+                .ForMember(dest => dest.EmployeeEmail, opt => opt.MapFrom(src => src.Employee.Email));
             CreateMap<ReservationDto, ReservationViewModel>();
             CreateMap<ReservationItem, ReservationItemDto>();
             CreateMap<ReservationItemDto, ReservationItemViewModel>();
@@ -155,6 +157,25 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<CustomerDto, CustomerDropDownViewModel>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CustomerId));
+
+            //Reservation Details
+
+            CreateMap<Reservation, ReservationDetailsDto>()
+                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => $"{src.Employee.FirstName}, {src.Employee.LastName}"))
+                .ForMember(dest => dest.EmployeeFullName, opt => opt.MapFrom(src => $"{src.Customer.FirstName}:{src.Customer.LastName}"))
+                .ForMember(dest => dest.ReservationItems, opt => opt.Ignore());
+
+            //CreateMap<ReservationItem, ReservationItemForDetailsDto>()
+            //    .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.BookCopy.OriginalBook.Title))
+            //    .ForMember(dest => dest.Edition, opt => opt.MapFrom(src => src.BookCopy.Edition))
+            //    .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.BookCopy.Publisher.PublisherName));
+
+            CreateMap<ReservationDetailsDto, ReservationDetailsViewModel>();
+            CreateMap<ReservationItemForDetailsDto, ReservationItemForDetailsViewModel>();
+
+
+
+
         }
     }
 }

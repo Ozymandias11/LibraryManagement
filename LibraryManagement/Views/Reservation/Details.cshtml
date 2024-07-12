@@ -1,0 +1,92 @@
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.ReservationDetailsViewModel
+
+<div class="container-fluid mt--7">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 order-xl-1">
+            <div class="card bg-secondary shadow">
+                <div class="card-header bg-white border-0">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h3 class="mb-0">Reservation Details</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group focused">
+                                    <label class="form-control-label">Customer Name</label>
+                                    <p class="form-control form-control-alternative">@Model.CustomerFullName</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group focused">
+                                    <label class="form-control-label">Employee Name</label>
+                                    <p class="form-control form-control-alternative">@Model.EmployeeFullName</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label">Checkout Time</label>
+                                    <p class="form-control form-control-alternative">@Model.CheckoutTime.ToString("g")</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label">Supposed Return Date</label>
+                                    <p class="form-control form-control-alternative">@Model.SupposedReturnDate.ToString("d")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label">Actual Return Date</label>
+                                    <p class="form-control form-control-alternative">@(Model.ActualReturnDate?.ToString("d") ?? "Not returned yet")</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="form-control-label">Is Late</label>
+                                    <p class="form-control form-control-alternative">@(Model.IsLate ? "Yes" : "No")</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="mt-4">Reservation Items</h4>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Edition</th>
+                                    <th>Publisher Name</th>
+                                    <th>Quantity</th>
+                                    <th>Actual Return date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ReservationItems)
+                                {
+                                    <tr>
+                                        <td>@item.BookTitle</td>
+                                        <td>@item.Edition</td>
+                                        <td>@item.PublisherName</td>
+                                        <td>@item.Quantity</td>
+                                        <td>@(item.ActualReturnDate?.ToString("d") ?? "Not returned yet")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="form-group row justify-content-end">
+                            <div class="col-auto">
+                                <a asp-controller="Reservation" asp-action="Reservations" class="btn btn-neutral btn-lg">Back to List</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

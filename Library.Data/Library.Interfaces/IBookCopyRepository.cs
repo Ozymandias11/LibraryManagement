@@ -25,6 +25,8 @@ namespace Library.Data.Library.Interfaces
             int quantity
             );
 
+        void UpdateBookCopyStatus(BookCopy bookCopy);
+
 
     }
 }

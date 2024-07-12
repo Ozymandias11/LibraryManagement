@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Dto.Library.Dto
 {
-   public class ReservationDto
+    public class ReservationDetailsDto
     {
-        public Guid ReservationId { get; set; }
-        public string? CustomerPersonalID { get; set; }
+        public string? CustomerFullName { get; set; }
+        public string? EmployeeFullName { get; set; }
         public DateTime CheckoutTime { get; set; }
         public DateTime SupposedReturnDate { get; set; }
         public DateTime? ActualReturnDate { get; set; }
-        public Guid? ReturnCustomerId { get; set; }
         public bool IsLate { get; set; }
-        public string? EmployeeEmail { get; set; }
-        public IEnumerable<ReservationItemDto>? ReservationItems { get; set; }
+        public List<ReservationItemForDetailsDto>? ReservationItems { get; set; }    
+        
     }
 }

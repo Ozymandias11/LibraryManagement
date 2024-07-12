@@ -65,6 +65,14 @@ namespace LibraryManagement.Controllers
 
         }
 
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var reservation = await _serviceManager.ReservationService.GetReservation(id, false);
+            var reservationViewModel = _mapper.Map<ReservationDetailsViewModel>(reservation.Value);
+
+            return View(reservationViewModel);
+        }
+
 
 
         public async Task<IActionResult> GetPublishersForBook(string bookId)

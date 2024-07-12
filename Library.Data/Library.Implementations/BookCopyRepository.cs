@@ -1,4 +1,5 @@
 ﻿using Library.Data.Library.Interfaces;
+using Library.Model.Enums;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -58,8 +59,8 @@ namespace Library.Data.Library.Implementations
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
                 .Include(bc => bc.Shelves)
-            .ThenInclude(bcs => bcs.Shelf)
-            .ThenInclude(s => s.Room);
+                      .ThenInclude(bcs => bcs.Shelf)
+                        .ThenInclude(s => s.Room);
 
             // First, get the distinct combinations
             var distinctCombos = await query
@@ -76,7 +77,8 @@ namespace Library.Data.Library.Implementations
                 var bookCopies = await query
                     .Where(bc => bc.OriginaBookId == combo.OriginaBookId &&
                                  bc.PublisherId == combo.PublisherId &&
-                                 bc.Edition == combo.Edition)
+                                 bc.Edition == combo.Edition &&
+                                 bc.Status == Status.Available)
                     .ToListAsync();
 
                 if (bookCopies.Any())
@@ -107,5 +109,8 @@ namespace Library.Data.Library.Implementations
                 .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
                 .Count();
         }
+
+        public void UpdateBookCopyStatus(BookCopy bookCopy) => Update(bookCopy);
+      
     }
 }

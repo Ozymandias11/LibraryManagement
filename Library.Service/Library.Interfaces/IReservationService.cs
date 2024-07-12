@@ -11,7 +11,7 @@ namespace Library.Service.Library.Interfaces
    public interface IReservationService
     {
         Task<IEnumerable<ReservationDto>> GetAllReservations(bool trackChanges);
-        Task<Result<ReservationDto>> GetReservation(Guid id, bool trackChanges);
+        Task<Result<ReservationDetailsDto>> GetReservation(Guid id, bool trackChanges);
         Task<Result> CreateReservation(CreateReservationDto createReservationDto);
     }
 }

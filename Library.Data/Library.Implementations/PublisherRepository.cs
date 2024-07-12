@@ -19,7 +19,7 @@ namespace Library.Data.Library.Implementations
        
 
         public async Task<IEnumerable<Publisher>> GetAllPublisher(bool trackChanges) 
-            => await FindAll(trackChanges).OrderBy(a => a.CreatedDate).ToListAsync();   
+            => await FindByCondition(a => a.DeletedDate == null, trackChanges).OrderBy(a => a.CreatedDate).ToListAsync();   
         
 
         public async Task<Publisher?> GetPublisher(Guid id, bool trackChanges)

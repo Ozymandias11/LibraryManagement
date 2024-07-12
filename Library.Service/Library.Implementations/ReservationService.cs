@@ -3,6 +3,7 @@ using FluentResults;
 using Library.Data.NewFolder;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using Library.Service.Logging;
 using System;
@@ -54,10 +55,13 @@ namespace Library.Service.Library.Implementations
 
                 foreach(var bookCopy in availableBookCopies)
                 {
+                    bookCopy.Status = Model.Enums.Status.CheckedOut;
                     reservation.ReservationItems.Add(new ReservationItem()
                     {
                         BookCopyID = bookCopy.BookCopyId,
                     });
+
+                     _repositoryManager.BookCopyRepository.UpdateBookCopyStatus(bookCopy);
                 }
 
             }
@@ -76,9 +80,36 @@ namespace Library.Service.Library.Implementations
             return reservationsDto;
         }
 
-        public Task<Result<ReservationDto>> GetReservation(Guid id, bool trackChanges)
+
+        public async Task<Result<ReservationDetailsDto>> GetReservation(Guid id, bool trackChanges)
         {
-            throw new NotImplementedException();
+            var reservation = await _repositoryManager.ReservationRepository.GetReservation(id, trackChanges);
+
+            if(reservation == null)
+            {
+                return Result.Fail(new NotFoundError("reservation not found", id));
+            }
+
+            var reservationDto = _mapper.Map<ReservationDetailsDto>(reservation);
+
+            reservationDto.ReservationItems = reservation.ReservationItems
+                   .GroupBy(ri => ri.BookCopy.OriginalBook.BookId)
+                   .Select(group => new ReservationItemForDetailsDto
+                   {
+                       BookTitle = group.First().BookCopy.OriginalBook.Title,
+                       PublisherName = group.First().BookCopy.Publisher.PublisherName,
+                       Quantity = group.Count(),
+                       Edition = group.First().BookCopy.Edition,
+                       ActualReturnDate = group.Any(ri => !ri.ActualReturnDate.HasValue)
+                           ? null
+                           : group.Max(ri => ri.ActualReturnDate)
+                   })
+                   .ToList();
+
+
+
+            return reservationDto;
+
         }
     }
 }
