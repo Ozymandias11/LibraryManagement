@@ -11,6 +11,9 @@
                         <div class="form-group">
                             <label asp-for="CustomerID" class="text-primary">Customer ID:</label>
                             <select asp-for="CustomerID" class="form-control customer-select" required>
+                                <div id="createNewCustomerContainer" style="display: none;">
+                                    <a href="/Customer/Create" class="text-primary">Create New Customer</a>
+                                </div>
                                 <option value="">Select a customer</option>
                                 @foreach (var customer in Model.AllCustomers)
                                 {

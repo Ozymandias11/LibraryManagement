@@ -6,12 +6,6 @@
     <ul class="navbar-nav">
         @if (SignInManager.IsSignedIn(User))
         {
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <li class="nav-item active">
-                    <span class="nav-link">@TempData["SuccessMessage"]</span>
-                </li>
-            }
             <li class="nav-item active">
                 <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
             </li>

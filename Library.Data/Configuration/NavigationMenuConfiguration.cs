@@ -198,7 +198,16 @@ namespace Library.Data.Configuration
                                                ControllerName = "Customer",
                                                ActionName = "Customers",
                                                Permitted = true,
-                                           }
+                                           },
+                                             new NavigationMenu
+                                             {
+                                                 Id = new Guid("9518e097-f106-497b-aac5-a3c5e7100aed"),
+                                                 Name = "Current Reservations",
+                                                 ParentMenuId = new Guid("f513d8d7-b945-40d2-b679-2c2bbdd24f25"),
+                                                 ControllerName = "Reservation",
+                                                 ActionName = "Reservations",
+                                                 Permitted = true,
+                                             }
 
                 );
 

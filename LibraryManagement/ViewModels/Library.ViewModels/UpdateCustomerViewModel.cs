@@ -24,5 +24,7 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
 
         [Required(ErrorMessage = "Address is required")]
         public Address Address { get; set; }
+        [Required(ErrorMessage = "ID is required")]
+        public string? CustomerPersonalId { get; set; }
     }
 }

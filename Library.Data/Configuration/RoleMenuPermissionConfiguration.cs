@@ -188,7 +188,13 @@ namespace Library.Data.Configuration
                                                 Id = Guid.NewGuid(),
                                                 RoleId = librarianRoleId,
                                                 NavigationMenuId = new Guid("10dc9edc-913d-4dda-a6ff-fe9065d575ee")
-                                            }
+                                            },
+                                              new RoleMenuPermission
+                                              {
+                                                  Id = Guid.NewGuid(),
+                                                  RoleId = librarianRoleId,
+                                                  NavigationMenuId = new Guid("9518e097-f106-497b-aac5-a3c5e7100aed")
+                                              }
 
 
 

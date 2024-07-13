@@ -2,14 +2,32 @@
 
 $(document).ready(function () {
 
+    // customer 
     $('.customer-select').select2({
         placeholder: "Search for a customer",
-        allowClear: true
+        allowClear: true,
+        language: {
+            noResults: function () {
+                return "No results found. <a href='/Customer/CreateCustomer' class='create-customer-link'>Create New Customer</a>";
+            }
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        }
+    }).on('select2:open', function () {
+        $('.select2-results__options').on('click', '.create-customer-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = $(this).attr('href');
+        });
     });
+
+    //books
 
     $('#modalOriginalBookId').select2({
         dropdownParent: $('#addBookCopyModal')
     });
+    //publishers
 
     $('#modalPublisherId').select2({
         dropdownParent: $('#addBookCopyModal')
