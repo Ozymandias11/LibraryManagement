@@ -3,6 +3,8 @@ using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Globalization;
 
 namespace LibraryManagement.Controllers
 {
@@ -18,10 +20,29 @@ namespace LibraryManagement.Controllers
             _userService = userService;
         }
 
-        public async Task<IActionResult> Reservations()
+        public async Task<IActionResult> Reservations(
+            string sortBy,
+            string sortOrder,
+            string searchString,
+            int page = 1,
+            int pageSize = 10)
         {
-            var reservations = await _serviceManager.ReservationService.GetAllReservations(false);
+
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.isPaginated = true;
+            ViewData["CurrentSearchString"] = searchString;
+            ViewData["CurrentPage"] = page;
+
+            var reservations = await _serviceManager.ReservationService.GetAllReservations(sortBy, sortOrder, searchString, page, pageSize,false);
             var reservationsViewModel = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
+
+            foreach(var reservation in reservationsViewModel)
+            {
+                reservation.CurrentPage = page;
+                reservation.PageSize = pageSize;
+                reservation.TotalCount = reservations.Count();
+            }
             return View(reservationsViewModel); 
 
         } 

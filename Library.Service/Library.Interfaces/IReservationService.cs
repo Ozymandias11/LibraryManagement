@@ -10,7 +10,7 @@ namespace Library.Service.Library.Interfaces
 {
    public interface IReservationService
     {
-        Task<IEnumerable<ReservationDto>> GetAllReservations(bool trackChanges);
+        Task<IEnumerable<ReservationDto>> GetAllReservations(string sortBy, string sortOrder, string searchString, int page, int pageSize, bool trackChanges);
         Task<Result<ReservationDetailsDto>> GetReservation(Guid id, bool trackChanges);
         Task<Result> CreateReservation(CreateReservationDto createReservationDto);
         Task<(bool isAvailable, string message)> CheckBookCopyAvailability(Guid originalBookId, string edition, Guid PublisherId, int quantity);

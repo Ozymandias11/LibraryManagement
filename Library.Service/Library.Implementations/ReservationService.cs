@@ -88,9 +88,19 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<ReservationDto>> GetAllReservations(bool trackChanges)
+        public async Task<IEnumerable<ReservationDto>> GetAllReservations(
+            string sortBy, string sortOrder, string searchString, int page, int pageSize, bool trackChanges)
         {
-            var reservations = await _repositoryManager.ReservationRepository.GetAllReservations(trackChanges);
+            var reservations = await _repositoryManager.ReservationRepository.GetAllReservations(page, pageSize, trackChanges);
+
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                reservations = reservations.Where(r => r.Customer.CustomerPersonalId.Contains(searchString) ||
+                                                       r.Employee.Email.Contains(searchString));
+            }
+
+            reservations = ApplySorting(reservations, sortBy, sortOrder);
+
             var reservationsDto = _mapper.Map<IEnumerable<ReservationDto>>(reservations);   
 
             return reservationsDto;
@@ -126,6 +136,23 @@ namespace Library.Service.Library.Implementations
 
             return reservationDto;
 
+        }
+
+        private IEnumerable<Reservation> ApplySorting(IEnumerable<Reservation> reservations, string sortBy, string sortOrder)
+        {
+            return reservations = sortBy switch
+            {
+                "CustomerPersonalID" => sortOrder == "CustomerPersonalID_Asc" ? reservations.OrderBy(r => r.Customer.CustomerPersonalId)
+                                                                                : reservations.OrderByDescending(r => r.Customer.CustomerPersonalId),
+                "CheckoutTime" => sortOrder == "CheckoutTime_Asc" ? reservations.OrderBy(r => r.CheckoutTime)
+                                                                                : reservations.OrderByDescending(r => r.CheckoutTime),
+                "EmployeeEmail" => sortOrder == "EmployeeEmail_Asc" ? reservations.OrderBy(r => r.Employee.Email)
+                                                                                : reservations.OrderByDescending(r => r.Employee.Email),
+                _ => reservations.OrderBy(r => r.CreatedDate)
+
+
+
+            };
         }
     }
 }

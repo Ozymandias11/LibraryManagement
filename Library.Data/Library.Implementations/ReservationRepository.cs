@@ -23,15 +23,18 @@ namespace Library.Data.Library.Implementations
         public void DeleteReservation(Reservation reservation) => Delete(reservation);
 
 
-        public async Task<IEnumerable<Reservation>> GetAllReservations(bool trackChanges)
-        {
-            return await FindByCondition(r => r.DeletedDate == null, trackChanges)
+        public async Task<IEnumerable<Reservation>> GetAllReservations(int page, int pageSize,bool trackChanges)
+            => await FindByCondition(r => r.DeletedDate == null, trackChanges)
                     .Include(r => r.Customer)
                     .Include(r => r.Employee)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync();
-         }
 
-      
+
+
+
+
 
 
 

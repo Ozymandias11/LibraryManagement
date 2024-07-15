@@ -2,6 +2,16 @@
 
 @{
     ViewData["Title"] = "Reservations";
+    ViewData["ActionUrl"] = "Reservations";
+    ViewData["ActionName"] = "Reservations";
+    ViewData["CurrentPage"] = Model.FirstOrDefault()?.CurrentPage ?? 1;
+    var sortableColumns = new[]
+    {
+        ("ID", "CustomerPersonalID"),
+        ("Checkout Time", "CheckoutTime"),
+        ("Employee Email", "EmployeeEmail")
+
+    };
 }
 
 <div class="card">
@@ -9,14 +19,17 @@
         <div class="d-flex justify-content-center mb-3">
             <h2 class="text-primary mb-0">Reservations</h2>
         </div>
+         <table>
+            <tr>
+                @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
+            </tr>
+        </table>
         <div class="table-responsive wide-table">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-primary text-center">Customer ID</th>
-                        <th class="text-primary text-center">Checkout Time</th>
+                        @await Html.PartialAsync("_SortableHeader", sortableColumns)
                         <th class="text-primary text-center">Is Late</th>
-                        <th class="text-primary text-center">Employee Email</th>
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
@@ -26,8 +39,8 @@
                         <tr>
                             <td class="text-center">@reservation.CustomerPersonalID</td>
                             <td class="text-center">@reservation.CheckoutTime</td>
-                            <td class="text-center">@reservation.IsLate</td>
                             <td class="text-center">@reservation.EmployeeEmail</td>
+                            <td class="text-center">@reservation.IsLate</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
                                     <a asp-controller="Reservation" asp-action="Details" asp-route-id="@reservation.ReservationId" class="btn btn-primary btn-sm mr-2">Details</a>
@@ -40,6 +53,15 @@
             </table>
             <a asp-action="CreateReservation" class="btn btn-primary">Add Reservation</a>
         </div>
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.FirstOrDefault()?.CurrentPage ?? 1,
+                 TotalPages: Model.FirstOrDefault()?.TotalPages ?? 1,
+                 PageSize: Model.FirstOrDefault()?.PageSize ?? 10,
+                 SortBy: ViewBag.SortBy,
+                 SortOrder: ViewBag.SortOrder,
+                 SearchString: ViewData["CurrentSearchString"] as string
+                 ))
+
     </div>
 </div>
 

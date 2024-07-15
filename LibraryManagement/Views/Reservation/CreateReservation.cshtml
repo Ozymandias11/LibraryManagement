@@ -32,11 +32,11 @@
                             <input asp-for="SupposedReturnDate" type="date" class="form-control" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="SupposedReturnDate" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                       @*  <div class="form-group">
                             <label asp-for="EmployeeId" class="text-primary">Employee ID:</label>
                             <input asp-for="EmployeeId" class="form-control" />
                             <span asp-validation-for="EmployeeId" class="text-danger"></span>
-                        </div>
+                        </div> *@
 
                         <h4 class="text-primary mt-4">Book Copy Reservations</h4>
                         <div id="bookCopySummary" class="mb-3">
@@ -60,6 +60,8 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script src="~/js/createReservation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/additional-methods.min.js"></script>
 }
 
 @section Styles {
