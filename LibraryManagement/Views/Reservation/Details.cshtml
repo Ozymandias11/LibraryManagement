@@ -13,6 +13,7 @@
                 </div>
                 <div class="card-body">
                     <div class="pl-lg-4">
+                        <!-- Reservation details -->
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group focused">
@@ -55,6 +56,8 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Reservation Items Table -->
                         <h4 class="mt-4">Reservation Items</h4>
                         <table class="table">
                             <thead>
@@ -64,6 +67,7 @@
                                     <th>Publisher Name</th>
                                     <th>Quantity</th>
                                     <th>Actual Return date</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,6 +79,25 @@
                                         <td>@item.PublisherName</td>
                                         <td>@item.Quantity</td>
                                         <td>@(item.ActualReturnDate?.ToString("d") ?? "Not returned yet")</td>
+                                        <td>
+                                            @if (item.Quantity > item.ReturnedQuantity)
+                                            {
+                                                <button type="button" class="btn btn-primary btn-sm return-book"
+                                                        data-toggle="modal"
+                                                        data-target="#returnBookModal"
+                                                        data-reservation-item-id="@item.ReservationItemId"
+                                                        data-book-title="@item.BookTitle"
+                                                        data-edition="@item.Edition"
+                                                        data-publisher-name="@item.PublisherName"
+                                                        data-remaining-quantity="@(item.Quantity - item.ReturnedQuantity)">
+                                                    Return
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <span>All Returned</span>
+                                            }
+                                        </td>
                                     </tr>
                                 }
                             </tbody>
@@ -90,3 +113,198 @@
         </div>
     </div>
 </div>
+
+<!-- Return Book Modal -->
+<div class="modal fade" id="returnBookModal" tabindex="-1" role="dialog" aria-labelledby="returnBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnBookModalLabel">Return Book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="returnBookForm">
+                    <input type="hidden" id="reservationItemId" name="reservationItemId">
+                    <div class="form-group">
+                        <label for="bookTitle">Book Title</label>
+                        <input type="text" class="form-control" id="bookTitle" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="edition">Edition</label>
+                        <input type="text" class="form-control" id="edition" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="publisherName">Publisher Name</label>
+                        <input type="text" class="form-control" id="publisherName" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="remainingQuantity">Remaining Quantity</label>
+                        <input type="number" class="form-control" id="remainingQuantity" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerSelect">Returned By</label>
+                        <select class="form-control customer-select" id="customerSelect" name="customerId">
+                            <option></option>
+                        </select>
+                    </div>
+                    <table class="table" id="returnActionsTable">
+                        <thead>
+                            <tr>
+                                <th>Return Status</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-secondary" id="addReturnAction">Add Return Action</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitReturn">Submit Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .select2-container {
+            width: 100% !important;
+        }
+
+        .select2-selection--single {
+            height: 38px !important;
+            padding: 6px 12px !important;
+            font-size: 1rem !important;
+            line-height: 1.5 !important;
+            border: 1px solid #ced4da !important;
+            border-radius: 0.25rem !important;
+        }
+
+        .select2-selection__arrow {
+            height: 36px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 24px !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#customerSelect').select2({
+                placeholder: "Search for a customer",
+                allowClear: true,
+                dropdownParent: $('#returnBookModal'),
+                language: {
+                    noResults: function () {
+                        return "No results found. <a href='/Customer/CreateCustomer' class='create-customer-link'>Create New Customer</a>";
+                    }
+                },
+                escapeMarkup: function (markup) {
+                    return markup;
+                }
+            }).on('select2:open', function () {
+                $('.select2-results__options').on('click', '.create-customer-link', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = $(this).attr('href');
+                });
+            });
+
+            // Function to populate customers
+            function populateCustomers() {
+                debugger;
+                $.ajax({
+                    url: '/Reservation/GetAllCustomers',
+                    type: 'GET',
+                    success: function (data) {;
+                        var customerSelect = $("#customerSelect");
+                        customerSelect.empty();
+                        customerSelect.append($("<option>").val("").text("Select a customer"));
+                        $.each(data, function (index, customer) {
+                            customerSelect.append($("<option>")
+                                .val(customer.id)
+                                .text(customer.customerPersonalId + ' - ' + customer.firstName + ' ' + customer.lastName));
+                        });
+                        customerSelect.trigger('change'); // Refresh Select2
+                    },
+                    error: function () {
+                        alert("Error occurred while fetching customers.");
+                    }
+                });
+            }
+
+           
+            populateCustomers();
+            $('.return-book').click(function () {
+                var button = $(this);
+                $('#reservationItemId').val(button.data('reservation-item-id'));
+                $('#bookTitle').val(button.data('book-title'));
+                $('#edition').val(button.data('edition'));
+                $('#publisherName').val(button.data('publisher-name'));
+                $('#remainingQuantity').val(button.data('remaining-quantity'));
+
+                // Reset form
+                $('#customerSelect').val(null).trigger('change');
+                $('#returnActionsTable tbody').empty();
+                addReturnActionRow();
+            });
+
+
+                    function addReturnActionRow() {
+                var row = `
+                            <tr>
+                                <td>
+                                    <select class="form-control return-status">
+                                        <option value="safe">Safe</option>
+                                        <option value="damaged">Damaged</option>
+                                        <option value="lost">Lost</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control return-quantity" min="1" max="${$('#remainingQuantity').val()}" value="1">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm remove-action">Remove</button>
+                                </td>
+                            </tr>
+                        `;
+                $('#returnActionsTable tbody').append(row);
+            }
+
+            // Add return action button
+            $('#addReturnAction').click(function () {
+                addReturnActionRow();
+            });
+
+
+            $(document).on('click', '.remove-action', function () {
+                $(this).closest('tr').remove();
+            });
+
+
+            $(document).on('change', '.return-quantity', function () {
+                var totalQuantity = 0;
+                $('.return-quantity').each(function () {
+                    totalQuantity += parseInt($(this).val()) || 0;
+                });
+                if (totalQuantity > parseInt($('#remainingQuantity').val())) {
+                    alert('Total quantity exceeds remaining quantity');
+                    $(this).val(1);
+                }
+            });
+
+        });
+    </script>
+}

@@ -12,7 +12,9 @@ namespace Library.Model.Models
         public Guid ReservationId { get; set; }
         public Guid BookCopyID { get; set; }
         public DateTime? ActualReturnDate { get; set; }
+        public Guid? ReturnCustomerId { get; set; }
         public Reservation? Reservation { get; set; }
         public BookCopy? BookCopy { get; set; }
+        public Customer? ReturnCustomer { get; set; }   
     }
 }

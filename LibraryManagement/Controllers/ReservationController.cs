@@ -114,7 +114,12 @@ namespace LibraryManagement.Controllers
 
         }
 
-
+        public async Task<IActionResult> GetAllCustomers()
+        {
+            var customers = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
+            var customerViewModel = _mapper.Map<IEnumerable<CustomerDropDownViewModel>>(customers);
+            return Json(customerViewModel);
+        }
 
 
     }

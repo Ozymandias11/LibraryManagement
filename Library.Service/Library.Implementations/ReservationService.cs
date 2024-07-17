@@ -45,15 +45,10 @@ namespace Library.Service.Library.Implementations
         {
             var reservation = _mapper.Map<Reservation>(createReservationDto);
 
-
-            //temp solution, will be changed
             if (reservation.ReservationItems == null)
             {
                 reservation.ReservationItems = new List<ReservationItem>();
             }
-
-
-           
 
             foreach (var bookCopyRequest in createReservationDto.BookCopyReservations)
             {

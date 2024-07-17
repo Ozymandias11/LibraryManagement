@@ -13,7 +13,6 @@ namespace Library.Model.Models
         public DateTime CheckoutTime { get; set; }
         public DateTime SupposedReturnDate { get; set; }
         public DateTime? ActualReturnDate { get; set; }
-        public Guid? ReturnCustomerId { get; set; }
         public bool IsLate => SupposedReturnDate < DateTime.Now && ActualReturnDate == null;
         public string? EmployeeId { get; set; }
         public Customer? Customer { get; set; }
