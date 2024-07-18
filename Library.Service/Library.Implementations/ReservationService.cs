@@ -137,17 +137,26 @@ namespace Library.Service.Library.Implementations
 
         public async Task<Result> ReturnBook(ReturnBookDto returnBookDto)
         {
-            var reservation = await _repositoryManager.ReservationRepository.GetReservation(returnBookDto.ReservationId, false);
-            var reservationBookCopies = await _repositoryManager.BookCopyRepository.GetBookCopiesOfReservation(returnBookDto.ReservationId);
+            var reservation = await _repositoryManager.ReservationRepository.GetReservation(returnBookDto.ReservationId, true);
+            
 
-            //foreach(var returnItem in returnBookDto.returnItems)
-            //{
-            //   int processedCopies = 0;
-            //   foreach(var returnAction in returnItem.ReturnActions)
-            //    {
-            //        for(int i = 0; i < returnAction.)
-            //    }
-            //}
+            foreach(var returnItem in returnBookDto.returnItems)
+            {
+                var status = GetStatusFromReturnAction(returnItem.ReturnStatus);
+                var itemsToUpdate = reservation.ReservationItems.Where(ri => ri.BookCopy.Status == Status.CheckedOut)
+                                    .Take(returnItem.Quantity)
+                                    .ToList();
+
+
+                foreach(var item in itemsToUpdate)
+                {
+                    item.BookCopy.Status = status;
+                    item.ReturnCustomerId = returnBookDto.CustomerId;
+                    item.ActualReturnDate = DateTime.Now;
+                }
+
+
+            }
 
             await _repositoryManager.SaveAsync();
             return Result.Ok();
@@ -156,22 +165,18 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        private Status GetStatusFromReturnAction(string returnStatus)
+        private static Status GetStatusFromReturnAction(string returnStatus)
         {
-            switch (returnStatus.ToLower())
+            return returnStatus.ToLower() switch
             {
-                case "safe":
-                    return Status.Available;
-                case "damaged":
-                    return Status.Damaged;
-                case "lost":
-                    return Status.Lost;
-                default:
-                    throw new Exception("Invalid return status");
-            }
+                "safe" => Status.Available,
+                "damaged" => Status.Damaged,
+                "lost" => Status.Lost,
+                _ => throw new Exception("Invalid return status"),
+            };
         }
 
-        private IEnumerable<Reservation> ApplySorting(IEnumerable<Reservation> reservations, string sortBy, string sortOrder)
+        private static IEnumerable<Reservation> ApplySorting(IEnumerable<Reservation> reservations, string sortBy, string sortOrder)
         {
             return reservations = sortBy switch
             {

@@ -28,6 +28,7 @@ namespace Library.Data.Library.Implementations
                     .Include(r => r.Customer)
                     .Include(r => r.Employee)
                     .Include(r => r.ReservationItems)
+                        .ThenInclude(ri => ri.BookCopy)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
