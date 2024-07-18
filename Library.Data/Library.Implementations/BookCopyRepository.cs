@@ -94,8 +94,9 @@ namespace Library.Data.Library.Implementations
 
         }
 
-
-
+        public async Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId)
+            => await FindByCondition(bc => bc.ReservationItems.Any(ri => ri.ReservationId == ReservationId), false).ToListAsync();
+        
 
         public Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges)
         {

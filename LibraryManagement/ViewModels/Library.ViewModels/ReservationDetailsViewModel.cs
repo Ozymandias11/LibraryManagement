@@ -5,7 +5,6 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
     public class ReservationDetailsViewModel
     {
         public Guid ReservationId { get; set; }
-
         public string? CustomerFullName { get; set; }
         public string? EmployeeFullName { get; set; }
         public DateTime CheckoutTime { get; set; }

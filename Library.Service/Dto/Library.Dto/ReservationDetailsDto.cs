@@ -8,6 +8,7 @@ namespace Library.Service.Dto.Library.Dto
 {
     public class ReservationDetailsDto
     {
+        public Guid ReservationId { get; set; }
         public string? CustomerFullName { get; set; }
         public string? EmployeeFullName { get; set; }
         public DateTime CheckoutTime { get; set; }

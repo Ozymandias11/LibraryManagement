@@ -34,18 +34,18 @@ namespace LibraryManagement.Controllers
             ViewData["CurrentSearchString"] = searchString;
             ViewData["CurrentPage"] = page;
 
-            var reservations = await _serviceManager.ReservationService.GetAllReservations(sortBy, sortOrder, searchString, page, pageSize,false);
+            var reservations = await _serviceManager.ReservationService.GetAllReservations(sortBy, sortOrder, searchString, page, pageSize, false);
             var reservationsViewModel = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
 
-            foreach(var reservation in reservationsViewModel)
+            foreach (var reservation in reservationsViewModel)
             {
                 reservation.CurrentPage = page;
                 reservation.PageSize = pageSize;
                 reservation.TotalCount = reservations.Count();
             }
-            return View(reservationsViewModel); 
+            return View(reservationsViewModel);
 
-        } 
+        }
 
         public async Task<IActionResult> CreateReservation()
         {
@@ -62,8 +62,8 @@ namespace LibraryManagement.Controllers
             var booksForDropDownViewModel = _mapper.Map<IEnumerable<BookDropdownViewModel>>(booksForDropDown);
 
             createReservationViewModel.AllBooks = booksForDropDownViewModel;
-            createReservationViewModel.AllCustomers = customersForDropDownViewModel;    
-            
+            createReservationViewModel.AllCustomers = customersForDropDownViewModel;
+
             return View(createReservationViewModel);
         }
 
@@ -77,7 +77,7 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.ReservationService.CreateReservation(reservationDto);
 
-            if(result.IsSuccess)
+            if (result.IsSuccess)
             {
                 return RedirectToAction("Reservations");
             }
@@ -119,6 +119,16 @@ namespace LibraryManagement.Controllers
             var customers = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
             var customerViewModel = _mapper.Map<IEnumerable<CustomerDropDownViewModel>>(customers);
             return Json(customerViewModel);
+        }
+
+        [HttpPost]
+
+        public async Task<IActionResult> ReturnBook( [FromBody]ReturnBookViewModel model)
+        {
+            var returnBookDto = _mapper.Map<ReturnBookDto>(model);
+            var result = await _serviceManager.ReservationService.ReturnBook(returnBookDto);
+            return Json(new { success = true, message = "Books returned successfully" });
+
         }
 
 

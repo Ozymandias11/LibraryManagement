@@ -126,7 +126,9 @@
             </div>
             <div class="modal-body">
                 <form id="returnBookForm">
-                    <input type="hidden" id="reservationItemId" name="reservationItemId">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(m => m.ReservationId)
+                    <input type="hidden" id="reservationItemId" name="ReservationItemId" />
                     <div class="form-group">
                         <label for="bookTitle">Book Title</label>
                         <input type="text" class="form-control" id="bookTitle" readonly>
@@ -237,7 +239,7 @@
                                 .val(customer.id)
                                 .text(customer.customerPersonalId + ' - ' + customer.firstName + ' ' + customer.lastName));
                         });
-                        customerSelect.trigger('change'); // Refresh Select2
+                        customerSelect.trigger('change'); 
                     },
                     error: function () {
                         alert("Error occurred while fetching customers.");
@@ -262,28 +264,27 @@
             });
 
 
-                    function addReturnActionRow() {
+            function addReturnActionRow() {
                 var row = `
-                            <tr>
-                                <td>
-                                    <select class="form-control return-status">
-                                        <option value="safe">Safe</option>
-                                        <option value="damaged">Damaged</option>
-                                        <option value="lost">Lost</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control return-quantity" min="1" max="${$('#remainingQuantity').val()}" value="1">
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm remove-action">Remove</button>
-                                </td>
-                            </tr>
-                        `;
+                <tr>
+                    <td>
+                        <select class="form-control return-status">
+                            <option value="Safe">Safe</option>
+                            <option value="Damaged">Damaged</option>
+                            <option value="Lost">Lost</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" class="form-control return-quantity" min="1" max="${$('#remainingQuantity').val()}" value="1">
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm remove-action">Remove</button>
+                    </td>
+                </tr>
+            `;
                 $('#returnActionsTable tbody').append(row);
             }
 
-            // Add return action button
             $('#addReturnAction').click(function () {
                 addReturnActionRow();
             });
@@ -303,6 +304,50 @@
                     alert('Total quantity exceeds remaining quantity');
                     $(this).val(1);
                 }
+            });
+
+          
+            $('#submitReturn').click(function () {
+                var returnItems = [];
+                $('#returnActionsTable tbody tr').each(function () {
+                    var returnStatus = $(this).find('.return-status').val();
+                    var quantity = $(this).find('.return-quantity').val();
+                    returnItems.push({
+                        ReturnStatus: returnStatus,
+                        Quantity: parseInt(quantity)
+                    });
+                });
+
+                var model = {
+                    ReservationId: $('#ReservationId').val(),
+                    CustomerId: $('#customerSelect').val(),
+                    ReturnItems: returnItems
+                };
+
+                console.log('Model:', model); 
+
+                $.ajax({
+                    url: '/Reservation/ReturnBook',
+                    type: 'POST',
+                    data: JSON.stringify(model),
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#returnBookModal').modal('hide');
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while returning the book.');
+                    }
+                });
+            });
+
+            $('#returnActionsTable').on('click', '.remove-return-action', function () {
+                $(this).closest('tr').remove();
             });
 
         });

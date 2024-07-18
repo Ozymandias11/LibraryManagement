@@ -26,6 +26,7 @@ namespace Library.Data.Library.Interfaces
             );
 
         void UpdateBookCopyStatus(BookCopy bookCopy);
+        Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId);
 
 
     }

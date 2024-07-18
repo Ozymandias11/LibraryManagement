@@ -173,6 +173,10 @@ namespace LibraryManagement.MappingProfile
             CreateMap<ReservationDetailsDto, ReservationDetailsViewModel>();
             CreateMap<ReservationItemForDetailsDto, ReservationItemForDetailsViewModel>();
 
+            //return book
+
+            CreateMap<ReturnBookViewModel, ReturnBookDto>();
+            CreateMap<ReturnActionViewModel, ReturnActionDto>();
 
 
 

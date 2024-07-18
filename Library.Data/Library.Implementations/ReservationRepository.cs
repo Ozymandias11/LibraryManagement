@@ -27,15 +27,10 @@ namespace Library.Data.Library.Implementations
             => await FindByCondition(r => r.DeletedDate == null, trackChanges)
                     .Include(r => r.Customer)
                     .Include(r => r.Employee)
+                    .Include(r => r.ReservationItems)
                     .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToListAsync();
-
-
-
-
-
-
 
 
 

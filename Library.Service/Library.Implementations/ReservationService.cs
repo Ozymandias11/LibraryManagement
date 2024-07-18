@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Library.Data.NewFolder;
+using Library.Model.Enums;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Errors.NotFoundError;
@@ -117,6 +118,7 @@ namespace Library.Service.Library.Implementations
                    .GroupBy(ri => ri.BookCopy.OriginalBook.BookId)
                    .Select(group => new ReservationItemForDetailsDto
                    {
+                       ReservationItemId = group.Key,
                        BookTitle = group.First().BookCopy.OriginalBook.Title,
                        PublisherName = group.First().BookCopy.Publisher.PublisherName,
                        Quantity = group.Count(),
@@ -131,6 +133,42 @@ namespace Library.Service.Library.Implementations
 
             return reservationDto;
 
+        }
+
+        public async Task<Result> ReturnBook(ReturnBookDto returnBookDto)
+        {
+            var reservation = await _repositoryManager.ReservationRepository.GetReservation(returnBookDto.ReservationId, false);
+            var reservationBookCopies = await _repositoryManager.BookCopyRepository.GetBookCopiesOfReservation(returnBookDto.ReservationId);
+
+            //foreach(var returnItem in returnBookDto.returnItems)
+            //{
+            //   int processedCopies = 0;
+            //   foreach(var returnAction in returnItem.ReturnActions)
+            //    {
+            //        for(int i = 0; i < returnAction.)
+            //    }
+            //}
+
+            await _repositoryManager.SaveAsync();
+            return Result.Ok();
+
+        
+
+        }
+
+        private Status GetStatusFromReturnAction(string returnStatus)
+        {
+            switch (returnStatus.ToLower())
+            {
+                case "safe":
+                    return Status.Available;
+                case "damaged":
+                    return Status.Damaged;
+                case "lost":
+                    return Status.Lost;
+                default:
+                    throw new Exception("Invalid return status");
+            }
         }
 
         private IEnumerable<Reservation> ApplySorting(IEnumerable<Reservation> reservations, string sortBy, string sortOrder)
