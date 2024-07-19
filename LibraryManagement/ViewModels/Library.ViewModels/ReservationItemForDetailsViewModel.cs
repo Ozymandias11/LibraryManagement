@@ -7,5 +7,7 @@
         public string? PublisherName { get; set; }
         public int Quantity { get; set; }
         public DateTime? ActualReturnDate { get; set; }
+        public string? ReturnCustomerId { get; set; }
+        public Guid? CustomerGuid { get; set; }
     }
 }

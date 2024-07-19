@@ -99,6 +99,13 @@ namespace Library.Service.Library.Implementations
 
         }
 
+        public async Task<Result<CustomerDto>> GetCustomerByPersonalId(string id, bool trackChanges)
+        {
+            var customer = await _repositoryManager.CustomerRepository.GetCustomerByPersonalId(id, trackChanges);
+            var customerDto = _mapper.Map<CustomerDto>(customer);
+            return customerDto;
+        }
+
         public async Task<int> GetTotalCustomersCount() => await _repositoryManager.CustomerRepository.GetTotalCustomersCount();
       
 

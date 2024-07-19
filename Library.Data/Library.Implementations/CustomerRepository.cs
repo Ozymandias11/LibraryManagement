@@ -35,6 +35,10 @@ namespace Library.Data.Library.Implementations
         public async Task<Customer?> GetCustomer(Guid id, bool trackChanges) =>
             await FindByCondition(c => c.CustomerId == id, trackChanges).FirstOrDefaultAsync();
 
+        public async Task<Customer?> GetCustomerByPersonalId(string id, bool trackChanges)
+            => await FindByCondition(c => c.CustomerPersonalId == id, trackChanges).FirstOrDefaultAsync();
+      
+
         public Task<int> GetTotalCustomersCount() => FindAll(false).CountAsync();
         
             

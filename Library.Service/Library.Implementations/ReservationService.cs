@@ -125,7 +125,10 @@ namespace Library.Service.Library.Implementations
                        Edition = group.First().BookCopy.Edition,
                        ActualReturnDate = group.Any(ri => !ri.ActualReturnDate.HasValue)
                            ? null
-                           : group.Max(ri => ri.ActualReturnDate)
+                           : group.Max(ri => ri.ActualReturnDate),
+                       ReturnCustomerId = group.FirstOrDefault()?.ReturnCustomer?.CustomerPersonalId,
+                       CustomerGuid = group.First()?.ReturnCustomer?.CustomerId
+
                    })
                    .ToList();
 

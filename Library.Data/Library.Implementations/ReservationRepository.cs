@@ -45,7 +45,11 @@ namespace Library.Data.Library.Implementations
                 .Include(r => r.ReservationItems)
                       .ThenInclude(ri => ri.BookCopy)
                          .ThenInclude(bc => bc.OriginalBook)
+                 .Include(r => r.ReservationItems)
+                      .ThenInclude(ri => ri.ReturnCustomer)
                            .FirstOrDefaultAsync();
+                 
+                 
 
 
 
