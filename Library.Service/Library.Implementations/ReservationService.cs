@@ -168,6 +168,32 @@ namespace Library.Service.Library.Implementations
 
         }
 
+        public async Task<Result<ReturnBookDto>> GetReturnBookInfo(Guid reservationId, bool trackChanges)
+        {
+            var reservation = await _repositoryManager.ReservationRepository.GetReservation(reservationId, trackChanges);
+
+            var returnedItems = reservation.ReservationItems
+                               .Where(ri => ri.ActualReturnDate.HasValue)
+                               .GroupBy(ri => DetermineReturnStatus(ri))
+                               .Select(g => new ReturnActionDto
+                               {
+                                   ReturnStatus = g.Key,
+                                   Quantity = g.Count()
+                               }).ToList();
+
+            var returnBookDto = new ReturnBookDto
+            {
+                ReservationId = reservationId,
+                CustomerId = reservation.CustomerID,
+                returnItems = returnedItems
+            };
+
+
+            return Result.Ok(returnBookDto);
+
+
+        }
+
         private static Status GetStatusFromReturnAction(string returnStatus)
         {
             return returnStatus.ToLower() switch
@@ -194,6 +220,29 @@ namespace Library.Service.Library.Implementations
 
 
             };
+        }
+
+      
+
+        private static string DetermineReturnStatus(ReservationItem item)
+        {
+            if (!item.ActualReturnDate.HasValue)
+                return "Not Returned";
+
+            Status bookStatus = item.BookCopy.Status;
+
+            switch (bookStatus)
+            {
+                case Status.Available:
+                    return "Safe";
+                case Status.Lost:
+                    return "Lost";
+                case Status.Damaged:
+                    return "Damaged";
+                default:
+                    return "";
+
+            }
         }
     }
 }
