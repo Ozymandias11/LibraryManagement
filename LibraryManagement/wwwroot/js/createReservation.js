@@ -37,7 +37,23 @@ $(document).ready(function () {
         populatePublishers();
     });
 
+    $('#reservationForm').on('submit', function (e) {
+        if (!hasBookCopies()) {
+            e.preventDefault(); 
+            alert('Please add at least one book copy to the reservation before submitting.');
+            return false;
+        }
+        return true;
+    });
+
+
+    updateBookCopySummary();
+
 });
+
+function hasBookCopies() {
+    return bookCopies.length > 0;
+}
 function checkAvailability() {
     const originalBookId = document.getElementById('modalOriginalBookId').value;
     const edition = document.getElementById('modalEdition').value;
@@ -110,20 +126,31 @@ function populatePublishers() {
 }
 
 function addBookCopy() {
-    const bookCopy = {
-        OriginalBookId: document.getElementById('modalOriginalBookId').value,
+    const originalBookId = document.getElementById('modalOriginalBookId').value;
+    const edition = document.getElementById('modalEdition').value;
+    const publisherId = document.getElementById('modalPublisherId').value;
+    const quantity = document.getElementById('modalQuantity').value;
+
+    if (!originalBookId || !edition || !publisherId || !quantity) {
+        alert('Please fill in all fields before adding a book copy.');
+        return;
+    }
+
+    const newBookCopy = {
+        OriginalBookId: originalBookId,
         OriginalBookTitle: $("#modalOriginalBookId option:selected").text(),
-        Edition: document.getElementById('modalEdition').value,
-        PublisherId: document.getElementById('modalPublisherId').value,
+        Edition: edition,
+        PublisherId: publisherId,
         PublisherName: $("#modalPublisherId option:selected").text(),
-        Quantity: document.getElementById('modalQuantity').value
+        Quantity: parseInt(quantity)
     };
 
-    bookCopies.push(bookCopy);
+    bookCopies.push(newBookCopy);
     updateBookCopySummary();
-    $('#addBookCopyModal').modal('hide');
     clearModalInputs();
+    $('#addBookCopyModal').modal('hide');
 }
+
 
 function updateBookCopySummary() {
     const summary = document.getElementById('bookCopySummary');
