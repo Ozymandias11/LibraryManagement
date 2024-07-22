@@ -33,6 +33,9 @@ namespace Library.Data.Library.Implementations
 
         public async Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges) => 
             await FindByCondition(c => c.BookCategories.Any(bc => bc.BookId == id), false).ToListAsync();
+
+        public async Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges)
+            => await FindByCondition(c => c.Title.ToLower() ==  title.ToLower(), trackChanges).FirstOrDefaultAsync();
         
     }
 }

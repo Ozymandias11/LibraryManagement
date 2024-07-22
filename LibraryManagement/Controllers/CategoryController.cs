@@ -3,6 +3,7 @@ using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
+using LibraryManagement.Helper;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
@@ -58,24 +59,12 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.CategoryService.CreateCategory(createCategoryDto, false);
 
-            if (result.IsFailed)
-            {
-                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Catgeory";
-                _loggerManager.LogError($"An error occured while createing Category {errorMessage}");
-                categoryViewModel.ErrorMessage = errorMessage;
-            }
-
-            return RedirectToAction("Categories");
+            return this.HandleFailure(result, categoryViewModel, _loggerManager, nameof(Categories), "creating Category");
         }
 
         public async Task<IActionResult> UpdateCategory(Guid id)
         {
             var category = await _serviceManager.CategoryService.GetCategory(id, false);
-
-            if (category.IsFailed)
-            {
-                _loggerManager.LogError($"The category with id {id} was not found");
-            }
 
             var categoryViewModel = new CategoryViewModel()
             {

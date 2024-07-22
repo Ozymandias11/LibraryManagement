@@ -11,6 +11,7 @@ namespace Library.Data.Library.Interfaces
     {
         Task<IEnumerable<Category>> GetAllCategories(bool trackChanges);
         Task<Category?> GetCategory(Guid id, bool trackChanges);
+        Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges);    
         Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges); 
         Task<IEnumerable<Category>> GetCategoriesById(IEnumerable<Guid> ids, bool trackChanges);
         void CreateCategory(Category category);

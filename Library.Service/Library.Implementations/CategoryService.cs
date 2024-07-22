@@ -25,6 +25,14 @@ namespace Library.Service.Library.Implementations
         }
         public async Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
         {
+            var existingCategory = await _repositoryManager.CategoryRepository.GetCatgeoryByTitle(categoryDto.Title, trackChanges);
+
+            if (existingCategory != null)
+            {
+                return Result.Fail($"A category with title {categoryDto.Title} already exists");
+            }
+
+
             var categoryEntity = _mapper.Map<Category>(categoryDto);
             _repositoryManager.CategoryRepository.CreateCategory(categoryEntity);
 
@@ -41,8 +49,6 @@ namespace Library.Service.Library.Implementations
             {
                 return Result.Fail(new NotFoundError("Category", id));
             }
-
-
 
              _repositoryManager.CategoryRepository.DeleteCatgeory(category);
 
