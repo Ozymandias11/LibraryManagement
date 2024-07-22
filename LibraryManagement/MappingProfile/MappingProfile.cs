@@ -161,8 +161,8 @@ namespace LibraryManagement.MappingProfile
             //Reservation Details
 
             CreateMap<Reservation, ReservationDetailsDto>()
-                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => $"{src.Employee.FirstName}, {src.Employee.LastName}"))
-                .ForMember(dest => dest.EmployeeFullName, opt => opt.MapFrom(src => $"{src.Customer.FirstName}:{src.Customer.LastName}"))
+                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => $"{src.Customer.FirstName}  {src.Customer.LastName}"))
+                .ForMember(dest => dest.EmployeeFullName, opt => opt.MapFrom(src => $"{src.Employee.FirstName} {src.Employee.LastName}"))
                 .ForMember(dest => dest.ReservationItems, opt => opt.Ignore());
 
 

@@ -33,6 +33,9 @@ namespace Library.Data.Library.Implementations
 
         public async Task<IEnumerable<Publisher>> GetPublishersById(IEnumerable<Guid> ids, bool trackChanges) => 
             await FindByCondition(p => ids.Contains(p.PublisherId), trackChanges).ToListAsync();
+
+        public async Task<Publisher?> GetPublisherWithTitle(string title, bool trackChanges)
+           => await FindByCondition(p => p.PublisherName.ToLower() ==  title.ToLower(), trackChanges).FirstOrDefaultAsync();
        
     }
 }

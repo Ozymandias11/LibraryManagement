@@ -3,6 +3,7 @@ using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
+using LibraryManagement.Helper;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,15 +70,7 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.PublisherService.CreatePublisher(publisherDto, false);
 
-            if (result.IsFailed)
-            {
-                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Publisher";
-                _loggerManager.LogError($"An error occured while createing publisher {errorMessage}");
-                createPublisherViewModel.ErrorMessage = errorMessage;
-            }
-
-
-            return RedirectToAction("Publishers");   
+            return this.HandleFailure(result, createPublisherViewModel, _loggerManager, nameof(Publishers), "Creating publishers");
 
         }
 

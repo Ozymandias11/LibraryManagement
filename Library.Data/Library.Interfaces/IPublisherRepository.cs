@@ -11,6 +11,7 @@ namespace Library.Data.Library.Interfaces
     {
         Task<IEnumerable<Publisher>> GetAllPublisher(bool trackChanges);
         Task<Publisher?> GetPublisher(Guid id, bool trackChanges);  
+        Task<Publisher?> GetPublisherWithTitle(string title, bool trackChanges);
         Task<IEnumerable<Publisher>> GetPublishersOfBook(Guid id, bool trackChanges);
         Task<IEnumerable<Publisher>> GetPublishersById(IEnumerable<Guid> ids, bool trackChanges);
         void DeletePublisher(Publisher publisher);

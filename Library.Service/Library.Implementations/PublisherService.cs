@@ -28,6 +28,13 @@ namespace Library.Service.Library.Implementations
 
         public async Task<Result> CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges)
         {
+            var existingPublisher = await _repositoryManager.PublisherRepository.GetPublisherWithTitle(createPublisherDto.PublisherName, trackChanges);
+
+            if (existingPublisher != null)
+            {
+                return Result.Fail($"The publisher with name {existingPublisher.PublisherName} already exists");
+            }
+
             var publisherEntity = _mapper.Map<Model.Models.Publisher>(createPublisherDto);
 
             _repositoryManager.PublisherRepository.CreatePublisher(publisherEntity);
