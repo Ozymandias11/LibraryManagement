@@ -45,6 +45,7 @@ builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<IResultHandlerService, ResultHandlerService>();    
 
 builder.Services.ConfigureLoggerService();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
