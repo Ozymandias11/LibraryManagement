@@ -48,10 +48,8 @@ namespace Library.Data.Library.Implementations
                  .Include(r => r.ReservationItems)
                       .ThenInclude(ri => ri.ReturnCustomer)
                            .FirstOrDefaultAsync();
-                 
-                 
 
-
-
+        public Task<int> GetTotalNumberOfReservations() => FindAll(false).CountAsync();
+        
     }
 }

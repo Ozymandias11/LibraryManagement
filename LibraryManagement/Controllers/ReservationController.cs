@@ -49,7 +49,7 @@ namespace LibraryManagement.Controllers
             {
                 reservation.CurrentPage = page;
                 reservation.PageSize = pageSize;
-                reservation.TotalCount = reservations.Count();
+                reservation.TotalCount = await _serviceManager.ReservationService.GetTotalNumberOfReservation();
             }
             return View(reservationsViewModel);
 

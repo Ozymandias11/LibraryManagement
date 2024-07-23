@@ -244,5 +244,10 @@ namespace Library.Service.Library.Implementations
 
             }
         }
+
+        public async Task<int> GetTotalNumberOfReservation() => await _repositoryManager.
+            ReservationRepository.
+            GetTotalNumberOfReservations();
+       
     }
 }

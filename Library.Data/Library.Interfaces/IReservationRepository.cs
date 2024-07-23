@@ -11,6 +11,7 @@ namespace Library.Data.Library.Interfaces
     {
         Task<IEnumerable<Reservation>> GetAllReservations(int page, int pageSize, bool trackChanges);
         Task<Reservation?> GetReservation(Guid id,  bool trackChanges);  
+        Task<int> GetTotalNumberOfReservations();   
 
         void CreateReservation(Reservation reservation);    
         void DeleteReservation(Reservation reservation);    

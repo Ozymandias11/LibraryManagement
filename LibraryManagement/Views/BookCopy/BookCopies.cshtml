@@ -76,7 +76,9 @@
                  PageSize: Model.FirstOrDefault()?.PageSize ?? 10,
                  SortBy: ViewBag.SortBy,
                  SortOrder: ViewBag.SortOrder,
-                 SearchString: ViewData["CurrentSearchString"] as string
+                 SearchString: ViewData["CurrentSearchString"] as string,
+                 ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
+                 ActionNameAttribute: ViewContext.RouteData.Values["action"].ToString()
                  ))
       
     </div>
