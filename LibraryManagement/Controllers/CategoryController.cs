@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
@@ -65,6 +66,14 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> UpdateCategory(Guid id)
         {
             var category = await _serviceManager.CategoryService.GetCategory(id, false);
+
+            if (category.IsFailed)
+            {
+
+                _loggerManager.LogError($"The Category with id {id} was not found");
+                return View("PageNotFound");
+            }
+
 
             var categoryViewModel = new CategoryViewModel()
             {

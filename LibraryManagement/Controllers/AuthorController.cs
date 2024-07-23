@@ -88,7 +88,9 @@ namespace LibraryManagement.Controllers
 
             if (author.IsFailed)
             {
+             
                 _loggerManager.LogError($"The Author with id {id} was not found");
+                return View("PageNotFound");
             }
 
 
