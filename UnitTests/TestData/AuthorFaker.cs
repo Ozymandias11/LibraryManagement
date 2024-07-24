@@ -21,13 +21,6 @@ namespace UnitTests.TestData
                 .RuleFor(a => a.CreatedDate, f => f.Date.Recent())
                 .RuleFor(a => a.DeletedDate, f => null);
         }
-        public static Faker<AuthorDto> CreateDto()
-        {
-            return new Faker<AuthorDto>()
-                .RuleFor(a => a.AuthorId, f => Guid.NewGuid())
-                .RuleFor(a => a.FirstName, f => f.Name.FirstName())
-                .RuleFor(a => a.LastName, f => f.Name.LastName());
-        }
 
     }
 }
