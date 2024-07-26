@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<(string displayName, string column)>
 @{
-    var sortBy = ViewBag.SortBy;
-    var sortOrder = ViewBag.SortOrder;
+    var orderBy = Context.Request.Query["OrderBy"].ToString();
     var currentSearchString = ViewData["CurrentSearchString"] as string;
     var actionName = ViewData["ActionName"] as string;
     var currentPage = ViewBag.CurrentPage ?? 1;
@@ -11,24 +10,32 @@
 {
     <th class="text-primary text-center">
         @{
-            string nextSortOrder = (sortBy != column || sortOrder == column + "_Default") ? column + "_Asc" :
-            (sortOrder == column + "_Asc") ? column + "_Desc" : column + "_Default";
+            string currentDirection = "";
+            if (orderBy.StartsWith(column, StringComparison.OrdinalIgnoreCase))
+            {
+                currentDirection = orderBy.EndsWith("desc", StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
+            }
+
+            string nextOrderBy = currentDirection == "" ? $"{column} asc" :
+            currentDirection == "asc" ? $"{column} desc" : "";
 
             var routeValues = new Dictionary<string, object>
                 {
-                    ["sortBy"] = column,
-                    ["sortOrder"] = nextSortOrder,
-                    ["SearchString"] = currentSearchString
+                    ["OrderBy"] = nextOrderBy,
+                    ["SearchString"] = currentSearchString,
+                    ["PageNumber"] = currentPage
                 };
-
-            if (ViewBag.IsPaginated == true)
-            {
-                routeValues["page"] = currentPage;
-            }
         }
         <a href="@Url.Action(actionName, routeValues)" class="text-primary">
             @displayName
-            <i class="fas fa-@(sortBy == column ? (sortOrder == column + "_Asc" ? "arrow-up" : sortOrder == column + "_Desc" ? "arrow-down" : "sort") : "sort")"></i>
+            @if (orderBy.StartsWith(column, StringComparison.OrdinalIgnoreCase))
+            {
+                <i class="fas fa-@(currentDirection == "asc" ? "arrow-up" : "arrow-down")"></i>
+            }
+            else
+            {
+                <i class="fas fa-sort"></i>
+            }
         </a>
     </th>
 }

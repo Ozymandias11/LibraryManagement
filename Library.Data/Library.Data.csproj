@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Library.Model\Library.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.4.3" />
+  </ItemGroup>
+
 </Project>

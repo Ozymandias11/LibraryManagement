@@ -94,8 +94,9 @@ namespace LibraryManagement.Controllers
 
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(Guid id, int page = 1)
         {
+            ViewBag.CurrentPage = page;
             var reservation = await _serviceManager.ReservationService.GetReservation(id, false);
             var reservationViewModel = _mapper.Map<ReservationDetailsViewModel>(reservation.Value);
 

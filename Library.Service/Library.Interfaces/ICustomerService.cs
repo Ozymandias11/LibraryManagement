@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,8 @@ namespace Library.Service.Library.Interfaces
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<CustomerDto>> GetAllCustomers(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            int page,
-            int pageSize,
-            bool trackChanges);
+        Task<(IEnumerable<CustomerDto> customers, MetaData metaData)> GetAllCustomers(CustomerParameters customerParameters ,bool trackChanges);
+           
         Task<IEnumerable<CustomerDto>> GetAllCustomersUnfiltered(bool trackChanges);
         Task<Result<CustomerDto>> GetCustomer(Guid id, bool trackChanges);  
         Task<Result<CustomerDto>> GetCustomerByPersonalId(string id, bool trackChanges);    

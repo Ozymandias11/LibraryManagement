@@ -177,7 +177,7 @@ namespace LibraryManagement.Controllers
             if (result.Succeeded)
             {
 
-                var currentUser = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var currentUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
                 var userRoles = await _userService.GetUserRoles(currentUser);
 

@@ -1,4 +1,6 @@
-﻿using Library.Data.Library.Interfaces;
+﻿using Library.Data.Extensions;
+using Library.Data.Library.Interfaces;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,11 +23,18 @@ namespace Library.Data.Library.Implementations
         public void DeleteCusotmer(Customer customer) => Delete(customer);
        
 
-        public async Task<IEnumerable<Customer>> GetAllCustomers(int page, int pageSize, bool trackChanges) =>
-            await FindByCondition(c => c.DeletedDate == null, trackChanges)
-                  .Skip((page - 1) * pageSize)
-                  .Take(pageSize)
-                  .ToListAsync();
+        public async Task<PagedList<Customer>> GetAllCustomers(CustomerParameters customerParameters,bool trackChanges)
+        {
+            var customers = await FindByCondition(c => c.DeletedDate == null, trackChanges)
+                .Search(customerParameters.SearchTerm)
+                .Sort(customerParameters.OrderBy)
+                .ToListAsync();
+
+            return PagedList<Customer>
+                .ToPagedList(customers, customerParameters.PageNumber, customerParameters.PageSize);
+
+        }
+         
 
         public async Task<IEnumerable<Customer>> GetAllCustomersUnfiltered(bool trackChanges)
             => await FindByCondition(c => c.DeletedDate == null, trackChanges)
