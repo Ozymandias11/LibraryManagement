@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Errors.NotFoundError;
@@ -36,7 +37,6 @@ namespace Library.Service.Library.Implementations
                 return Result.Fail(new NotFoundError("Author", id));
             }
 
-
             _repositoryManager.AuthorRepository.DeleteAuthor(Author);
 
             await _repositoryManager.SaveAsync();
@@ -46,27 +46,11 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<Result<IEnumerable<AuthorDto>>> GetAllAuthors(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            bool trackChanges)
+        public async Task<(IEnumerable<AuthorDto> authors, MetaData metaData)> GetAllAuthors(AuthorParameters authorParameters, bool trackChanges)
         {
-            var authors = await _repositoryManager.AuthorRepository.GetAllAuthor(trackChanges);
-
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                authors = authors.Where(a => a.FirstName.Contains(searchString) ||
-                                         a.LastName.Contains(searchString));
-            }
-
-            authors = ApplySorting(authors, sortBy, sortOrder); 
-
-
-
-            var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);  
-            return Result.Ok(authorsDto);
+            var authorsWithMetaData = await _repositoryManager.AuthorRepository.GetAllAuthor(authorParameters ,trackChanges);
+            var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authorsWithMetaData);
+            return (authorsDto, authorsWithMetaData.MetaData);
         }
 
         public async Task<Result<AuthorDto>> GetAuthor(Guid id, bool trackChanges)
@@ -116,16 +100,6 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        private IEnumerable<Author> ApplySorting(IEnumerable<Author> authors, string sortBy, string sortOrder)
-        {
-
-            return authors = sortBy switch
-            {
-                "FirstName" => sortOrder == "FirstName_Asc" ? authors.OrderBy(a => a.FirstName) : authors.OrderByDescending(a => a.FirstName),
-                "LastName" => sortOrder == "LastName_Asc" ? authors.OrderBy(a => a.LastName) : authors.OrderByDescending(a => a.LastName),
-                "DateOfBirth" => sortOrder == "DateOfBirth_Asc" ? authors.OrderBy(a => a.DateOfBirth) : authors.OrderByDescending(a => a.DateOfBirth),
-                _ => authors.OrderBy(a => a.CreatedDate),
-            };
-        }
+  
     }
 }

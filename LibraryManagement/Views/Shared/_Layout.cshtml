@@ -67,7 +67,7 @@
                 {
                     @await Component.InvokeAsync("NavigationMenu")
                 }
-              
+
              
                 </nav>
             </div>
@@ -87,6 +87,7 @@
 
     @await RenderSectionAsync("Scripts", required: false)
     @RenderSection("Styles", required:false)
+    @await Component.InvokeAsync("Notyf")
 
 </body>
 </html>

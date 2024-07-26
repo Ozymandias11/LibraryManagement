@@ -1,10 +1,8 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.AuthorViewModel>
-
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.AuthorViewModel>
 @{
     ViewData["Title"] = "Authors";
     ViewData["ActionUrl"] = "Authors";
     ViewData["ActionName"] = "Authors";
-
     var sortableColumns = new[]
     {
         ("First Name", "FirstName"),
@@ -12,7 +10,6 @@
         ("Date of Birth", "DateOfBirth")
     };
 }
-
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center mb-3">
@@ -32,7 +29,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var author in Model)
+                    @foreach (var author in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@author.FirstName</td>
@@ -40,9 +37,9 @@
                             <td class="text-center">@author.DateOfBirth.ToShortDateString()</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                    <a asp-controller="Author" asp-action="UpdateAuthor" asp-route-id ="@author.AuthorId" class="btn btn-primary btn-sm mr-2">Edit</a>
+                                    <a asp-controller="Author" asp-action="UpdateAuthor" asp-route-id="@author.AuthorId" class="btn btn-primary btn-sm mr-2">Edit</a>
                                     <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-author-id="@author.AuthorId" data-author-name="@($"{author.FirstName} {author.LastName}")">Delete</button>
-                                </div>            
+                                </div>
                             </td>
                         </tr>
                     }
@@ -50,12 +47,19 @@
             </table>
             <a asp-action="CreateAuthor" class="btn btn-primary">Add Author</a>
         </div>
+
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
+                 SearchString: ViewData["CurrentSearchString"] as string,
+                 ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
+                 ))
     </div>
 </div>
-
-
-
-
 @await Html.PartialAsync("_DeleteConfirmationModal", ("author-id", "author-name", "DeleteAuthor"))
 
 @section Scripts {
@@ -67,4 +71,3 @@
         });
     </script>
 }
-

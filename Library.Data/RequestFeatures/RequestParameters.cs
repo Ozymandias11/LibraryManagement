@@ -23,5 +23,6 @@ namespace Library.Data.RequestFeatures
             }
         }
         public string? OrderBy { get; set; }
+        public string? SearchTerm { get; set; }
     }
 }

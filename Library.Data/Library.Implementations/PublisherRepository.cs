@@ -1,4 +1,6 @@
-﻿using Library.Data.Library.Interfaces;
+﻿using Library.Data.Extensions;
+using Library.Data.Library.Interfaces;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,8 +20,18 @@ namespace Library.Data.Library.Implementations
         public void DeletePublisher(Publisher publisher) => Delete(publisher);
        
 
-        public async Task<IEnumerable<Publisher>> GetAllPublisher(bool trackChanges) 
-            => await FindByCondition(a => a.DeletedDate == null, trackChanges).OrderBy(a => a.CreatedDate).ToListAsync();   
+        public async Task<PagedList<Publisher>> GetAllPublisher(PublisherParameters publisherParameters, bool trackChanges)
+        {
+            var publishers = await FindByCondition(p => p.DeletedDate == null, trackChanges)
+                .Search(publisherParameters.SearchTerm)
+                .Sort(publisherParameters.OrderBy)
+                .ToListAsync();
+
+            return PagedList<Publisher>
+                .ToPagedList(publishers, publisherParameters.PageNumber, publisherParameters.PageSize);
+
+        }
+             
         
 
         public async Task<Publisher?> GetPublisher(Guid id, bool trackChanges)

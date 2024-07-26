@@ -9,6 +9,5 @@ namespace Library.Data.RequestFeatures
    public class CustomerParameters : RequestParameters
     {
         public CustomerParameters() => OrderBy = "CreatedDate";
-        public string? SearchTerm { get; set; } 
     }
 }

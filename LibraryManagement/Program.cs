@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification;
 using FluentValidation;
 using Library.Data.Implementations;
 using Library.Data.Interfaces;
@@ -53,6 +54,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
 
+builder.Services.AddNotyf(config => {
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.BottomRight;
+});
 
 var app = builder.Build();
 

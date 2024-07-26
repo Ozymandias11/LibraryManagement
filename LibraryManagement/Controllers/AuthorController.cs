@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AutoMapper;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
@@ -13,34 +15,24 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _loggerManager;
-        public AuthorController(
-            IServiceManager serviceManager, 
-            IMapper mapper,
-             ILoggerManager loggermanager)
+        private readonly INotyfService _notyf;
+        public AuthorController(IServiceManager serviceManager, IMapper mapper, INotyfService notyf)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
-            _loggerManager = loggermanager;
+            _notyf = notyf;
         }
 
-        public async Task<IActionResult> Authors(string sortBy, string sortOrder, string searchString)
+        public async Task<IActionResult> Authors([FromQuery] AuthorParameters authorParameters)
         {
 
-            ViewBag.SortBy = sortBy;    
-            ViewBag.SortOrder = sortOrder;
-            ViewData["CurrentSearchString"] = searchString;
+            var (authorDtos, metaData) = await _serviceManager.AuthorService.GetAllAuthors(authorParameters, false);
 
-            var authorDtos = await _serviceManager.AuthorService.GetAllAuthors(sortBy, sortOrder, searchString,false);
+            var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos);
 
-            if (authorDtos.IsFailed)
-            {
-                _loggerManager.LogError($"Error getting all authors:  {string.Join(", ", authorDtos.Errors.Select(e => e.Message))}");
-                return View("Error");
-            }
+            var pagedViewModel = new PagedViewModel<AuthorViewModel>(authorsViewModel, metaData);
 
-            var authorsViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDtos.Value);
-            return View(authorsViewModel);
+            return View(pagedViewModel);
 
         }
 
@@ -62,10 +54,7 @@ namespace LibraryManagement.Controllers
 
             if (result.IsFailed)
             {
-                var errorMessage = result.Errors.FirstOrDefault()?.Message ?? "An error Occured while creating Author";
-                _loggerManager.LogError($"An error occured while createing author {errorMessage}");
-                createAuthorViewModel.ErrorMessage = errorMessage;
-
+                _notyf.Warning("Something went wrong please try again");
                 return View(createAuthorViewModel);
             }
 
@@ -75,61 +64,50 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> DeleteAuthor(Guid id)
         {
-            await _serviceManager.AuthorService.DeleteAuthor(id, false);
+            var result = await _serviceManager.AuthorService.DeleteAuthor(id, false);
+
+            if (result.IsFailed)
+            {
+                _notyf.Error("Something went wrong, please try again");
+            }
+
             return RedirectToAction("Authors");
         }
 
 
         public async Task<IActionResult> UpdateAuthor(Guid id)
         {
+            var result = await _serviceManager.AuthorService.GetAuthor(id, false);
 
-
-            var author = await _serviceManager.AuthorService.GetAuthor(id, false);
-
-            if (author.IsFailed)
+            if (result.IsFailed)
             {
-             
-                _loggerManager.LogError($"The Author with id {id} was not found");
                 return View("PageNotFound");
             }
 
+            var authorViewModel = _mapper.Map<AuthorViewModel>(result.Value);
 
-            var authorViewModel = new AuthorViewModel()
-            {
-                AuthorId = author.Value.AuthorId,
-                FirstName = author.Value.FirstName,
-                LastName = author.Value.LastName,
-                DateOfBirth = author.Value.DateOfBirth
-            };
-
-            return  View(authorViewModel);
-
-
-
+            return View(authorViewModel);
         }
 
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UpdateAuthor(AuthorViewModel authorViewModel)
+        public async Task<IActionResult> UpdateAuthor(AuthorViewModel model)
         {
+            var authorDto = _mapper.Map<AuthorDto>(model);
 
+            var result = await _serviceManager.AuthorService.UpdateAuthor(authorDto, true);
 
-            var authorDto = _mapper.Map<AuthorDto>(authorViewModel);
-            await _serviceManager.AuthorService.UpdateAuthor(authorDto, true);
+            if (result.IsFailed)
+            {
+                _notyf.Error("Updating Author has failed, please try again");
+                return View(model);
+            }
 
-            TempData["SuccessMessage"] = "Author Updated Successfully";
-
-            return View(authorViewModel);
-
-
-
-
+            _notyf.Success("Author updated successfully");
+            return View(model);
 
         }
-
-
-
 
     }
 

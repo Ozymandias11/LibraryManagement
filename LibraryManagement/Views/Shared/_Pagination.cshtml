@@ -7,16 +7,16 @@
             var nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : "";
         }
         <li class="page-item @prevDisabled">
-            <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = Model.CurrentPage - 1, pageSize = Model.PageSize, orderBy = Model.OrderBy, searchString = Model.SearchString })">Previous</a>
+            <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">Previous</a>
         </li>
         @for (int i = 1; i <= Model.TotalPages; i++)
         {
             <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = i, pageSize = Model.PageSize, orderBy = Model.OrderBy, searchString = Model.SearchString })">@i</a>
+                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = i, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">@i</a>
             </li>
         }
         <li class="page-item @nextDisabled">
-            <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { page = Model.CurrentPage + 1, pageSize = Model.PageSize, orderBy = Model.OrderBy, searchString = Model.SearchString })">Next</a>
+            <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">Next</a>
         </li>
     </ul>
 </nav>
