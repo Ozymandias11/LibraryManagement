@@ -1,5 +1,7 @@
-﻿using Library.Data.Library.Interfaces;
+﻿using Library.Data.Extensions;
+using Library.Data.Library.Interfaces;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -22,8 +24,18 @@ namespace Library.Data.Library.Implementations
         public void DeleteAuthor(Author author) => Delete(author);
 
 
-        public async Task<IEnumerable<Author>> GetAllAuthor(bool trackChanges)
-            => await FindByCondition(a => a.DeletedDate == null, trackChanges).OrderBy(a => a.CreatedDate).ToListAsync();
+        public async Task<PagedList<Author>> GetAllAuthor(AuthorParameters authorParameters, bool trackChanges)
+        {
+            var authors = await FindByCondition(a => a.DeletedDate == null, trackChanges)
+                .Search(authorParameters.SearchTerm)
+                .Sort(authorParameters.OrderBy)
+                .ToListAsync();
+
+            return PagedList<Author>
+                .ToPagedList(authors, authorParameters.PageNumber, authorParameters.PageSize);
+                
+        }
+            
 
         public async Task<Author?> GetAuthor(Guid id, bool trackChanges)
             => await FindByCondition(a => a.AuthorId == id, trackChanges).FirstOrDefaultAsync();

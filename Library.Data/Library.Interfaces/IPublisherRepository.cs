@@ -1,4 +1,5 @@
-﻿using Library.Model.Models;
+﻿using Library.Data.RequestFeatures;
+using Library.Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Library.Data.Library.Interfaces
 {
    public interface IPublisherRepository
     {
-        Task<IEnumerable<Publisher>> GetAllPublisher(bool trackChanges);
+        Task<PagedList<Publisher>> GetAllPublisher(PublisherParameters publisherParameters,bool trackChanges);
         Task<Publisher?> GetPublisher(Guid id, bool trackChanges);  
         Task<Publisher?> GetPublisherWithTitle(string title, bool trackChanges);
         Task<IEnumerable<Publisher>> GetPublishersOfBook(Guid id, bool trackChanges);

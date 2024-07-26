@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AutoMapper;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
@@ -13,51 +15,32 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        private readonly ILoggerManager _loggerManager;
-        public PublisherController(
-            IServiceManager serviceManager, 
-            IMapper mapper,
-            ILoggerManager loggerManager)
+        private readonly INotyfService _notyf;
+
+        public PublisherController(IServiceManager serviceManager, IMapper mapper, INotyfService notyf)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
-            _loggerManager = loggerManager;
+            _notyf = notyf;
         }
 
-        public async Task<IActionResult> Publishers(string sortBy, string sortOrder, string searchString)
+        public async Task<IActionResult> Publishers([FromQuery] PublisherParameters publisherParameters)
         {
+            var (publisherDtos, metaData) = await _serviceManager.PublisherService.GetAllPublishers(publisherParameters ,false);
 
-            ViewBag.SortBy = sortBy;
-            ViewBag.SortOrder = sortOrder;
-            ViewData["CurrentSearchString"] = searchString;
+            var publisherViewModels = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDtos);
 
-            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers(sortBy,sortOrder,searchString,false);
+            var pagedViewModel = new PagedViewModel<PublisherViewModel>(publisherViewModels, metaData);
 
-            if (publisherDto.IsFailed)
-            {
-                _loggerManager.LogError($"Error getting all Categories:  {string.Join(", ", publisherDto.Errors.Select(e => e.Message))}");
-                return View("Error");
-            }
-
-            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
-
-            return View(publisherViewModel);
+            return View(pagedViewModel);
 
 
         }
-
-
         public IActionResult CreatePublisher()
         {
             var createPublisherViewModel = new CreatePublisherViewModel();
 
             return View(createPublisherViewModel);
-        }
-
-        public async Task<IActionResult> DeletePublisher(Guid id)
-        {
-            await _serviceManager.PublisherService.DeletePublisher(id, false);
-            return RedirectToAction("Publishers");
         }
 
 
@@ -66,55 +49,69 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> CreatePublisher(CreatePublisherViewModel createPublisherViewModel)
         {
 
-            var publisherDto = _mapper.Map<CreatePublisherDto>(createPublisherViewModel);
+            var createPublisherDto = _mapper.Map<CreatePublisherDto>(createPublisherViewModel);
 
-            var result = await _serviceManager.PublisherService.CreatePublisher(publisherDto, false);
+            var result = await _serviceManager.PublisherService.CreatePublisher(createPublisherDto ,false);
 
-            return this.HandleFailure(result, createPublisherViewModel, _loggerManager, nameof(Publishers), "Creating publishers");
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something went wrong please try again");
+                return View(createPublisherViewModel);
+            }
+
+            _notyf.Success("Publisher created successfully");
+            return RedirectToAction("Publishers");
+
+            
 
         }
 
         public async Task<IActionResult> UpdatePublisher(Guid id)
         {
-            var publisher = await _serviceManager.PublisherService.GetPublisher(id, false);
+            var result = await _serviceManager.PublisherService.GetPublisher(id, false);
 
-            if (publisher.IsFailed)
+            if (result.IsFailed)
             {
-                _loggerManager.LogError($"The publisher with id {id} was not found");
+                return View("PageNotFound");
             }
 
+           var publisherViewModel = _mapper.Map<PublisherViewModel>(result.Value);    
 
-            var publisherViewModel = new PublisherViewModel()
-            {
-                PublisherId = publisher.Value.PublisherId,
-                PublisherName = publisher.Value.PublisherName,
-                Email = publisher.Value.Email,
-                PhoneNumber = publisher.Value.PhoneNumber
-            };
-
-            return View(publisherViewModel);
+           return View(publisherViewModel);
 
         }
 
         [HttpPost]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
-        public async Task<IActionResult> UpdatePublisher(PublisherViewModel publisherViewModel) 
+        public async Task<IActionResult> UpdatePublisher(PublisherViewModel model)
         {
-            var publisherDto = _mapper.Map<PublisherDto>(publisherViewModel);
+            var publisherDto = _mapper.Map<PublisherDto>(model);
 
-            await _serviceManager.PublisherService.UpdatePublisher(publisherDto, true);
+             var result = await _serviceManager.PublisherService.UpdatePublisher(publisherDto, true);
 
-            TempData["SuccessMessage"] = "Publisher Updated Successfully";
+            if(result.IsFailed)
+            {
+                _notyf.Error("Publisher update has failed, please try again");
+                return View(model);
+            }
 
-            return View(publisherViewModel);
-
-
-
+            _notyf.Success("Publisher updated successfully");
+            return View(model);
 
         }
 
 
+        public async Task<IActionResult> DeletePublisher(Guid id)
+        {
+            var result = await _serviceManager.PublisherService.DeletePublisher(id, false);
 
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something Went wrong please try again");
+            }
+
+            return RedirectToAction("Publishers");
+        }
 
     }
 }

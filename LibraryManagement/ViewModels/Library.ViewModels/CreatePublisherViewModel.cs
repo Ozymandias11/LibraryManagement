@@ -7,7 +7,7 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         [Required(ErrorMessage = "The First Name is Required")]
         public string? PublisherName { get; set; }
         [Required(ErrorMessage = "The phone Number is Required")]
-        [RegularExpression(@"^[9][9][5][5][0-9]{8}$", ErrorMessage = "Phone number must be in the format 9955xxxxxxxx")]
+        [RegularExpression(@"^5\d{8}$", ErrorMessage = "Phone number must be in the format 5XXXXXXXX")]
         public string? PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Email is required")]

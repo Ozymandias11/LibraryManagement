@@ -1,14 +1,15 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.PublisherViewModel>
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.PublisherViewModel>
 
 @{
     ViewData["Title"] = "Publishers";
     ViewData["ActionUrl"] = "Publishers";
     ViewData["ActionName"] = "Publishers";
+    ViewData["CurrentPage"] = Model.MetaData.CurrentPage;
     var sortableColumns = new[]
     {
-        ("PublisherName", "PublisherName"),
-        ("PhoneNumber", "PhoneNumber"),
-        ("Email", "Email"),
+        ("Publisher Name", "PublisherName"),
+        ("Phone Number", "PhoneNumber"),
+        ("Email", "Email")
     };
 }
 
@@ -31,7 +32,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var publisher in Model)
+                    @foreach (var publisher in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@publisher.PublisherName</td>
@@ -49,21 +50,27 @@
             </table>
             <a asp-action="CreatePublisher" class="btn btn-primary">Add Publisher</a>
         </div>
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
+                 SearchString: ViewData["CurrentSearchString"] as string,
+                 ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
+                 ))
     </div>
 </div>
-
-
 
 @await Html.PartialAsync("_DeleteConfirmationModal", ("publisher-id", "publisher-name", "DeletePublisher"))
 
 @section Scripts {
-<script src="~/js/deleteModal.js"></script>
-<script>
-    $.noConflict();
-    jQuery(document).ready(function ($) {
-        initializeDeleteModal('publisher-id', 'publisher-name');
-    });
-</script>
+    <script src="~/js/deleteModal.js"></script>
+    <script>
+        $.noConflict();
+        jQuery(document).ready(function ($) {
+            initializeDeleteModal('publisher-id', 'publisher-name');
+        });
+    </script>
 }
-
-

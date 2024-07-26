@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AutoMapper;
 using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
@@ -14,12 +15,12 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        private readonly IResultHandlerService _resultHandlerService;
-        public CustomerController(IServiceManager serviceManager, IMapper mapper, IResultHandlerService resultHandlerService)
+        private readonly INotyfService _notyf;
+        public CustomerController(IServiceManager serviceManager, IMapper mapper, INotyfService notyf)
         {
             _serviceManager = serviceManager;
-            _mapper = mapper;
-            _resultHandlerService = resultHandlerService;   
+            _mapper = mapper;  
+            _notyf = notyf;
 
         }
 
@@ -49,7 +50,12 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.CustomerService.CreateCustomer(createCustomerDto, false);
 
-            _resultHandlerService.HandleResult(result, "Creating customer");
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something went wrong please try again");
+                return View(createCustomerViewModel);
+                    
+            }
 
             return RedirectToAction("Customers");
 
@@ -59,19 +65,27 @@ namespace LibraryManagement.Controllers
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
             var result = await _serviceManager.CustomerService.DeleteCustomer(id, false);
-            _resultHandlerService.HandleResult(result, $"Deleting customer with id {id}");
+
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something Went wrong please try again");
+            }
+
             return RedirectToAction("Customers");
         }
 
         public async Task<IActionResult> UpdateCustomer(Guid id)
         {
-            var GetcustomerResult = await _serviceManager.CustomerService.GetCustomer(id, false);
+            var result = await _serviceManager.CustomerService.GetCustomer(id, false);
 
-            _resultHandlerService.HandleResult(GetcustomerResult, $"getting customer with id {id}");
+            if (result.IsFailed)
+            {
+                return View("PageNotFound");
+            }
 
 
-            var updateCustomerViewModel = _mapper.Map<UpdateCustomerViewModel>(GetcustomerResult.Value);
-           
+            var updateCustomerViewModel = _mapper.Map<UpdateCustomerViewModel>(result.Value);
+
 
             return View(updateCustomerViewModel);
 
@@ -88,11 +102,16 @@ namespace LibraryManagement.Controllers
 
             var result = await _serviceManager.CustomerService.UpdateCustomer(customerDto, true);
 
-            _resultHandlerService.HandleResult(result, $"updating customer with id {model.CustomerId}");
+            if (result.IsFailed)
+            {
+                _notyf.Error("Customer update has failed, please try again");
+                return View(model);
+            }
 
-            TempData["SuccessMessage"] = "customer Updated Successfully";
-
+            _notyf.Success("Customer updated successfully");
             return View(model);
+
+
 
 
         }
