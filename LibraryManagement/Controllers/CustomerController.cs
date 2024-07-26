@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Library.Interfaces;
@@ -13,48 +14,25 @@ namespace LibraryManagement.Controllers
     {
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-       // private readonly ILoggerManager _loggerManager;
-       private readonly IResultHandlerService _resultHandlerService;
+        private readonly IResultHandlerService _resultHandlerService;
         public CustomerController(IServiceManager serviceManager, IMapper mapper, IResultHandlerService resultHandlerService)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
             _resultHandlerService = resultHandlerService;   
-           // _loggerManager = loggerManager; 
+
         }
 
-        public async Task<IActionResult> Customers(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            int page = 1,
-            int pageSize = 10) 
+        public async Task<IActionResult> Customers([FromQuery] CustomerParameters customerParameters) 
         {
 
-            ViewBag.SortBy = sortBy;
-            ViewBag.SortOrder = sortOrder;
-            ViewBag.isPaginated = true;
-            ViewData["CurrentSearchString"] = searchString;
-            ViewData["CurrentPage"] = page;
-
-            var customerDtos = await _serviceManager.CustomerService.GetAllCustomers(
-                sortBy, 
-                sortOrder, 
-                searchString,
-                page,
-                pageSize,
-                false);
+            var (customerDtos, metaData) = await _serviceManager.CustomerService.GetAllCustomers(customerParameters, false);  
 
             var customerViewModels = _mapper.Map<IEnumerable<CustomerViewModel>>(customerDtos);
 
-            foreach (var customer in customerViewModels)
-            {
-                customer.CurrentPage = page;
-                customer.PageSize = pageSize;
-                customer.TotalCount = await _serviceManager.CustomerService.GetTotalCustomersCount();
-            }
-
-            return View(customerViewModels);
+            var pagedViewModel = new PagedViewModel<CustomerViewModel>(customerViewModels, metaData);
+           
+            return View(pagedViewModel);
         }
 
         public IActionResult CreateCustomer() 

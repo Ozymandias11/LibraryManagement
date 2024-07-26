@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Errors.NotFoundError;
@@ -48,30 +49,14 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<CustomerDto>> GetAllCustomers(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            int page,
-            int pageSize,
-            bool trackChanges)
+        public async Task<(IEnumerable<CustomerDto> customers, MetaData metaData)> GetAllCustomers(CustomerParameters customerParameters ,bool trackChanges)
+            
         {
-            var customers = await _repositoryManager.CustomerRepository.GetAllCustomers(page, pageSize, trackChanges);
+            var customersWithMetaData = await _repositoryManager.CustomerRepository.GetAllCustomers(customerParameters,trackChanges);
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                customers = customers.Where(c => c.FirstName.Contains(searchString) ||
-                                                 c.LastName.Contains(searchString) ||
-                                                 c.Email.Contains(searchString));
-            }
+            var customersDto = _mapper.Map<IEnumerable<CustomerDto>>(customersWithMetaData);
 
-
-            customers = ApplySorting(customers, sortBy, sortOrder);
-
-
-
-            var customerDtos = _mapper.Map<IEnumerable<CustomerDto>>(customers);
-            return customerDtos;    
+            return (customersDto, customersWithMetaData.MetaData);
         }
 
         public async Task<IEnumerable<CustomerDto>> GetAllCustomersUnfiltered(bool trackChanges)
@@ -125,20 +110,6 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
 
 
-        }
-
-        private IEnumerable<Customer> ApplySorting(IEnumerable<Customer> customers, string sortBy, string sortOrder) 
-        {
-            return customers = sortBy switch
-            {
-                "LastName" => sortOrder == "LastName_Asc" ? customers.OrderBy(c => c.LastName) :
-                                                            customers.OrderByDescending(c => c.LastName),
-                "FirstName" => sortOrder == "FirstName_Asc" ? customers.OrderBy(c => c.FirstName) :
-                                                              customers.OrderByDescending(c => c.FirstName),
-                "Email" => sortOrder == "Email_Asc" ? customers.OrderBy(c => c.Email) :
-                                                            customers.OrderByDescending(c => c.Email),
-                _ => customers.OrderBy(c => c.CreatedDate)
-            };
         }
     }
 }

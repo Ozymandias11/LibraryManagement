@@ -1,9 +1,9 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.CustomerViewModel>
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.CustomerViewModel>
 @{
     ViewData["Title"] = "Customers";
     ViewData["ActionUrl"] = "Customers";
     ViewData["ActionName"] = "Customers";
-    ViewData["CurrentPage"] = Model.FirstOrDefault()?.CurrentPage ?? 1;
+    ViewData["CurrentPage"] = Model.MetaData.CurrentPage;
     var sortableColumns = new[]
     {
         ("Last Name", "LastName"),
@@ -33,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var customer in Model)
+                    @foreach (var customer in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@customer.LastName</td>
@@ -41,7 +41,7 @@
                             <td class="text-center">@customer.Email</td>
                             <td class="text-center">@customer.PhoneNumber</td>
                             <td class="text-center">@customer.CustomerPersonalId</td>
-                            <td class="text-center">@customer.Address.ToString()</td>
+                            <td class="text-center">@customer.Address</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
                                     <a asp-controller="Customer" asp-action="UpdateCustomer" asp-route-id="@customer.CustomerId" class="btn btn-primary btn-sm mr-2">Edit</a>
@@ -54,18 +54,16 @@
             </table>
             <a asp-action="CreateCustomer" class="btn btn-primary">Add Customer</a>
         </div>
-
         @await Html.PartialAsync("_Pagination", (
-                 CurrentPage: Model.FirstOrDefault()?.CurrentPage ?? 1,
-                 TotalPages: Model.FirstOrDefault()?.TotalPages ?? 1,
-                 PageSize: Model.FirstOrDefault()?.PageSize ?? 10,
-                 SortBy: ViewBag.SortBy,
-                 SortOrder: ViewBag.SortOrder,
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
                  SearchString: ViewData["CurrentSearchString"] as string,
                  ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
-                 ActionNameAttribute: ViewContext.RouteData.Values["action"].ToString()
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
                  ))
-
     </div>
 </div>
 @await Html.PartialAsync("_DeleteConfirmationModal", ("customer-id", "customer-name", "DeleteCustomer"))
