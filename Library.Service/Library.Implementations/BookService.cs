@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -21,70 +24,52 @@ namespace Library.Service.Library.Implementations
             _repositoryManager = repositoryManager; 
             _mapper = mapper;
         }
-
-        public async Task CreateBook(
-            CreateBookDto bookDto, 
-            IEnumerable<Guid> authroIds, 
-            IEnumerable<Guid> publishersIds,
-            IEnumerable<Guid> categoryIds,
-            bool trackChanges)
+        public async Task<Result> CreateBook(CreateBookDto bookDto, bool trackChanges)
         {
-            var bookEntity =  _mapper.Map<Book>(bookDto);
 
-            _repositoryManager.BookRepository.CreateBook(bookEntity);
+            
+            var bookEntity = _mapper.Map<Book>(bookDto);
+           _repositoryManager.BookRepository.CreateBook(bookEntity);
 
-            foreach (var authorId in  authroIds) 
+            var result = await AddRelatedEntities(bookEntity, bookDto);
+            if (!result.IsSuccess)
             {
-                var author = await _repositoryManager.AuthorRepository.GetAuthor(authorId, false);
-                _repositoryManager.BookAuthorRepository.CreateBookAuthor(bookEntity, author);
+                return result;
             }
-
-            foreach(var publishersId in publishersIds)
-            {
-                var publisher = await _repositoryManager.PublisherRepository.GetPublisher(publishersId, false); 
-                _repositoryManager.BookPublisherRepository.CreateBookPublisher(bookEntity, publisher);
-                
-            }
-
-            foreach(var categoryId in categoryIds)
-            {
-                var category = await _repositoryManager.CategoryRepository.GetCategory(categoryId, false);
-                _repositoryManager.BookCategoryRepository.CreateBookCategory(bookEntity, category);
-            }
-
-           
-
-
-
 
             await _repositoryManager.SaveAsync();
 
-
+            return Result.Ok();
+          
+            
         }
 
-        public async Task DeleteBook(Guid id, bool trackChanges)
-        {
-            var bookEntity = await _repositoryManager.BookRepository.GetBook(id, trackChanges);
 
-            _repositoryManager.BookRepository.DeleteBook(bookEntity);
+        public async Task<Result> DeleteBook(Guid id, bool trackChanges)
+        {
+            var book = await _repositoryManager.BookRepository.GetBook(id, trackChanges);
+
+            if(book == null)
+            {
+                return Result.Fail(new NotFoundError("Book", id));
+            }
+
+
+            _repositoryManager.BookRepository.DeleteBook(book);
 
             await _repositoryManager.SaveAsync();
 
+            return Result.Ok();
+
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooks(string sortBy, string sortOrder, string searchString,bool trackChanges)
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooks(BookParameters bookParameters ,bool trackChanges)
         {
-            var books = await _repositoryManager.BookRepository.GetAllBooks(trackChanges);
+            var booksWithMetaData = await _repositoryManager.BookRepository.GetAllBooks(bookParameters ,trackChanges);
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                books = books.Where(b => b.Title.Contains(searchString));
-            }
-
-            books = ApplySorting(books, sortBy, sortOrder);
-
-            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);    
-            return booksDto;
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);   
+            
+            return (booksDto, booksWithMetaData.MetaData);
         }
 
         public async Task<BookDto> GetBook(Guid id, bool trackChanges)
@@ -98,124 +83,153 @@ namespace Library.Service.Library.Implementations
         }
 
 
-        public async Task<IEnumerable<AuthorDto>> GetBookAuthors(Guid id, bool trackChanges)
-        {
-            var authors = await _repositoryManager.AuthorRepository.GetAuthorsOfBook(id, trackChanges);
-
-            var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);
-
-            return authorsDto;
-
-
-        }
-
-        public async Task<IEnumerable<CategoryDto>> GetBookCategories(Guid id, bool trackChanges)
-        {
-            var categories = await _repositoryManager.CategoryRepository.GetCategoryOfBooks(id, trackChanges);
-
-            var categoryDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
-
-            return categoryDto;
-
-
-        }
-
-        public async Task<IEnumerable<PublisherDto>> GetBookPublishers(Guid id, bool trackChanges)
-        {
-            var publishers = await _repositoryManager.PublisherRepository.GetPublishersOfBook(id, trackChanges);
-
-            var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers); 
-
-            return publishersDto;   
-        }
-
-
-        public async Task UpdateBook(
-            BookDto bookDto,
-            IEnumerable<Guid> authorIds,
-            IEnumerable<Guid> publisherIds,
-            IEnumerable<Guid> categoryIds,
+        public async Task<Result> UpdateBook(BookDto bookDto, IEnumerable<Guid> authorIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds,
             bool trackChanges)
         {
-            var bookentity = await _repositoryManager.BookRepository.GetBook(bookDto.BookId, trackChanges);
 
-            _mapper.Map(bookDto, bookentity);
+                var bookEntity = await _repositoryManager.BookRepository.GetBook(bookDto.BookId, trackChanges);
+                if (bookEntity == null)
+                {
+                    return Result.Fail("book not found");
+                }
 
-            // Manage authors
-            var currentAuthorIds = bookentity.Authors.Select(a => a.AuthorID).ToList();
-            var authorsToRemove = bookentity.Authors.Where(a => !authorIds.Contains(a.AuthorID)).ToList();
-            var authorIdsToAdd = authorIds.Except(currentAuthorIds).ToList();
+                _mapper.Map(bookDto, bookEntity);
 
-            if (authorsToRemove.Any())
-            {
-                _repositoryManager.BookAuthorRepository.RemoveRange(authorsToRemove);
+                await UpdateRelatedEntities(bookEntity, authorIds, publisherIds, categoryIds);
+
+                await _repositoryManager.SaveAsync();
+
+                return Result.Ok();
             }
+
+
+        private async Task UpdateRelatedEntities(Book bookEntity, IEnumerable<Guid> authorIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds)
+        {
+            await UpdateAuthors(bookEntity, authorIds);
+            await UpdatePublishers(bookEntity, publisherIds);
+            await UpdateCategories(bookEntity, categoryIds);
+        }
+
+        private async Task UpdateAuthors(Book bookEntity, IEnumerable<Guid> authorIds)
+        {
+            var currentAuthorIds = bookEntity.Authors?.Select(a => a.AuthorID).ToHashSet() ?? new HashSet<Guid>();
+            var newAuthorIds = authorIds.ToHashSet();
+
+            var authorsToRemove = bookEntity.Authors?.Where(a => !newAuthorIds.Contains(a.AuthorID)).ToList() ?? new List<BookAuthor>();
+            var authorIdsToAdd = newAuthorIds.Except(currentAuthorIds).ToList();
+
+            _repositoryManager.BookAuthorRepository.RemoveRange(authorsToRemove);
 
             if (authorIdsToAdd.Any())
             {
                 var authorsToAdd = await _repositoryManager.AuthorRepository.GetAuthorsById(authorIdsToAdd, false);
                 foreach (var author in authorsToAdd)
                 {
-                    _repositoryManager.BookAuthorRepository.CreateBookAuthor(bookentity, author);
+                    _repositoryManager.BookAuthorRepository.CreateBookAuthor(bookEntity, author);
                 }
             }
+        }
 
-            // Manage publishers
-            var currentPublisherIds = bookentity.Publishers.Select(p => p.PublisherId).ToList();
-            var publishersToRemove = bookentity.Publishers.Where(p => !publisherIds.Contains(p.PublisherId)).ToList();
-            var publisherIdsToAdd = publisherIds.Except(currentPublisherIds).ToList();
+        private async Task UpdatePublishers(Book bookEntity, IEnumerable<Guid> publisherIds)
+        {
+            var currentPublisherIds = bookEntity.Publishers?.Select(p => p.PublisherId).ToHashSet() ?? new HashSet<Guid>();
+            var newPublisherIds = publisherIds.ToHashSet();
 
-            if (publishersToRemove.Any())
-            {
-                _repositoryManager.BookPublisherRepository.RemoveRange(publishersToRemove);
-            }
+            var publishersToRemove = bookEntity.Publishers?.Where(p => !newPublisherIds.Contains(p.PublisherId)).ToList() ?? new List<BookPublisher>();
+            var publisherIdsToAdd = newPublisherIds.Except(currentPublisherIds).ToList();
+
+            _repositoryManager.BookPublisherRepository.RemoveRange(publishersToRemove);
 
             if (publisherIdsToAdd.Any())
             {
                 var publishersToAdd = await _repositoryManager.PublisherRepository.GetPublishersById(publisherIdsToAdd, false);
                 foreach (var publisher in publishersToAdd)
                 {
-                    _repositoryManager.BookPublisherRepository.CreateBookPublisher(bookentity, publisher);
+                    _repositoryManager.BookPublisherRepository.CreateBookPublisher(bookEntity, publisher);
                 }
             }
-
-
-            //Manage Categories
-            var currentCategories = bookentity.Categories.Select(c => c.CategoryId).ToList();
-            var categoriesToRemove = bookentity.Categories.Where(c => !categoryIds.Contains(c.CategoryId)).ToList();
-            var categoriesToAdd = categoryIds.Except(currentCategories).ToList();   
-
-
-            if(categoriesToRemove.Any()) 
-            {
-                _repositoryManager.BookCategoryRepository.RemoveRange(categoriesToRemove);
-            }
-
-            if (categoriesToAdd.Any())
-            {
-                var categoriesToBeAdded = await _repositoryManager.CategoryRepository.GetCategoriesById(categoriesToAdd, false);
-                foreach (var category in categoriesToBeAdded)
-                {
-                    _repositoryManager.BookCategoryRepository.CreateBookCategory(bookentity, category);
-                }
-
-            }
-
-
-
-            await _repositoryManager.SaveAsync();
         }
 
-        private IEnumerable<Book> ApplySorting(IEnumerable<Book> books, string sortBy, string sortOrder)
+        private async Task UpdateCategories(Book bookEntity, IEnumerable<Guid> categoryIds)
         {
+            var currentCategoryIds = bookEntity.Categories?.Select(c => c.CategoryId).ToHashSet() ?? new HashSet<Guid>();
+            var newCategoryIds = categoryIds.ToHashSet();
 
-           return books = sortBy switch
+            var categoriesToRemove = bookEntity.Categories?.Where(c => !newCategoryIds.Contains(c.CategoryId)).ToList() ?? new List<BookCategory>();
+            var categoryIdsToAdd = newCategoryIds.Except(currentCategoryIds).ToList();
+
+            _repositoryManager.BookCategoryRepository.RemoveRange(categoriesToRemove);
+
+            if (categoryIdsToAdd.Any())
             {
-                "Title" => sortOrder == "Title_Asc" ? books.OrderBy(b => b.Title) : books.OrderByDescending(b => b.Title),
-                "PublishedYear" => sortOrder == "PublishedYear_Asc" ? books.OrderBy(b => b.PublishedYear) : books.OrderByDescending(b => b.PublishedYear),
-                _ => books.OrderBy(b => b.Title),
-            };
+                var categoriesToAdd = await _repositoryManager.CategoryRepository.GetCategoriesById(categoryIdsToAdd, false);
+                foreach (var category in categoriesToAdd)
+                {
+                    _repositoryManager.BookCategoryRepository.CreateBookCategory(bookEntity, category);
+                }
+            }
         }
+
+
+        private async Task<Result> AddRelatedEntities(Book bookEntity, CreateBookDto bookDto)
+        {
+            var authorResult = await AddAuthors(bookEntity, bookDto.SelectedAuthorIds);
+            if (!authorResult.IsSuccess) return authorResult;
+
+            var publisherResult = await AddPublishers(bookEntity, bookDto.SelectedPublisherIds);
+            if (!publisherResult.IsSuccess) return publisherResult;
+
+            var categoryResult = await AddCategories(bookEntity, bookDto.SelectedCategoryIds);
+            if (!categoryResult.IsSuccess) return categoryResult;
+
+            return Result.Ok();
+        }
+
+
+        private async Task<Result> AddAuthors(Book bookEntity, IEnumerable<Guid> authorIds)
+        {
+            foreach (var authorId in authorIds)
+            {
+                var author = await _repositoryManager.AuthorRepository.GetAuthor(authorId, false);
+                if (author == null)
+                {
+                    return Result.Fail($"Author with ID {authorId} not found.");
+                }
+                _repositoryManager.BookAuthorRepository.CreateBookAuthor(bookEntity, author);
+            }
+            return Result.Ok();
+        }
+
+        private async Task<Result> AddPublishers(Book bookEntity, IEnumerable<Guid> publisherIds)
+        {
+            foreach (var publisherId in publisherIds)
+            {
+                var publisher = await _repositoryManager.PublisherRepository.GetPublisher(publisherId, false);
+                if (publisher == null)
+                {
+                    return Result.Fail($"Publisher with ID {publisherId} not found.");
+                }
+                _repositoryManager.BookPublisherRepository.CreateBookPublisher(bookEntity, publisher);
+            }
+            return Result.Ok();
+        }
+
+        private async Task<Result> AddCategories(Book bookEntity, IEnumerable<Guid> categoryIds)
+        {
+            foreach (var categoryId in categoryIds)
+            {
+                var category = await _repositoryManager.CategoryRepository.GetCategory(categoryId, false);
+                if (category == null)
+                {
+                    return Result.Fail($"Category with ID {categoryId} not found.");
+                }
+                _repositoryManager.BookCategoryRepository.CreateBookCategory(bookEntity, category);
+            }
+            return Result.Ok();
+        }
+
+
 
     }
 }
+

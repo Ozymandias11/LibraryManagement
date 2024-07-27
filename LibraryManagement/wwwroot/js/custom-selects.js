@@ -1,9 +1,11 @@
 ﻿$(document).ready(function () {
-    initializeSelect2('#authors', 'Select authors', '/Author/CreateAuthor', 'Author');
-    initializeSelect2('#publishers', 'Select Publishers', '/Publisher/CreatePublisher', 'Publisher');
-    initializeSelect2('#Categories', 'Select Categories', '/Category/CreateCategory', 'Category');
+    const bookId = $('#bookId').val();
 
-    // Handle click on "Create new" links
+    loadAndInitializeSelect('#authors', '/Author/GetAuthorsForDropDown', '/Author/GetBookAuthors/' + bookId);
+    loadAndInitializeSelect('#publishers', '/Publisher/GetPublishersForDropDown', '/Publisher/GetBookPublishers/' + bookId);
+    loadAndInitializeSelect('#categories', '/Category/GetCategoriesForDropDown', '/Category/GetBookCategories/' + bookId);
+
+    
     $(document).on('click', '[class^="create-new-"]', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -11,19 +13,38 @@
     });
 });
 
+function loadAndInitializeSelect(selectElement, allDataUrl, selectedDataUrl) {
+    $.when(
+        $.getJSON(allDataUrl),
+        $.getJSON(selectedDataUrl)
+    ).done(function (allDataResponse, selectedDataResponse) {
+        const allData = allDataResponse[0];
+        const selectedIds = selectedDataResponse[0];
 
-function initializeSelect2(selector, placeholder, createUrl, entityName) {
-    $(selector).select2({
-        placeholder: placeholder,
-        multiple: true,
-        allowClear: true,
-        language: {
-            noResults: function () {
-                return `No results found. <a href="${createUrl}" class="create-new-${entityName.toLowerCase()}">Create new ${entityName}</a>`;
+        const options = allData.map(item => ({
+            id: item.id,
+            text: item.name,
+            selected: selectedIds.includes(item.id)
+        }));
+
+        $(selectElement).select2({
+            data: options,
+            placeholder: $(selectElement).data('placeholder'),
+            allowClear: true,
+            multiple: true,
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            language: {
+                noResults: function () {
+                    const createUrl = $(selectElement).data('create-url');
+                    const entityName = $(selectElement).data('entity-name');
+                    return `No results found. <a href="${createUrl}" class="create-new-${entityName.toLowerCase()}">Create new ${entityName}</a>`;
+                }
             }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
+        });
+
+       
+        $(selectElement).trigger('change');
     });
 }

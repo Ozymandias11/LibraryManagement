@@ -11,6 +11,7 @@ namespace Library.Data.Library.Interfaces
    public interface IPublisherRepository
     {
         Task<PagedList<Publisher>> GetAllPublisher(PublisherParameters publisherParameters,bool trackChanges);
+        Task<IEnumerable<Publisher>> GetAllPublishersForDropDown(bool trackChanges);
         Task<Publisher?> GetPublisher(Guid id, bool trackChanges);  
         Task<Publisher?> GetPublisherWithTitle(string title, bool trackChanges);
         Task<IEnumerable<Publisher>> GetPublishersOfBook(Guid id, bool trackChanges);

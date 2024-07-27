@@ -48,6 +48,11 @@ namespace Library.Data.Library.Implementations
 
         public async Task<Publisher?> GetPublisherWithTitle(string title, bool trackChanges)
            => await FindByCondition(p => p.PublisherName.ToLower() ==  title.ToLower(), trackChanges).FirstOrDefaultAsync();
-       
+
+        public async Task<IEnumerable<Publisher>> GetAllPublishersForDropDown(bool trackChanges)
+            => await FindByCondition(p => p.DeletedDate == null, trackChanges)
+               .OrderBy(p => p.PublisherName)
+               .ToListAsync();
+      
     }
 }

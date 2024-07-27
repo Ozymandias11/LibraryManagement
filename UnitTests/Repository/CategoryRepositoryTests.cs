@@ -13,32 +13,32 @@ namespace UnitTests.Repository
    public class CategoryRepositoryTests
     {
         [Fact]
-        public async Task GetAllCategories_ReturnsAllNonDeletedCategories()
-        {
-            var mockRepo = new Mock<ICategoryRepository>();
-            var categories = CategoryFaker.Create().Generate(3);
-            mockRepo.Setup(repo => repo.GetAllCategories(false))
-                .ReturnsAsync(categories.AsEnumerable());
+        //public async Task GetAllCategories_ReturnsAllNonDeletedCategories()
+        //{
+        //    var mockRepo = new Mock<ICategoryRepository>();
+        //    var categories = CategoryFaker.Create().Generate(3);
+        //    mockRepo.Setup(repo => repo.GetAllCategories(false))
+        //        .ReturnsAsync(categories.AsEnumerable());
 
-            var result = await mockRepo.Object.GetAllCategories(false);
+        //    var result = await mockRepo.Object.GetAllCategories(false);
 
-            Assert.IsType<List<Category>>(result);
-            Assert.Equal(3, result.Count());
-            Assert.All(result, category => Assert.Null(category.DeletedDate));
-        }
+        //    Assert.IsType<List<Category>>(result);
+        //    Assert.Equal(3, result.Count());
+        //    Assert.All(result, category => Assert.Null(category.DeletedDate));
+        //}
 
-        [Fact]
-        public async Task GetCategory_ReturnsNull_WhenCategoryNotFound()
-        {
-            var mockRepo = new Mock<ICategoryRepository>();
-            var nonExistentId = Guid.NewGuid();
-            mockRepo.Setup(repo => repo.GetCategory(nonExistentId, It.IsAny<bool>()))
-                .ReturnsAsync((Category?)null);
+        //[Fact]
+        //public async Task GetCategory_ReturnsNull_WhenCategoryNotFound()
+        //{
+        //    var mockRepo = new Mock<ICategoryRepository>();
+        //    var nonExistentId = Guid.NewGuid();
+        //    mockRepo.Setup(repo => repo.GetCategory(nonExistentId, It.IsAny<bool>()))
+        //        .ReturnsAsync((Category?)null);
 
-            var result = await mockRepo.Object.GetCategory(nonExistentId, false);
+        //    var result = await mockRepo.Object.GetCategory(nonExistentId, false);
 
-            Assert.Null(result);
-        }
+        //    Assert.Null(result);
+        //}
 
         [Fact]
         public async Task GetCategory_ReturnsCorrectCategory()

@@ -3,6 +3,7 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Library.Interfaces;
@@ -28,52 +29,38 @@ namespace LibraryManagement.Controllers
             
         }
 
-        public async Task<IActionResult> Reservations(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            int page = 1,
-            int pageSize = 10)
+        public async Task<IActionResult> Reservations([FromQuery] ReservationParameters reservationParameters)
         {
 
-            ViewBag.SortBy = sortBy;
-            ViewBag.SortOrder = sortOrder;
-            ViewBag.isPaginated = true;
-            ViewData["CurrentSearchString"] = searchString;
-            ViewData["CurrentPage"] = page;
+            var (reservationsDto, metaData) = await _serviceManager.ReservationService.GetAllReservations(reservationParameters ,false);
 
-            var reservations = await _serviceManager.ReservationService.GetAllReservations(sortBy, sortOrder, searchString, page, pageSize, false);
-            var reservationsViewModel = _mapper.Map<IEnumerable<ReservationViewModel>>(reservations);
+            var reservationsViewModel = _mapper.Map<IEnumerable<ReservationViewModel>>(reservationsDto);
 
-            foreach (var reservation in reservationsViewModel)
-            {
-                reservation.CurrentPage = page;
-                reservation.PageSize = pageSize;
-                reservation.TotalCount = await _serviceManager.ReservationService.GetTotalNumberOfReservation();
-            }
-            return View(reservationsViewModel);
+            var pagedViewModel = new PagedViewModel<ReservationViewModel>(reservationsViewModel, metaData);
+
+            return View(pagedViewModel);
 
         }
 
-        public async Task<IActionResult> CreateReservation()
-        {
-            var createReservationViewModel = new CreateReservationViewModel();
+        //public async Task<IActionResult> CreateReservation()
+        //{
+        //    var createReservationViewModel = new CreateReservationViewModel();
 
-            //get all books for dropdown
-            var booksForDropDown = await _serviceManager.BookService.GetAllBooks("", "", "", false);
-            //get all customers for dropdown
-            var customersForDropDown = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
+        //    //get all books for dropdown
+        //    var booksForDropDown = await _serviceManager.BookService.GetAllBooks("", "", "", false);
+        //    //get all customers for dropdown
+        //    var customersForDropDown = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
 
 
 
-            var customersForDropDownViewModel = _mapper.Map<IEnumerable<CustomerDropDownViewModel>>(customersForDropDown);
-            var booksForDropDownViewModel = _mapper.Map<IEnumerable<BookDropdownViewModel>>(booksForDropDown);
+        //    var customersForDropDownViewModel = _mapper.Map<IEnumerable<CustomerDropDownViewModel>>(customersForDropDown);
+        //    var booksForDropDownViewModel = _mapper.Map<IEnumerable<BookDropdownViewModel>>(booksForDropDown);
 
-            createReservationViewModel.AllBooks = booksForDropDownViewModel;
-            createReservationViewModel.AllCustomers = customersForDropDownViewModel;
+        //    createReservationViewModel.AllBooks = booksForDropDownViewModel;
+        //    createReservationViewModel.AllCustomers = customersForDropDownViewModel;
 
-            return View(createReservationViewModel);
-        }
+        //    return View(createReservationViewModel);
+        //}
 
         [HttpPost]
         public async Task<IActionResult> CreateReservation(CreateReservationViewModel createReservationViewModel)
@@ -105,15 +92,15 @@ namespace LibraryManagement.Controllers
 
 
 
-        public async Task<IActionResult> GetPublishersForBook(string bookId)
-        {
-            if (Guid.TryParse(bookId, out Guid parsedBookId))
-            {
-                var publishers = await _serviceManager.BookService.GetBookPublishers(parsedBookId, false);
-                return Json(publishers);
-            }
-            return BadRequest("Invalid book ID");
-        }
+        //public async Task<IActionResult> GetPublishersForBook(string bookId)
+        //{
+        //    if (Guid.TryParse(bookId, out Guid parsedBookId))
+        //    {
+        //        var publishers = await _serviceManager.BookService.GetBookPublishers(parsedBookId, false);
+        //        return Json(publishers);
+        //    }
+        //    return BadRequest("Invalid book ID");
+        //}
 
         public async Task<IActionResult> CheckBookCopyAvailability(Guid originalBookId, string edition, Guid PublisherId, int quantity)
         {

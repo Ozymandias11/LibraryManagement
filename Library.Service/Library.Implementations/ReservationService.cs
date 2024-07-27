@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Enums;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
@@ -84,22 +85,14 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<ReservationDto>> GetAllReservations(
-            string sortBy, string sortOrder, string searchString, int page, int pageSize, bool trackChanges)
+        public async Task<(IEnumerable<ReservationDto> reservations, MetaData MetaData)> GetAllReservations(ReservationParameters reservationParameters, bool trackChanges)
         {
-            var reservations = await _repositoryManager.ReservationRepository.GetAllReservations(page, pageSize, trackChanges);
+            var reservationsWithMetaData = await _repositoryManager.ReservationRepository.GetAllReservations(reservationParameters, trackChanges);
 
-            if(!string.IsNullOrEmpty(searchString))
-            {
-                reservations = reservations.Where(r => r.Customer.CustomerPersonalId.Contains(searchString) ||
-                                                       r.Employee.Email.Contains(searchString));
-            }
+            var reservationsDto = _mapper.Map<IEnumerable<ReservationDto>>(reservationsWithMetaData);
 
-            reservations = ApplySorting(reservations, sortBy, sortOrder);
+            return (reservationsDto, reservationsWithMetaData.MetaData);
 
-            var reservationsDto = _mapper.Map<IEnumerable<ReservationDto>>(reservations);   
-
-            return reservationsDto;
         }
 
 
@@ -205,25 +198,7 @@ namespace Library.Service.Library.Implementations
             };
         }
 
-        private static IEnumerable<Reservation> ApplySorting(IEnumerable<Reservation> reservations, string sortBy, string sortOrder)
-        {
-            return reservations = sortBy switch
-            {
-                "CustomerPersonalID" => sortOrder == "CustomerPersonalID_Asc" ? reservations.OrderBy(r => r.Customer.CustomerPersonalId)
-                                                                                : reservations.OrderByDescending(r => r.Customer.CustomerPersonalId),
-                "CheckoutTime" => sortOrder == "CheckoutTime_Asc" ? reservations.OrderBy(r => r.CheckoutTime)
-                                                                                : reservations.OrderByDescending(r => r.CheckoutTime),
-                "EmployeeEmail" => sortOrder == "EmployeeEmail_Asc" ? reservations.OrderBy(r => r.Employee.Email)
-                                                                                : reservations.OrderByDescending(r => r.Employee.Email),
-                _ => reservations.OrderBy(r => r.CreatedDate)
-
-
-
-            };
-        }
-
-      
-
+   
         private static string DetermineReturnStatus(ReservationItem item)
         {
             if (!item.ActualReturnDate.HasValue)
@@ -248,6 +223,7 @@ namespace Library.Service.Library.Implementations
         public async Task<int> GetTotalNumberOfReservation() => await _repositoryManager.
             ReservationRepository.
             GetTotalNumberOfReservations();
-       
+
+    
     }
 }

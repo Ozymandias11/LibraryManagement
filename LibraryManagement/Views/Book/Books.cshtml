@@ -1,16 +1,15 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.BookViewModel>
-
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.BookViewModel>
 @{
     ViewData["Title"] = "Books";
     ViewData["ActionUrl"] = "Books";
     ViewData["ActionName"] = "Books";
-    var sortableColums = new[]
+    ViewData["CurrentPage"] = Model.MetaData.CurrentPage;
+    var sortableColumns = new[]
     {
         ("Title", "Title"),
-        ("PublishedYear", "PublishedYear")
+        ("Published Year", "PublishedYear"),
     };
 }
-
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center mb-3">
@@ -25,12 +24,12 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        @await Html.PartialAsync("_SortableHeader", sortableColums)
+                        @await Html.PartialAsync("_SortableHeader", sortableColumns)
                         <th class="text-primary text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var book in Model)
+                    @foreach (var book in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@book.Title</td>
@@ -47,12 +46,19 @@
             </table>
             <a asp-action="CreateBook" class="btn btn-primary">Add Book</a>
         </div>
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
+                 SearchString: ViewData["CurrentSearchString"] as string,
+                 ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
+                 ))
     </div>
 </div>
-
-
 @await Html.PartialAsync("_DeleteConfirmationModal", ("book-id", "book-title", "DeleteBook"))
-
 @section Scripts {
     <script src="~/js/deleteModal.js"></script>
     <script>
@@ -62,4 +68,3 @@
         });
     </script>
 }
-

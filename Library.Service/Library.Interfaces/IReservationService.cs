@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Library.Service.Library.Interfaces
 {
    public interface IReservationService
     {
-        Task<IEnumerable<ReservationDto>> GetAllReservations(string sortBy, string sortOrder, string searchString, int page, int pageSize, bool trackChanges);
+        Task<(IEnumerable<ReservationDto> reservations, MetaData MetaData)> GetAllReservations(ReservationParameters reservationParameters, bool trackChanges);
         Task<Result<ReservationDetailsDto>> GetReservation(Guid id, bool trackChanges);
         Task<Result<ReturnBookDto>> GetReturnBookInfo(Guid reservationId, bool trackChanges);
         Task<int> GetTotalNumberOfReservation();

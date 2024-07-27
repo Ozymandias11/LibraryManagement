@@ -11,7 +11,7 @@ namespace Library.Data.Extensions
 {
     public static class PublisherRepositoryExtensions
     {
-        public static IQueryable<Publisher> Search(this IQueryable<Publisher> publishers, string searchTerm)
+        public static IQueryable<Publisher> Search(this IQueryable<Publisher> publishers, string? searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return publishers;
@@ -21,7 +21,7 @@ namespace Library.Data.Extensions
 
         }
 
-        public static IQueryable<Publisher> Sort(this IQueryable<Publisher> publishers, string orderByQueryString)
+        public static IQueryable<Publisher> Sort(this IQueryable<Publisher> publishers, string? orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
             {

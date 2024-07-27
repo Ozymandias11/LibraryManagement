@@ -1,15 +1,14 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.CategoryViewModel>
-
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.CategoryViewModel>
 @{
     ViewData["Title"] = "Categories";
     ViewData["ActionUrl"] = "Categories";
     ViewData["ActionName"] = "Categories";
+    ViewData["CurrentPage"] = Model.MetaData.CurrentPage;
     var sortableColumns = new[]
     {
         ("Title", "Title")
     };
 }
-
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center mb-3">
@@ -18,7 +17,6 @@
         <table>
             <tr>
                 @await Html.PartialAsync("_SearchForm", ViewData["CurrentSearchString"] as string)
-
             </tr>
         </table>
         <div class="table-responsive wide-table">
@@ -30,7 +28,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var category in Model)
+                    @foreach (var category in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@category.Title</td>
@@ -46,19 +44,25 @@
             </table>
             <a asp-action="CreateCategory" class="btn btn-primary">Add Category</a>
         </div>
+        @await Html.PartialAsync("_Pagination", (
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
+                 SearchString: ViewData["CurrentSearchString"] as string,
+                 ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
+                 ))
     </div>
 </div>
-
 @await Html.PartialAsync("_DeleteConfirmationModal", ("category-id", "category-name", "DeleteCategory"))
-
-
-@section Scripts{
+@section Scripts {
     <script src="~/js/deleteModal.js"></script>
     <script>
         $.noConflict();
         jQuery(document).ready(function ($) {
-             initializeDeleteModal('category-id', 'category-name');
+            initializeDeleteModal('category-id', 'category-name');
         });
     </script>
 }
-

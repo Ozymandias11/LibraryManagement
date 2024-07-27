@@ -12,6 +12,8 @@ namespace Library.Service.Library.Interfaces
     public interface IPublisherService
     {
         Task<(IEnumerable<PublisherDto> publishers, MetaData metaData)> GetAllPublishers(PublisherParameters publisherParameters, bool trackChanges);
+        Task<IEnumerable<PublisherDto>> GetBookPublishers(Guid bookId, bool trackChanges);
+        Task<IEnumerable<PublisherDto>> GetAllPublishersForDropDown(bool trackChanges);
         Task<Result<PublisherDto>> GetPublisher(Guid id, bool trackChanges);
         Task<Result> CreatePublisher(CreatePublisherDto createPublisherDto, bool trackChanges);
         Task<Result> DeletePublisher(Guid guid, bool trackChanges);

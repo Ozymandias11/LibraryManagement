@@ -1,4 +1,6 @@
-﻿using Library.Data.Library.Interfaces;
+﻿using Library.Data.Extensions;
+using Library.Data.Library.Interfaces;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,8 +23,26 @@ namespace Library.Data.Library.Implementations
         public void DeleteCatgeory(Category category) => Delete(category);
 
 
-        public async Task<IEnumerable<Category>> GetAllCategories(bool trackChanges) =>
-            await FindByCondition(c => c.DeletedDate == null, trackChanges).ToListAsync();
+        public async Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters ,bool trackChanges)
+        {
+            var categories = await FindByCondition(c => c.DeletedDate == null, trackChanges)
+                .Search(categoryParameters.SearchTerm)
+                .Sort(categoryParameters.OrderBy)
+                .ToListAsync();
+
+            return PagedList<Category>
+                .ToPagedList(categories, categoryParameters.PageNumber, categoryParameters.PageSize);
+            
+
+        }
+
+        public async Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges)
+            => await FindByCondition(c => c.DeletedDate == null, trackChanges)
+               .OrderBy(c => c.Title)
+               .ToListAsync();
+        
+           
+        
 
         public async Task<IEnumerable<Category>> GetCategoriesById(IEnumerable<Guid> ids, bool trackChanges) =>
             await FindByCondition(c => ids.Contains(c.CategoryId), trackChanges).ToListAsync();

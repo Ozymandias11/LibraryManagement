@@ -1,7 +1,4 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateBookViewModel
-
-
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -19,54 +16,25 @@
                             <label asp-for="PublishedYear" class="text-primary">Published Year:</label>
                             <input asp-for="PublishedYear" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="PublishedYear" class="text-danger"></span>
-                        </div>                     
+                        </div>
                         <div class="form-group">
                             <label for="authors" class="text-primary">Authors:</label>
-                            <select id="authors" name="SelectedAuthorIds" class="form-control" multiple>
-                                @foreach (var author in Model.Authors)
-                                {
-                                    <option value="@author.AuthorId">@author.FirstName @author.LastName</option>
-                                }
-                            </select>
+                            <select id="authors" name="SelectedAuthorIds" class="form-control" multiple
+                                    data-create-url="/Author/CreateAuthor" data-entity-name="Author"></select>
                             <span asp-validation-for="SelectedAuthorIds" class="text-danger"></span>
                         </div>
                         <div class="form-group">
                             <label for="publishers" class="text-primary">Publishers:</label>
-                            <select id="publishers" name="SelectedPublisherIds" class="form-control" multiple>
-                                @foreach (var publisher in Model.Publishers)
-                                {
-                                    <option value="@publisher.PublisherId">@publisher.PublisherName</option>
-                                }
-                            </select>
+                            <select id="publishers" name="SelectedPublisherIds" class="form-control" multiple
+                                    data-create-url="/Publisher/CreatePublisher" data-entity-name="Publisher"></select>
                             <span asp-validation-for="SelectedPublisherIds" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label for="Categories" class="text-primary">Categories:</label>
-                            <select id="Categories" name="SelectedCategoryIds" class="form-control" multiple>
-                                @foreach ( var category in Model.Categories)
-                                {
-                                    <option value="@category.CategoryId">@category.Title</option>
-                                }
-                            </select>
+                            <label for="categories" class="text-primary">Categories:</label>
+                            <select id="categories" name="SelectedCategoryIds" class="form-control" multiple
+                                    data-create-url="/Category/CreateCategory" data-entity-name="Category"></select>
                             <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
                         </div>
-
-
-
-                        @foreach (var author in Model.Authors)
-                        {
-                            <input type="hidden" name="Authors" value="@author.AuthorId" />
-                        }
-
-                        @foreach (var publisher in Model.Publishers)
-                        {
-                            <input type="hidden" name="Publishers" value="@publisher.PublisherId" />
-                        }
-                        @foreach(var category in Model.Categories)
-                        {
-                            <input type="hidden" name="Categories" value="@category.CategoryId" />
-                        }
-
                         <div class="form-group text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-block btn-lg">Create Book</button>
                             <a asp-controller="Book" asp-action="Books" class="btn btn-neutral btn-block btn-lg">Cancel</a>
@@ -78,10 +46,8 @@
     </div>
 </div>
 
-
-
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-@section Scripts{
+@section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src ="~/js/custom-selects.js"></script>
+    <script src="~/js/custom-selects.js"></script>
 }

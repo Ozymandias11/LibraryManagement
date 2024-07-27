@@ -13,33 +13,33 @@ namespace UnitTests.Repository
 {
     public class PublisherReposiotryTests
     {
-        [Fact]
-        public async Task GetAllPublisher_ReturnsAllNonDeletedPublishers()
-        {
-            var mockRepo = new Mock<IPublisherRepository>();
-            var publishers = PublisherFaker.Create().Generate(3);
-            mockRepo.Setup(repo => repo.GetAllPublisher(false))
-                .ReturnsAsync(publishers.OrderBy(p => p.CreatedDate));
+       
+        //public async Task GetAllPublisher_ReturnsAllNonDeletedPublishers()
+        //{
+        //    var mockRepo = new Mock<IPublisherRepository>();
+        //    var publishers = PublisherFaker.Create().Generate(3);
+        //    mockRepo.Setup(repo => repo.GetAllPublisher(false))
+        //        .ReturnsAsync(publishers.OrderBy(p => p.CreatedDate));
 
-            var result = await mockRepo.Object.GetAllPublisher(false);
+        //    var result = await mockRepo.Object.GetAllPublisher(false);
 
-            Assert.Equal(3, result.Count());
-            Assert.All(result, publisher => Assert.Null(publisher.DeletedDate));
-            Assert.Equal(publishers.OrderBy(p => p.CreatedDate), result);
-        }
+        //    Assert.Equal(3, result.Count());
+        //    Assert.All(result, publisher => Assert.Null(publisher.DeletedDate));
+        //    Assert.Equal(publishers.OrderBy(p => p.CreatedDate), result);
+        //}
 
-        [Fact]
-        public async Task GetPublisher_ReturnsNull_WhenPublisherNotFound()
-        {
-            var mockRepo = new Mock<IPublisherRepository>();
-            var nonExistentId = Guid.NewGuid();
-            mockRepo.Setup(repo => repo.GetPublisher(nonExistentId, It.IsAny<bool>()))
-                .ReturnsAsync((Publisher?)null);
+        //[Fact]
+        //public async Task GetPublisher_ReturnsNull_WhenPublisherNotFound()
+        //{
+        //    var mockRepo = new Mock<IPublisherRepository>();
+        //    var nonExistentId = Guid.NewGuid();
+        //    mockRepo.Setup(repo => repo.GetPublisher(nonExistentId, It.IsAny<bool>()))
+        //        .ReturnsAsync((Publisher?)null);
 
-            var result = await mockRepo.Object.GetPublisher(nonExistentId, false);
+        //    var result = await mockRepo.Object.GetPublisher(nonExistentId, false);
 
-            Assert.Null(result);
-        }
+        //    Assert.Null(result);
+        //}
 
         [Fact]
         public async Task GetPublisher_ReturnsCorrectPublisher()

@@ -113,5 +113,19 @@ namespace LibraryManagement.Controllers
             return RedirectToAction("Publishers");
         }
 
+        // below are methods used for populating dropowns
+
+        public async Task<IActionResult> GetPublishersForDropDown()
+        {
+            var publishersDto = await _serviceManager.PublisherService.GetAllPublishersForDropDown(false);
+            return Json(publishersDto.Select(p => new { id = p.PublisherId, name = p.PublisherName }));
+        }
+
+        public async Task<IActionResult> GetBookPublishers(Guid id)
+        {
+            var bookPublishers = await _serviceManager.PublisherService.GetBookPublishers(id, false);
+            return Json(bookPublishers.Select(p => p.PublisherId));
+        }
+
     }
 }

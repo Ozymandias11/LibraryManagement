@@ -11,7 +11,7 @@ namespace Library.Data.Extensions
 {
     public static class AuthorRepositoryExtensions
     {
-        public static IQueryable<Author> Search(this IQueryable<Author> authors, string searchTerm)
+        public static IQueryable<Author> Search(this IQueryable<Author> authors, string? searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
                 return authors;
@@ -22,7 +22,7 @@ namespace Library.Data.Extensions
 
         }
 
-        public static IQueryable<Author> Sort(this IQueryable<Author> authors, string orderByQueryString)
+        public static IQueryable<Author> Sort(this IQueryable<Author> authors, string? orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
             {
