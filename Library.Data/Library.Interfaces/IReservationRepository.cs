@@ -1,4 +1,5 @@
-﻿using Library.Model.Models;
+﻿using Library.Data.RequestFeatures;
+using Library.Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Library.Data.Library.Interfaces
 {
    public interface IReservationRepository
     {
-        Task<IEnumerable<Reservation>> GetAllReservations(int page, int pageSize, bool trackChanges);
+        Task<PagedList<Reservation>> GetAllReservations(ReservationParameters reservationParameters, bool trackChanges);
         Task<Reservation?> GetReservation(Guid id,  bool trackChanges);  
         Task<int> GetTotalNumberOfReservations();   
 

@@ -35,7 +35,14 @@ namespace Library.Data.Library.Implementations
                 .ToPagedList(authors, authorParameters.PageNumber, authorParameters.PageSize);
                 
         }
+
+        public async Task<IEnumerable<Author>> GetAllAuthorsForDropDown(bool trackChanges)
+            => await FindByCondition(a => a.DeletedDate == null, trackChanges)
+               .OrderBy(a => a.FirstName)
+               .ToListAsync();
+        
             
+        
 
         public async Task<Author?> GetAuthor(Guid id, bool trackChanges)
             => await FindByCondition(a => a.AuthorId == id, trackChanges).FirstOrDefaultAsync();

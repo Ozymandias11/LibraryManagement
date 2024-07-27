@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Errors.NotFoundError;
@@ -9,6 +10,7 @@ using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,62 +25,26 @@ namespace Library.Service.Library.Implementations
             _repositoryManager  = repositoryManager;    
             _mapper = mapper;
         }
-        public async Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
+     
+
+        public async Task<(IEnumerable<CategoryDto> categories, MetaData metaData)> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges)
         {
-            var existingCategory = await _repositoryManager.CategoryRepository.GetCatgeoryByTitle(categoryDto.Title, trackChanges);
+            var categoriesWithMetaData = await _repositoryManager.CategoryRepository.GetAllCategories(categoryParameters, trackChanges);
 
-            if (existingCategory != null)
-            {
-                return Result.Fail($"A category with title {categoryDto.Title} already exists");
-            }
+            var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categoriesWithMetaData);
 
-
-            var categoryEntity = _mapper.Map<Category>(categoryDto);
-            _repositoryManager.CategoryRepository.CreateCategory(categoryEntity);
-
-            await _repositoryManager.SaveAsync();
-
-            return Result.Ok();
-        }
-
-        public async Task<Result> DeleteCategory(Guid id, bool trackChanges)
-        {
-            var category = await _repositoryManager.CategoryRepository.GetCategory(id, trackChanges);
-
-            if(category == null)
-            {
-                return Result.Fail(new NotFoundError("Category", id));
-            }
-
-             _repositoryManager.CategoryRepository.DeleteCatgeory(category);
-
-            await _repositoryManager.SaveAsync();
-
-            return Result.Ok();
-
-
-
+            return (categoreisDto, categoriesWithMetaData.MetaData);
 
         }
 
-        public async Task<Result<IEnumerable<CategoryDto>>> GetAllCategories(
-            string sortBy, 
-            string sortOrder, 
-            string searchString,
-            bool trackChanges)
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesForDropDown(bool trackChanges)
         {
-            var categories = await _repositoryManager.CategoryRepository.GetAllCategories(trackChanges);
+            var categories = await _repositoryManager.CategoryRepository.GetAllCategoriesForDropDown(trackChanges);
 
-            if(!string.IsNullOrEmpty(searchString))
-            {
-                categories = categories.Where(c => c.Title.Contains(searchString));
-            }
+            var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
-            categories = ApplySorting(categories, sortBy, sortOrder);
+            return categoriesDto;
 
-
-            var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
-            return Result.Ok(categoreisDto);
         }
 
         public async Task<Result<CategoryDto>> GetCategory(Guid id, bool trackChanges)
@@ -111,13 +77,53 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
         }
 
-        private IEnumerable<Category> ApplySorting(IEnumerable<Category> categories, string sortBy, string sortOrder)
+        public async Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
         {
-            return categories = sortBy switch
+            var existingCategory = await _repositoryManager.CategoryRepository.GetCatgeoryByTitle(categoryDto.Title, trackChanges);
+
+            if (existingCategory != null)
             {
-                "Title" => sortOrder == "Title_Asc" ? categories.OrderBy(c => c.Title) : categories.OrderByDescending(c => c.Title),
-                _ => categories.OrderBy(c => c.CreatedDate),
-            };
+                return Result.Fail($"A category with title {categoryDto.Title} already exists");
+            }
+
+
+            var categoryEntity = _mapper.Map<Category>(categoryDto);
+            _repositoryManager.CategoryRepository.CreateCategory(categoryEntity);
+
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
+        }
+
+        public async Task<Result> DeleteCategory(Guid id, bool trackChanges)
+        {
+            var category = await _repositoryManager.CategoryRepository.GetCategory(id, trackChanges);
+
+            if (category == null)
+            {
+                return Result.Fail(new NotFoundError("Category", id));
+            }
+
+            _repositoryManager.CategoryRepository.DeleteCatgeory(category);
+
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
+
+
+
+
+        }
+
+        public async Task<IEnumerable<CategoryDto>> GetBookCategories(Guid bookId, bool trackChanges)
+        {
+            var categories = await _repositoryManager.CategoryRepository.GetCategoryOfBooks(bookId, trackChanges);
+
+            var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
+
+            return categoriesDto;
+
+
         }
     }
 }

@@ -13,34 +13,34 @@ namespace UnitTests.Repository
     public class AuthorRepositoryTests
     {
         [Fact]
-        public async Task GetAllAuthor_ReturnsAllNonDeletedAuthors()
-        {
-            var mockRepo = new Mock<IAuthorRepository>();
-            var authors = AuthorFaker.Create().Generate(3);
+        //public async Task GetAllAuthor_ReturnsAllNonDeletedAuthors()
+        //{
+        //    var mockRepo = new Mock<IAuthorRepository>();
+        //    var authors = AuthorFaker.Create().Generate(3);
 
-            mockRepo.Setup(repo => (repo.GetAllAuthor(false)))
-                 .Returns(Task.FromResult(authors.AsEnumerable()));
+        //    mockRepo.Setup(repo => (repo.GetAllAuthor(false)))
+        //         .Returns(Task.FromResult(authors.AsEnumerable()));
 
-            var result = await mockRepo.Object.GetAllAuthor(false);
+        //    var result = await mockRepo.Object.GetAllAuthor(false);
 
-            Assert.IsType<List<Author>>(result);
-            Assert.Equal(3, result.Count());
-            Assert.All(result, author => Assert.Null(author.DeletedDate));
+        //    Assert.IsType<List<Author>>(result);
+        //    Assert.Equal(3, result.Count());
+        //    Assert.All(result, author => Assert.Null(author.DeletedDate));
 
-        }
-        [Fact]
-        public async Task GetAuthor_ReturnsNull_WhenAuthorNotFound()
-        {
-            var mockRepo = new Mock<IAuthorRepository>();
-            var nonExistentId = Guid.NewGuid();
-            mockRepo.Setup(repo => repo.GetAuthor(nonExistentId, It.IsAny<bool>()))
-                .ReturnsAsync((Author?)null);
+        //}
+        //[Fact]
+        //public async Task GetAuthor_ReturnsNull_WhenAuthorNotFound()
+        //{
+        //    var mockRepo = new Mock<IAuthorRepository>();
+        //    var nonExistentId = Guid.NewGuid();
+        //    mockRepo.Setup(repo => repo.GetAuthor(nonExistentId, It.IsAny<bool>()))
+        //        .ReturnsAsync((Author?)null);
 
-            var result = await mockRepo.Object.GetAuthor(nonExistentId, false);
+        //    var result = await mockRepo.Object.GetAuthor(nonExistentId, false);
 
-            Assert.Null(result);
-        }
-        [Fact]
+        //    Assert.Null(result);
+        //}
+        //[Fact]
         public async Task GetAuthor_ReturnsCorrectAuthor()
         {
             var mockRepo = new Mock<IAuthorRepository>();

@@ -9,7 +9,10 @@ namespace Library.Service.Dto.Library.Dto
    public record CreateBookDto(
        string Title,
        DateTime PublishedYear,
-       int Edition
+       int Edition,
+       IEnumerable<Guid> SelectedAuthorIds,
+       IEnumerable<Guid> SelectedPublisherIds,
+       IEnumerable<Guid> SelectedCategoryIds
        );
     
     

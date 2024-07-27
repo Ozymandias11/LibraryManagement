@@ -37,6 +37,16 @@ namespace Library.Service.Library.Implementations
             return (publishersDto, publishersWithMetaData.MetaData);
 
         }
+        public async Task<IEnumerable<PublisherDto>> GetAllPublishersForDropDown(bool trackChanges)
+        {
+            var publishers = await _repositoryManager.PublisherRepository.GetAllPublishersForDropDown(trackChanges);
+
+            var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers);
+
+            return publishersDto;
+
+
+        }
 
         public async Task<Result<PublisherDto>> GetPublisher(Guid id, bool trackChanges)
         {
@@ -107,6 +117,14 @@ namespace Library.Service.Library.Implementations
             return Result.Ok(); 
         }
 
-      
+        public async Task<IEnumerable<PublisherDto>> GetBookPublishers(Guid bookId, bool trackChanges)
+        {
+            var publishers = await _repositoryManager.PublisherRepository.GetPublishersOfBook(bookId, trackChanges);
+
+            var publishersDto = _mapper.Map<IEnumerable<PublisherDto>>(publishers); 
+
+            return publishersDto;
+
+        }
     }
 }

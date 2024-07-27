@@ -1,175 +1,119 @@
-﻿//using AutoMapper;
-//using Library.Service.Dto.Library.Dto;
-//using Library.Service.Interfaces;
-//using LibraryManagement.ViewModels.Library.ViewModels;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AutoMapper;
+using Library.Data.RequestFeatures;
+using Library.Service.Dto.Library.Dto;
+using Library.Service.Interfaces;
+using LibraryManagement.ActionFilters;
+using LibraryManagement.ViewModels.Library.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace LibraryManagement.Controllers
-//{
-//    public class BookController : Controller
-//    {
-//        private readonly IServiceManager _serviceManager;
-//        private readonly IMapper _mapper;
-//        public BookController(IServiceManager serviceManager, IMapper mapper)
-//        {
-//            _serviceManager = serviceManager;
-//            _mapper = mapper;
-//        }
+namespace LibraryManagement.Controllers
+{
+    public class BookController : Controller
+    {
+        private readonly IServiceManager _serviceManager;
+        private readonly IMapper _mapper;
+        private readonly INotyfService _notyf;
+        public BookController(IServiceManager serviceManager, IMapper mapper, INotyfService notyf)
+        {
+            _serviceManager = serviceManager;
+            _mapper = mapper;
+            _notyf = notyf;
+        }
 
-//        public async Task<IActionResult> Books(string sortBy, string sortOrder, string searchString)
-//        {
+        public async Task<IActionResult> Books([FromQuery] BookParameters bookParameters)
+        {
+            var (booksDto, metaData) = await _serviceManager.BookService.GetAllBooks(bookParameters, false);
 
-//            ViewBag.SortBy = sortBy;    
-//            ViewBag.SortOrder = sortOrder;
-//            ViewData["CurrentSearchString"] = searchString;
+            var booksViewModel = _mapper.Map<IEnumerable<BookViewModel>>(booksDto);
 
-//            var booksDto = await _serviceManager.BookService.GetAllBooks(sortBy, sortOrder, searchString,false);
-//            var booksViewModel = _mapper.Map<IEnumerable<BookViewModel>>(booksDto); 
-//            return View(booksViewModel);    
-//        }
+            var pagedViewModel = new PagedViewModel<BookViewModel>(booksViewModel, metaData);
 
-//        public async Task<IActionResult> CreateBook()
-//        {
-//            return View(await PopulateCreateBookViewModel());
-//        }
+            return View(pagedViewModel);
+        }
 
-
-//        [HttpPost]
-//        public async Task<IActionResult> CreateBook(CreateBookViewModel createBookViewModel)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                createBookViewModel = await PopulateCreateBookViewModel();
-//                return View(createBookViewModel);
-//            }
+        public IActionResult CreateBook()
+        {
+            var createBookViewModel = new CreateBookViewModel();
+            return View(createBookViewModel);
+        }
 
 
-//            var selectedAuthorIds = createBookViewModel.SelectedAuthorIds;
-//            var SelectedPublisherIds = createBookViewModel.SelectedPublisherIds;
-//            var SelctedCategoryIds = createBookViewModel.SelectedCategoryIds;
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> CreateBook(CreateBookViewModel createBookViewModel)
+        {
+            var bookDto = _mapper.Map<CreateBookDto>(createBookViewModel);
 
-//            var bookDto = _mapper.Map<CreateBookDto>(createBookViewModel);
+            var result = await _serviceManager.BookService.CreateBook(bookDto, false);
 
-//            await _serviceManager.BookService.CreateBook(
-//                bookDto,
-//                selectedAuthorIds,
-//                SelectedPublisherIds, 
-//                SelctedCategoryIds,
-//                false);
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something went wrong please try again");
+                return View(createBookViewModel);
+            }
 
-//            return RedirectToAction("Books");
+            _notyf.Success("Book Created successfully");
+            return RedirectToAction("Books");
 
+        }
 
-//        }
-
-//        public async Task<IActionResult> EditBook(Guid id)
-//        {
-//            var book = await _serviceManager.BookService.GetBook(id, false);
-
-
-//            //fetching data to display all possible options
-
-//            var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("","","",false);
-//            var authorViewModel = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
+        public async Task<IActionResult> EditBook(Guid id)
+        {
+            var book = await _serviceManager.BookService.GetBook(id, false);
 
 
-//            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
-//            var publisherViewModel = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
+
+            var updateBookViewModel = new UpdateBookViewModel()
+            {
+                BookId = book.BookId,
+                Title = book.Title,
+                PublishedYear = book.PublishedYear,
+            };
 
 
-//            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
-//            var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
+            return View(updateBookViewModel);
 
-//            //Get Current authors, publishers and categories
-//            var bookAuthors = await _serviceManager.BookService.GetBookAuthors(id, false);
-//            var bookPublishers = await _serviceManager.BookService.GetBookPublishers(id, false);
-//            var bookCategories = await _serviceManager.BookService.GetBookCategories(id, false);
+        }
 
+        [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        public async Task<IActionResult> EditBook(UpdateBookViewModel updateBookViewModel)
+        { 
+            var bookDto = _mapper.Map<BookDto>(updateBookViewModel);
 
-//            var updateBookViewModel = new UpdateBookViewModel()
-//            {
-//                BookId = book.BookId,
-//                Title = book.Title,
-//                PublishedYear = book.PublishedYear,
-//                Authors = authorViewModel,
-//                Publishers = publisherViewModel,
-//                Categories = categoryViewModel,
-//                // can also be done with automapper
-//                SelectedAuthorIds = bookAuthors.Select(ba => ba.AuthorId),
-//                SelectedPublisherIds = bookPublishers.Select(ba => ba.PublisherId),
-//                SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId),
-//            };
+            var result = await _serviceManager.BookService.UpdateBook(bookDto, updateBookViewModel.SelectedAuthorIds, updateBookViewModel.SelectedPublisherIds,
+                                                         updateBookViewModel.SelectedCategoryIds, true);
+
+            if (result.IsFailed)
+            {
+                _notyf.Error("something went wrong please try again");
+            }
 
 
-//            return View(updateBookViewModel);
+            _notyf.Success("Book edited succesfully");
+            return RedirectToAction("Books");
 
-//        }
+        }
 
-//        [HttpPost]
-//        public async Task<IActionResult> EditBook(UpdateBookViewModel updateBookViewModel)
-//        {
-//            if (!ModelState.IsValid)
-//            {
-//                // Repopulate dropdowns
-//                var AuthorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "", false);
-//                updateBookViewModel.Authors = _mapper.Map<IEnumerable<AuthorViewModel>>(AuthorDto.Value);
+        public async Task<IActionResult> DeleteBook(Guid id)
+        {
 
-//                var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
-//                updateBookViewModel.Publishers = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
+           var result = await _serviceManager.BookService.DeleteBook(id, false);
 
-//                var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
-//                updateBookViewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
+            if (result.IsFailed)
+            {
+                _notyf.Warning("Something Went wrong please try again");
+            }
 
-//                // Get current selections (if any)
-//                var bookAuthors = await _serviceManager.BookService.GetBookAuthors(updateBookViewModel.BookId, false);
-//                var bookPublishers = await _serviceManager.BookService.GetBookPublishers(updateBookViewModel.BookId, false);
-//                var bookCategories = await _serviceManager.BookService.GetBookCategories(updateBookViewModel.BookId, false);
-
-//                updateBookViewModel.SelectedAuthorIds = bookAuthors.Select(ba => ba.AuthorId);
-//                updateBookViewModel.SelectedPublisherIds = bookPublishers.Select(ba => ba.PublisherId);
-//                updateBookViewModel.SelectedCategoryIds = bookCategories.Select(bc => bc.CategoryId);
-
-//                return View(updateBookViewModel);
-//            }
-
-//            var bookDto = _mapper.Map<BookDto>(updateBookViewModel);
-
-//            await _serviceManager.BookService.UpdateBook(bookDto,
-//                updateBookViewModel.SelectedAuthorIds,
-//                updateBookViewModel.SelectedPublisherIds,
-//                updateBookViewModel.SelectedCategoryIds,
-//                true);
-
-//            TempData["SuccessMessage"] = "Book Updated Successfully";
-
-//            return RedirectToAction("Books");
-
-//        }
-
-//        public async Task<IActionResult> DeleteBook(Guid id)
-//        {
-//            await _serviceManager.BookService.DeleteBook(id, false);
-//            TempData["DeleteSuccessMessage"] = "Book Deleted Successfully";
-//            return RedirectToAction("Books");
-
-           
-
-//        }
-
-//        private async Task<CreateBookViewModel> PopulateCreateBookViewModel(CreateBookViewModel model = null)
-//        {
-//            var authorDto = await _serviceManager.AuthorService.GetAllAuthors("", "", "", false);
-//            var publisherDto = await _serviceManager.PublisherService.GetAllPublishers("", "", "", false);
-//            var categoryDto = await _serviceManager.CategoryService.GetAllCategories("", "", "", false);
-
-//            var viewModel = model ?? new CreateBookViewModel();
-//            viewModel.Authors = _mapper.Map<IEnumerable<AuthorViewModel>>(authorDto.Value);
-//            viewModel.Publishers = _mapper.Map<IEnumerable<PublisherViewModel>>(publisherDto.Value);
-//            viewModel.Categories = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDto.Value);
-
-//            return viewModel;
-//        }
+            _notyf.Success("Book deleted successfully");
+            return RedirectToAction("Books");
 
 
-//    }
-//}
+
+        }
+
+   
+
+    }
+}

@@ -12,7 +12,7 @@ namespace Library.Data.Extensions
 {
     public static class CustomerRepositoryExtensions
     {
-       public static IQueryable<Customer> Search(this IQueryable<Customer> customers, string searchTerm)
+       public static IQueryable<Customer> Search(this IQueryable<Customer> customers, string? searchTerm)
         {
             if(string.IsNullOrEmpty(searchTerm))
                 return customers;   
@@ -23,11 +23,11 @@ namespace Library.Data.Extensions
 
         }  
 
-        public static IQueryable<Customer> Sort(this IQueryable<Customer> customers, string orderByQueryString)
+        public static IQueryable<Customer> Sort(this IQueryable<Customer> customers, string? orderByQueryString)
         {
             if (string.IsNullOrWhiteSpace(orderByQueryString))
             {
-                return customers.OrderBy(c => c.CreatedDate);
+                return customers.OrderBy(c => c.CreatedDate);   
             }
             var orderQuery = OrderQueryBuilder.CreateOrderQuery<Customer>(orderByQueryString);
 

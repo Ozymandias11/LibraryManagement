@@ -1,4 +1,5 @@
-﻿using Library.Model.Models;
+﻿using Library.Data.RequestFeatures;
+using Library.Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Library.Data.Library.Interfaces
 {
     public interface IBookRepository
     {
-        Task<IEnumerable<Book>> GetAllBooks(bool trackChanges);
+        Task<PagedList<Book>> GetAllBooks(BookParameters bookParameters ,bool trackChanges);
         Task<Book?> GetBook(Guid id, bool trackChanges);
         void CreateBook(Book book);
         void DeleteBook(Book book);

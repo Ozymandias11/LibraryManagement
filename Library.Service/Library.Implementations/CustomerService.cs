@@ -34,14 +34,14 @@ namespace Library.Service.Library.Implementations
 
         public async Task<Result> DeleteCustomer(Guid id, bool trackChanges)
         {
-            var Customer = await _repositoryManager.CustomerRepository.GetCustomer(id, trackChanges);
+            var customer = await _repositoryManager.CustomerRepository.GetCustomer(id, trackChanges);
 
-            if(Customer == null)
+            if(customer == null)
             {
                 return Result.Fail(new NotFoundError("Customer", id));
             }
 
-            _repositoryManager.CustomerRepository.DeleteCusotmer(Customer);
+            _repositoryManager.CustomerRepository.DeleteCusotmer(customer);
 
             await _repositoryManager.SaveAsync();
 

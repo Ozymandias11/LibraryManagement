@@ -1,51 +1,6 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.UpdateBookViewModel
 
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#authors').select2({
-                placeholder: 'Select authors',
-                multiple: true,
-                allowClear: true
-            });
-            // Initialize with selected authors
-            var selectedAuthors = @Html.Raw(Json.Serialize(Model.SelectedAuthorIds));
-            $('#authors').val(selectedAuthors).trigger('change');
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#publishers').select2({
-                placeholder: 'Select Publishers',
-                multiple: true,
-                allowClear: true
-            });
-            // Initialize with selected publishers
-            var selectedPublishers = @Html.Raw(Json.Serialize(Model.SelectedPublisherIds));
-            $('#publishers').val(selectedPublishers).trigger('change');
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#categories').select2({
-                placeholder: 'Select Categories',
-                multiple: true,
-                allowClear: true
-            });
-            // Initialize with selected publishers
-            var selectedCategories = @Html.Raw(Json.Serialize(Model.SelectedCategoryIds));
-            $('#categories').val(selectedCategories).trigger('change');
-        });
-    </script>
-
-}
-
-
-
 <div class="container-fluid mt--7">
     <div class="row justify-content-center">
         <div class="col-xl-10 order-xl-1">
@@ -68,7 +23,7 @@
                 }
                 <div class="card-body">
                     <form id="book-form" asp-action="EditBook" asp-controller="Book" method="post">
-                        @Html.HiddenFor(model => model.BookId)
+                        <input type="hidden" asp-for="BookId" id="bookId" value="@Model.BookId" />
                         <div class="pl-lg-4">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -103,60 +58,45 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="authors" class="form-control-label">Authors</label>
-                                        <select id="authors" name="SelectedAuthorIds" class="form-control" multiple>
-                                            @foreach (var author in Model.Authors)
-                                            {
-                                                <option value="@author.AuthorId">@author.FirstName @author.LastName</option>
-                                            }
+                                        <select id="authors" name="SelectedAuthorIds" class="form-control" multiple
+                                                data-url="/Author/GetAuthorsForDropDown"
+                                                data-placeholder="Select authors"
+                                                data-create-url="/Author/CreateAuthor"
+                                                data-entity-name="Author">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="publishers" class="form-control-label">Publishers</label>
-                                        <select id="publishers" name="SelectedPublisherIds" class="form-control" multiple>
-                                            @foreach (var publisher in Model.Publishers)
-                                            {
-                                                <option value="@publisher.PublisherId">@publisher.PublisherName</option>
-                                            }
+                                        <select id="publishers" name="SelectedPublisherIds" class="form-control" multiple
+                                                data-url="/Publisher/GetPublishersForDropDown"
+                                                data-preselected="@Json.Serialize(Model.SelectedPublisherIds)"
+                                                data-placeholder="Select Publishers"
+                                                data-create-url="/Publisher/CreatePublisher"
+                                                data-entity-name="Publisher">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="categories" class="form-control-label">Categories</label>
-                                        <select id="categories" name="SelectedCategoryIds" class="form-control" multiple>
-                                            @foreach (var category in Model.Categories)
-                                            {
-                                                <option value="@category.CategoryId">@category.Title</option>
-                                            }
+                                        <select id="categories" name="SelectedCategoryIds" class="form-control" multiple
+                                                data-url="/Category/GetCategoriesForDropDown"
+                                                data-preselected="@Json.Serialize(Model.SelectedCategoryIds)"
+                                                data-placeholder="Select Categories"
+                                                data-create-url="/Category/CreateCategory"
+                                                data-entity-name="Category">
                                         </select>
                                     </div>
                                 </div>
                             </div>
 
-
-
-                            @foreach (var author in Model.Authors)
-                            {
-                                <input type="hidden" name="Authors" value="@author.AuthorId" />
-                            }
-
-                            @foreach (var publisher in Model.Publishers)
-                            {
-                                <input type="hidden" name="Publishers" value="@publisher.PublisherId" />
-                            }
-
-                            @foreach (var CATEGORY in Model.Categories)
-                            {
-                                <input type="hidden" name="Categories" value="@CATEGORY.CategoryId" />
-                            }
-
+                            
                             <div class="form-group row justify-content-end">
                                 <div class="col-auto">
                                     <button type="submit" id="saveButton" class="btn btn-success btn-lg mr-3">Save Changes</button>
@@ -170,3 +110,9 @@
         </div>
     </div>
 </div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="~/js/custom-selects.js"></script>
+}

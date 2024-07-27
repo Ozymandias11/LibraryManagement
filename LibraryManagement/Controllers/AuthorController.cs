@@ -109,6 +109,24 @@ namespace LibraryManagement.Controllers
 
         }
 
+        // below are methods used for populating dropowns
+
+        public async Task<IActionResult> GetAuthorsForDropDown()
+        {
+            var authorsDto = await _serviceManager.AuthorService.GetAllAuthorsForDropDown(false);
+
+            return Json(authorsDto.Select(a => new { id = a.AuthorId, name = $"{a.FirstName} {a.LastName}" }));
+
+        }
+
+        public async Task<IActionResult> GetBookAuthors(Guid id)
+        {
+            var bookAuthors = await _serviceManager.AuthorService.GetBookAuthors(id, false);
+            return Json(bookAuthors.Select(a => a.AuthorId));
+
+        }
+
+
     }
 
 }

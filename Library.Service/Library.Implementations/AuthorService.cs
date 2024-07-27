@@ -28,28 +28,13 @@ namespace Library.Service.Library.Implementations
             _mapper = mapper;
         }
 
-        public async Task<Result> DeleteAuthor(Guid id, bool trackChanges)
-        {
-            var Author = await _repositoryManager.AuthorRepository.GetAuthor(id, false);
-
-            if(Author == null)
-            {
-                return Result.Fail(new NotFoundError("Author", id));
-            }
-
-            _repositoryManager.AuthorRepository.DeleteAuthor(Author);
-
-            await _repositoryManager.SaveAsync();
-
-            return Result.Ok();
-
-
-        }
-
+     
         public async Task<(IEnumerable<AuthorDto> authors, MetaData metaData)> GetAllAuthors(AuthorParameters authorParameters, bool trackChanges)
         {
             var authorsWithMetaData = await _repositoryManager.AuthorRepository.GetAllAuthor(authorParameters ,trackChanges);
+
             var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authorsWithMetaData);
+
             return (authorsDto, authorsWithMetaData.MetaData);
         }
 
@@ -68,6 +53,14 @@ namespace Library.Service.Library.Implementations
             return authorDto;
 
 
+        }
+        public async Task<IEnumerable<AuthorDto>> GetAllAuthorsForDropDown(bool trackChanges)
+        {
+            var authors = await _repositoryManager.AuthorRepository.GetAllAuthorsForDropDown(trackChanges);
+
+            var authrosDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);
+
+            return authrosDto;
         }
 
         public async Task<Result> CreateAuthor (CreateAuthorDto author, bool trackChanges)
@@ -100,6 +93,32 @@ namespace Library.Service.Library.Implementations
 
         }
 
-  
+        public async Task<Result> DeleteAuthor(Guid id, bool trackChanges)
+        {
+            var Author = await _repositoryManager.AuthorRepository.GetAuthor(id, false);
+
+            if (Author == null)
+            {
+                return Result.Fail(new NotFoundError("Author", id));
+            }
+
+            _repositoryManager.AuthorRepository.DeleteAuthor(Author);
+
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
+
+
+        }
+
+        public async Task<IEnumerable<AuthorDto>> GetBookAuthors(Guid bookId, bool trackChanges)
+        {
+            var authors = await _repositoryManager.AuthorRepository.GetAuthorsOfBook(bookId, trackChanges);
+
+            var authorsDto = _mapper.Map<IEnumerable<AuthorDto>>(authors);  
+
+            return authorsDto;
+
+        }
     }
 }
