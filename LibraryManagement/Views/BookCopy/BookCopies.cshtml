@@ -1,16 +1,15 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Library.ViewModels.BookCopyViewModel>
+﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.BookCopyViewModel>
 
 @{
     ViewData["Title"] = "Book Copies";
     ViewData["ActionUrl"] = "BookCopies";
     ViewData["ActionName"] = "BookCopies";
-    ViewData["CurrentPage"] = Model.FirstOrDefault()?.CurrentPage ?? 1;
+    ViewData["CurrentPage"] = Model.MetaData.CurrentPage;
     var sortableColumns = new[]
     {
-        ("BookTitle", "BookTitle"),
-        ("PublisherName", "PublisherName"),
+        ("Book Title", "BookTitle"),
+        ("Publisher Name", "PublisherName"),
         ("Edition", "Edition")
-
     };
 }
 
@@ -38,7 +37,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    @foreach (var bookCopy in Model)
+                    @foreach (var bookCopy in Model.Items)
                     {
                         <tr>
                             <td class="text-center">@bookCopy.BookTitle</td>
@@ -71,16 +70,15 @@
             <a asp-action="CreateBookCopy" class="btn btn-primary">Add Book Copy</a>
         </div>
         @await Html.PartialAsync("_Pagination", (
-                 CurrentPage: Model.FirstOrDefault()?.CurrentPage ?? 1,
-                 TotalPages: Model.FirstOrDefault()?.TotalPages ?? 1,
-                 PageSize: Model.FirstOrDefault()?.PageSize ?? 10,
-                 SortBy: ViewBag.SortBy,
-                 SortOrder: ViewBag.SortOrder,
+                 CurrentPage: Model.MetaData.CurrentPage,
+                 TotalPages: Model.MetaData.TotalPages,
+                 PageSize: Model.MetaData.PageSize,
+                 TotalCount: Model.MetaData.TotalCount,
+                 OrderBy: ViewBag.OrderBy,
                  SearchString: ViewData["CurrentSearchString"] as string,
                  ControllerName: ViewContext.RouteData.Values["controller"].ToString(),
-                 ActionNameAttribute: ViewContext.RouteData.Values["action"].ToString()
+                 ActionName: ViewContext.RouteData.Values["action"].ToString()
                  ))
-      
     </div>
 </div>
 
@@ -95,7 +93,3 @@
         });
     </script>
 }
-
-
-
-

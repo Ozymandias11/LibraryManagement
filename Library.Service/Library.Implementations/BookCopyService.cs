@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Library.Interfaces;
@@ -56,22 +57,10 @@ namespace Library.Service.Library.Implementations
             await _repositoryManager.SaveAsync();
         }
 
-        public async Task<IEnumerable<BookCopyDto>> GetAllBookCopies(
-            string sortBy, 
-            string sortOrder,
-            string searchString, 
-            int page,
-            int pageSize, 
-            bool trackChanges)
+        public async Task<(IEnumerable<BookCopyDto> bookCopies, MetaData metaData)> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
-            var bookCopy = await _repositoryManager.BookCopyRepository.GetAllBookCopies(page, pageSize,trackChanges);
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                bookCopy = bookCopy.Where(bc => bc.OriginalBook.Title.Contains(searchString));
-            }
-
-            bookCopy = ApplySorting(bookCopy, sortBy, sortOrder);   
+            var bookCopy = await _repositoryManager.BookCopyRepository.GetAllBookCopies(bookCopyParameters ,trackChanges);
+ 
 
             var bookCopyDto = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopy);
 
@@ -88,24 +77,9 @@ namespace Library.Service.Library.Implementations
             }
 
 
-            return bookCopyDto;
+            return (bookCopyDto, bookCopy.MetaData);
         }
 
         public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
-
-        private IEnumerable<BookCopy> ApplySorting(IEnumerable<BookCopy> bookCopies, string sortBy, string sortOrder)
-        {
-            return bookCopies = sortBy switch
-            {
-                "BookTitle" => sortOrder == "BookTitle_Asc" ? bookCopies.OrderBy(bc => bc.OriginalBook.Title) :
-                                             bookCopies.OrderByDescending(bc => bc.OriginalBook.Title),
-                "PublisherName" => sortOrder == "PublisherName_Asc" ? bookCopies.OrderBy(bc => bc.Publisher.PublisherName) :
-                                             bookCopies.OrderByDescending(bc => bc.Publisher.PublisherName),
-                "Edition" => sortOrder == "Edition_Asc" ? bookCopies.OrderBy(bc => bc.Edition) :
-                                             bookCopies.OrderByDescending(bc => bc.Edition),
-                _ => bookCopies.OrderBy(bc => bc.CreatedDate)
-            };
-        }
-       
     }
 }

@@ -1,4 +1,5 @@
-﻿using Library.Service.Dto.Library.Dto;
+﻿using Library.Data.RequestFeatures;
+using Library.Service.Dto.Library.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,7 @@ namespace Library.Service.Library.Interfaces
 {
     public interface IBookCopyService
     {
-        Task<IEnumerable<BookCopyDto>> GetAllBookCopies(
-            string sortBy,
-            string sortOrder,
-            string searchString,
-            int page,
-            int pageSize,
-            bool trackChanges);
+        Task<(IEnumerable<BookCopyDto> bookCopies, MetaData metaData)> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges);
         Task CreateBookCopy(
             Guid originalBookId,
             Guid PublisherId,

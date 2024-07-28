@@ -8,6 +8,7 @@ using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,6 +73,19 @@ namespace Library.Service.Library.Implementations
             return (booksDto, booksWithMetaData.MetaData);
         }
 
+
+        public async Task<IEnumerable<BookDto>> GetAllBooksForDropDown(bool trackChanges)
+        {
+            var books = await _repositoryManager.BookRepository.GetBooksForDropDown(trackChanges);
+
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(books);
+
+
+            return booksDto;
+
+
+        }
+
         public async Task<BookDto> GetBook(Guid id, bool trackChanges)
         {
            var book = await _repositoryManager.BookRepository.GetBook(id, trackChanges);
@@ -109,6 +123,20 @@ namespace Library.Service.Library.Implementations
             await UpdatePublishers(bookEntity, publisherIds);
             await UpdateCategories(bookEntity, categoryIds);
         }
+        private async Task<Result> AddRelatedEntities(Book bookEntity, CreateBookDto bookDto)
+        {
+            var authorResult = await AddAuthors(bookEntity, bookDto.SelectedAuthorIds);
+            if (!authorResult.IsSuccess) return authorResult;
+
+            var publisherResult = await AddPublishers(bookEntity, bookDto.SelectedPublisherIds);
+            if (!publisherResult.IsSuccess) return publisherResult;
+
+            var categoryResult = await AddCategories(bookEntity, bookDto.SelectedCategoryIds);
+            if (!categoryResult.IsSuccess) return categoryResult;
+
+            return Result.Ok();
+        }
+
 
         private async Task UpdateAuthors(Book bookEntity, IEnumerable<Guid> authorIds)
         {
@@ -171,21 +199,6 @@ namespace Library.Service.Library.Implementations
         }
 
 
-        private async Task<Result> AddRelatedEntities(Book bookEntity, CreateBookDto bookDto)
-        {
-            var authorResult = await AddAuthors(bookEntity, bookDto.SelectedAuthorIds);
-            if (!authorResult.IsSuccess) return authorResult;
-
-            var publisherResult = await AddPublishers(bookEntity, bookDto.SelectedPublisherIds);
-            if (!publisherResult.IsSuccess) return publisherResult;
-
-            var categoryResult = await AddCategories(bookEntity, bookDto.SelectedCategoryIds);
-            if (!categoryResult.IsSuccess) return categoryResult;
-
-            return Result.Ok();
-        }
-
-
         private async Task<Result> AddAuthors(Book bookEntity, IEnumerable<Guid> authorIds)
         {
             foreach (var authorId in authorIds)
@@ -228,8 +241,7 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
         }
 
-
-
+     
     }
 }
 

@@ -75,9 +75,6 @@ namespace LibraryManagement.MappingProfile
             //books
 
             CreateMap<Book, BookDto>();
-                          //.ForMember(dest => dest.SelectedAuthorIds, opt => opt.MapFrom(src => src.Authors.Select(ba => ba.AuthorID)))
-                          //.ForMember(dest => dest.SelectedPublisherIds, opt => opt.MapFrom(src => src.Publishers.Select(p => p.PublisherId)))
-                          //.ForMember(dest => dest.SelectedCategoryIds, opt => opt.MapFrom(src => src.Categories.Select(c => c.CategoryId)));;
 
 
 
@@ -87,7 +84,7 @@ namespace LibraryManagement.MappingProfile
             CreateMap<BookDto, Book>()
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now));
 
-            CreateMap<UpdateBookViewModel, BookDto>();
+            CreateMap<UpdateBookViewModel, BookDto>().ReverseMap();
             CreateMap<CreateBookViewModel, CreateBookDto>();
             CreateMap<CreateBookDto, Book>();
 

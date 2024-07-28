@@ -1,4 +1,5 @@
-﻿using Library.Model.Models;
+﻿using Library.Data.RequestFeatures;
+using Library.Model.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Library.Data.Library.Interfaces
 {
     public interface IBookCopyRepository
     {
-        Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges);
+        Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges);
         Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges);
         
         void AddBookCopies(

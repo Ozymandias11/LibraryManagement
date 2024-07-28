@@ -51,7 +51,10 @@ namespace Library.Data.Library.Implementations
             .SingleOrDefaultAsync();
         }
 
-  
-       
+        public async Task<IEnumerable<Book>> GetBooksForDropDown(bool trackChanges)
+            => await FindByCondition(b => b.DeletedDate == null, trackChanges)
+              .OrderBy(b => b.Title)
+              .ToListAsync();
+      
     }
 }
