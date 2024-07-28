@@ -1,126 +1,61 @@
-﻿//using AutoMapper;
-//using Library.Service.Dto.Library.Dto;
-//using Library.Service.Interfaces;
-//using LibraryManagement.ViewModels.Library.ViewModels;
-//using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Library.Data.RequestFeatures;
+using Library.Service.Dto.Library.Dto;
+using Library.Service.Interfaces;
+using LibraryManagement.ViewModels.Library.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 
-//namespace LibraryManagement.Controllers
-//{
-//    public class BookCopyController : Controller
-//    {
+namespace LibraryManagement.Controllers
+{
+    public class BookCopyController : Controller
+    {
 
-//        private readonly IServiceManager _serviceManager;
-//        private readonly IMapper _mapper;
-//        public BookCopyController(IServiceManager serviceManager, IMapper mapper)
-//        {
-//            _serviceManager = serviceManager;
-//            _mapper = mapper;
-//        }
+        private readonly IServiceManager _serviceManager;
+        private readonly IMapper _mapper;
+        public BookCopyController(IServiceManager serviceManager, IMapper mapper)
+        {
+            _serviceManager = serviceManager;
+            _mapper = mapper;
+        }
 
-//        public async Task<IActionResult> BookCopies(
-//            string sortBy,
-//            string sortOrder,
-//            string searchString, 
-//            int page = 1,
-//            int pageSize = 10) 
-//        {
+        public async Task<IActionResult> BookCopies([FromQuery] BookCopyParameters bookCopyParameters)
+        {
+            var (bookCopiesDto, metaData) = await _serviceManager.BookCopyService.GetAllBookCopies(bookCopyParameters, false);
 
-//            ViewBag.SortBy = sortBy;
-//            ViewBag.SortOrder = sortOrder;
-//            ViewBag.isPaginated = true;
-//            ViewData["CurrentSearchString"] = searchString;
-//            ViewData["CurrentPage"] = page;
+            var bookCopyViewModel = _mapper.Map<IEnumerable<BookCopyViewModel>>(bookCopiesDto);
 
-//            var bookCopies = await _serviceManager.BookCopyService.GetAllBookCopies(
-//                sortBy,
-//                sortOrder,
-//                searchString
-//                ,page,
-//                pageSize
-//                ,false);
+            var pagedViewModel = new PagedViewModel<BookCopyViewModel>(bookCopyViewModel, metaData);
 
-//            var bookCopyViewModel =  _mapper.Map<IEnumerable<BookCopyViewModel>>(bookCopies);
-
-//            foreach(var bookCopyviewModel_1 in bookCopyViewModel)
-//            {
-//                bookCopyviewModel_1.CurrentPage = page;
-//                bookCopyviewModel_1.PageSize = pageSize;
-//                bookCopyviewModel_1.TotalCount = await _serviceManager.BookCopyService.GetTotalBookCopiesCount();
-//            }
+            return View(pagedViewModel);
 
 
-         
+        }
 
-//            return View(bookCopyViewModel);
+        public IActionResult CreateBookCopy()
+        {
+            var createBookCopyViewModel = new CreateBookCopyViewModel();
 
-
-//        }
-
-//        public async Task<IActionResult> CreateBookCopy()
-//        {
-//            var bookDtos = await _serviceManager.BookService.GetAllBooks("", "", "", false);
-//            var bookViewModels = _mapper.Map<IEnumerable<BookViewModel>>(bookDtos);
-
-//            var roomDtos = await _serviceManager.RoomService.GetallRooms(false);
-//            var roomViewModel = _mapper.Map<IEnumerable<RoomViewModel>>(roomDtos);
+            return View(createBookCopyViewModel);
+        }
 
 
-//            var createBookCopyViewModel = new CreateBookCopyViewModel
-//            {
+        [HttpPost]
+        public async Task<IActionResult> CreateBookCopy(CreateBookCopyViewModel createBookCopyViewModel)
 
-//                Books = bookViewModels,
-//                Rooms = roomViewModel
-//            };
+        {
 
-//            return View(createBookCopyViewModel);
-//        }
+            var CreateBookCopyDto = _mapper.Map<CreateBookCopyDto>(createBookCopyViewModel);
 
+            await _serviceManager.BookCopyService.CreateBookCopy(
+                createBookCopyViewModel.SelectedBookId,
+                createBookCopyViewModel.SelectedPublisherId,
+                createBookCopyViewModel.SelectedShelfId,
+                createBookCopyViewModel.SelectedRoomId,
+                CreateBookCopyDto);
 
-//        [HttpPost]
-//        public async Task<IActionResult> CreateBookCopy(CreateBookCopyViewModel createBookCopyViewModel)
-            
-//        {
+            return RedirectToAction("BookCopies");
 
-//            var CreateBookCopyDto = _mapper.Map<CreateBookCopyDto>(createBookCopyViewModel);
+        }
 
-//            await _serviceManager.BookCopyService.CreateBookCopy(
-//                createBookCopyViewModel.SelectedBookId,
-//                createBookCopyViewModel.SelectedPublisherId,
-//                createBookCopyViewModel.SelectedShelfId,
-//                createBookCopyViewModel.SelectedRoomId,
-//                CreateBookCopyDto);
-
-//            return RedirectToAction("BookCopies");
-
-//        }
-
-       
-
-
-//        public async Task<IActionResult> GetPublishersForBook(Guid bookId)
-//        {
-//            var bookPublishers = await _serviceManager.BookService.GetBookPublishers(bookId, false);
-
-//            return Json(bookPublishers);
-
-//        }
-
-//        public async Task<IActionResult> GetShelvesForRoom(Guid roomId)
-//        {
-//            var roomShelves = await _serviceManager.ShelfService.GetShelves(roomId, false);
-//            return Json(roomShelves);
-//        }
-
-
-//        public IActionResult GetPublishersUrl()
-//        {
-//            return Json(Url.Action("GetPublishersForBook", "BookCopy"));
-//        }
-
-//        public IActionResult GetShelvesUrl()
-//        {
-//            return Json(Url.Action("GetShelvesForRoom", "BookCopy"));
-//        }
-
-//    }
-//}
+    }
+}

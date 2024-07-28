@@ -62,16 +62,8 @@ namespace LibraryManagement.Controllers
         {
             var book = await _serviceManager.BookService.GetBook(id, false);
 
-
-
-            var updateBookViewModel = new UpdateBookViewModel()
-            {
-                BookId = book.BookId,
-                Title = book.Title,
-                PublishedYear = book.PublishedYear,
-            };
-
-
+            var updateBookViewModel = _mapper.Map<UpdateBookViewModel>(book);   
+        
             return View(updateBookViewModel);
 
         }
@@ -112,6 +104,18 @@ namespace LibraryManagement.Controllers
 
 
         }
+
+        // below are methods used for populating dropdowns
+
+        public async Task<IActionResult> GetBooksForDropDown()
+        {
+            var booksDto = await _serviceManager.BookService.GetAllBooksForDropDown(false);
+
+            return Json(booksDto.Select(b => new { id = b.BookId, name = b.Title }));
+
+            
+        }
+
 
    
 

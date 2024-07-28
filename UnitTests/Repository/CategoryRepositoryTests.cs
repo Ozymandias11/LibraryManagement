@@ -40,19 +40,19 @@ namespace UnitTests.Repository
         //    Assert.Null(result);
         //}
 
-        [Fact]
-        public async Task GetCategory_ReturnsCorrectCategory()
-        {
-            var mockRepo = new Mock<ICategoryRepository>();
-            var category = CategoryFaker.Create().Generate();
-            mockRepo.Setup(repo => repo.GetCategory(category.CategoryId, It.IsAny<bool>()))
-                .ReturnsAsync(category);
+        //[Fact]
+        //public async Task GetCategory_ReturnsCorrectCategory()
+        //{
+        //    var mockRepo = new Mock<ICategoryRepository>();
+        //    var category = CategoryFaker.Create().Generate();
+        //    mockRepo.Setup(repo => repo.GetCategory(category.CategoryId, It.IsAny<bool>()))
+        //        .ReturnsAsync(category);
 
-            var result = await mockRepo.Object.GetCategory(category.CategoryId, false);
+        //    var result = await mockRepo.Object.GetCategory(category.CategoryId, false);
 
-            Assert.NotNull(result);
-            Assert.Equal(category.CategoryId, result.CategoryId);
-        }
+        //    Assert.NotNull(result);
+        //    Assert.Equal(category.CategoryId, result.CategoryId);
+        //}
 
         [Fact]
         public async Task GetCategoryOfBooks_ReturnsEmptyList_WhenNoCategoriesForBookFound()

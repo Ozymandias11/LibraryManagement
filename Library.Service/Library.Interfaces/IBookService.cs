@@ -13,6 +13,7 @@ namespace Library.Service.Library.Interfaces
     public interface IBookService
     {
         Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooks(BookParameters bookParameters ,bool trackChanges);
+        Task<IEnumerable<BookDto>> GetAllBooksForDropDown(bool trackChanges);
         Task<BookDto> GetBook(Guid id,  bool trackChanges); 
         Task<Result> CreateBook(CreateBookDto book, bool trackChanges);
         Task<Result> UpdateBook(BookDto book, IEnumerable<Guid> authordIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds,

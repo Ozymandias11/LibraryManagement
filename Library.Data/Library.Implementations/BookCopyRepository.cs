@@ -1,4 +1,6 @@
-﻿using Library.Data.Library.Interfaces;
+﻿using Library.Data.Extensions;
+using Library.Data.Library.Interfaces;
+using Library.Data.RequestFeatures;
 using Library.Model.Enums;
 using Library.Model.Models;
 using Microsoft.EntityFrameworkCore;
@@ -51,26 +53,24 @@ namespace Library.Data.Library.Implementations
                                    .Take(quantity)
                                    .ToListAsync();
 
-        public async Task<IEnumerable<BookCopy>> GetAllBookCopies(int page, int pageSize, bool trackChanges)
+        public async Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
-
-
             var query = FindAll(trackChanges)
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
                 .Include(bc => bc.Shelves)
                       .ThenInclude(bcs => bcs.Shelf)
-                        .ThenInclude(s => s.Room);
+                        .ThenInclude(s => s.Room)
+                .Search(bookCopyParameters.SearchTerm)
+                .Sort(bookCopyParameters.OrderBy);
 
-            // First, get the distinct combinations
+            // Get distinct combinations
             var distinctCombos = await query
                 .Select(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
                 .Distinct()
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
                 .ToListAsync();
 
-            // Then, for each combination, get the first book copy and count
+            // Process each combination
             var results = new List<BookCopy>();
             foreach (var combo in distinctCombos)
             {
@@ -89,9 +89,10 @@ namespace Library.Data.Library.Implementations
                 }
             }
 
-            return results.OrderBy(bc => bc.OriginalBook.Title);
 
-
+            return PagedList<BookCopy>.ToPagedList(results,
+                bookCopyParameters.PageNumber,
+                bookCopyParameters.PageSize);
         }
 
         public async Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId)

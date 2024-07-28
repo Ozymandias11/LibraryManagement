@@ -132,10 +132,6 @@ namespace LibraryManagement.Controllers
 
             if (result.Succeeded)
             {
-
-               // await _userService.UpdateEmail(email);
-
-
                 ViewBag.Message = "Your email has been verified successfully.";
                 ViewBag.IsSuccess = true;
             }
