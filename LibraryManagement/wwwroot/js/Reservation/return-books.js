@@ -1,8 +1,12 @@
 ﻿$(document).ready(function () {
+    initializeReturnBook();
+});
+
+function initializeReturnBook() {
     initializeCustomerSelect();
     populateCustomers();
     setupEventListeners();
-});
+}
 
 function initializeCustomerSelect() {
     $('#customerSelect').select2({
@@ -18,7 +22,7 @@ function initializeCustomerSelect() {
             return markup;
         }
     }).on('select2:open', function () {
-        $('.select2-results__options').on('click', '.create-customer-link', function (e) {
+        $('.select2-results__options').off('click', '.create-customer-link').on('click', '.create-customer-link', function (e) {
             e.preventDefault();
             e.stopPropagation();
             window.location.href = $(this).attr('href');
@@ -28,16 +32,21 @@ function initializeCustomerSelect() {
 
 function populateCustomers() {
     $.ajax({
-        url: '/Reservation/GetAllCustomers',
+        url: '/Customer/GetCustomersForDropDown',
         type: 'GET',
         success: function (data) {
             var customerSelect = $("#customerSelect");
-            customerSelect.empty().append($("<option>").val("").text("Select a customer"));
+            customerSelect.empty();
+
+            // Add placeholder option
+            customerSelect.append($("<option>").val("").text("Search for a customer"));
+
             $.each(data, function (index, customer) {
                 customerSelect.append($("<option>")
                     .val(customer.id)
-                    .text(`${customer.customerPersonalId} - ${customer.firstName} ${customer.lastName}`));
+                    .text(customer.name));
             });
+
             customerSelect.trigger('change');
         },
         error: function () {
@@ -49,18 +58,19 @@ function populateCustomers() {
 function setupEventListeners() {
     $('.return-book').click(handleReturnBookClick);
     $('#addReturnAction').click(addReturnActionRow);
-    $(document).on('click', '.remove-action', removeActionRow);
-    $(document).on('change', '.return-quantity', validateReturnQuantity);
+    $('#returnActionsTable').on('click', '.remove-action', removeActionRow);
+    $('#returnActionsTable').on('change', '.return-quantity', validateReturnQuantity);
     $('#submitReturn').click(submitReturn);
 }
 
 function handleReturnBookClick() {
     var button = $(this);
-    $('#reservationItemId').val(button.data('reservation-item-id'));
-    $('#bookTitle').val(button.data('book-title'));
-    $('#edition').val(button.data('edition'));
-    $('#publisherName').val(button.data('publisher-name'));
-    $('#remainingQuantity').val(button.data('remaining-quantity'));
+    var data = button.data();
+    $('#reservationItemId').val(data.reservationItemId);
+    $('#bookTitle').val(data.bookTitle);
+    $('#edition').val(data.edition);
+    $('#publisherName').val(data.publisherName);
+    $('#remainingQuantity').val(data.remainingQuantity);
 
     // Reset form
     $('#customerSelect').val(null).trigger('change');
@@ -69,6 +79,7 @@ function handleReturnBookClick() {
 }
 
 function addReturnActionRow() {
+    var remainingQuantity = $('#remainingQuantity').val();
     var row = `
         <tr>
             <td>
@@ -79,7 +90,7 @@ function addReturnActionRow() {
                 </select>
             </td>
             <td>
-                <input type="number" class="form-control return-quantity" min="1" max="${$('#remainingQuantity').val()}" value="1">
+                <input type="number" class="form-control return-quantity" min="1" max="${remainingQuantity}" value="1">
             </td>
             <td>
                 <button type="button" class="btn btn-danger btn-sm remove-action">Remove</button>
@@ -95,10 +106,11 @@ function removeActionRow() {
 
 function validateReturnQuantity() {
     var totalQuantity = 0;
+    var remainingQuantity = parseInt($('#remainingQuantity').val());
     $('.return-quantity').each(function () {
         totalQuantity += parseInt($(this).val()) || 0;
     });
-    if (totalQuantity > parseInt($('#remainingQuantity').val())) {
+    if (totalQuantity > remainingQuantity) {
         alert('Total quantity exceeds remaining quantity');
         $(this).val(1);
     }

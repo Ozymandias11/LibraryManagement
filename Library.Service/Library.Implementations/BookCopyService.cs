@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentResults;
 using Library.Data.NewFolder;
 using Library.Data.RequestFeatures;
 using Library.Model.Models;
@@ -22,64 +23,74 @@ namespace Library.Service.Library.Implementations
             _mapper = mapper;
         }
 
-        public async Task CreateBookCopy(
-            Guid originalBookId,
-            Guid PublisherId, 
-            Guid ShelfId,
-            Guid RoomId,
-            CreateBookCopyDto createBookCopyDto)
+
+        public async Task<Result> CreateBookCopy(CreateBookCopyDto dto)
         {
-            var BookCopies = Enumerable.Range(0, createBookCopyDto.Quantity)
-                .Select(_ => new BookCopy
-                {
-                    NumberOfPages = createBookCopyDto.NumberOfPages,
-                    Status = createBookCopyDto.Status,
-                    Edition = createBookCopyDto.Edition,
-                    Quantity = createBookCopyDto.Quantity,
-                })
-                .ToList();
+            var bookCopies = CreateBookCopies(dto);
+            await AddBookCopiesToRepository(dto.SelectedBookId, dto.SelectedPublisherId, bookCopies);
+            await AddBookCopiesToShelf(dto.SelectedRoomId, dto.SelectedShelfId, bookCopies);
 
-            _repositoryManager.BookCopyRepository.AddBookCopies(originalBookId, PublisherId ,BookCopies);
-
-            // temporary solution
-
-            await _repositoryManager.SaveAsync();
-
-            var shelf = await _repositoryManager.ShelfRepository.GetShelf(RoomId, ShelfId, false);
-
-            foreach(var bookCopy in BookCopies)
-            {
-                _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopy, shelf);
-            }
-
-            
-
-            await _repositoryManager.SaveAsync();
+            return Result.Ok();
         }
 
         public async Task<(IEnumerable<BookCopyDto> bookCopies, MetaData metaData)> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
-            var bookCopy = await _repositoryManager.BookCopyRepository.GetAllBookCopies(bookCopyParameters ,trackChanges);
- 
+            var bookCopiesWithMetaData = await _repositoryManager.BookCopyRepository.GetAllBookCopies(bookCopyParameters, trackChanges);
+            var bookCopyDtos = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopiesWithMetaData);
 
-            var bookCopyDto = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopy);
-
-            foreach (var dto in bookCopyDto)
+            foreach (var dto in bookCopyDtos)
             {
-                var bookCopyShelf = bookCopy.FirstOrDefault(bc => bc.BookCopyId == dto.BookCopyId)?.Shelves.FirstOrDefault();
-                if (bookCopyShelf != null)
+                var bookCopy = bookCopiesWithMetaData.FirstOrDefault(bc => bc.BookCopyId == dto.BookCopyId);
+                var bookCopyShelf = bookCopy?.Shelves?.FirstOrDefault();
+                var shelf = bookCopyShelf?.Shelf;
+                var room = shelf?.Room;
+
+                if (room != null && shelf != null)
                 {
-                    dto.RoomId = bookCopyShelf.Shelf.Room.RoomId;
-                    dto.RoomNumber = bookCopyShelf.Shelf.Room.RoomNumber;
-                    dto.ShelfNumber  = bookCopyShelf.Shelf.ShelfNumber;
-                    dto.ShelfId = bookCopyShelf.Shelf.ShelfId;
+                    dto.RoomId = room.RoomId;
+                    dto.RoomNumber = room.RoomNumber;
+                    dto.ShelfNumber = shelf.ShelfNumber;
+                    dto.ShelfId = shelf.ShelfId;
                 }
             }
 
+            return (bookCopyDtos, bookCopiesWithMetaData.MetaData);
+        }
 
-            return (bookCopyDto, bookCopy.MetaData);
+
+        private static List<BookCopy> CreateBookCopies(CreateBookCopyDto dto)
+        {
+            return Enumerable.Range(0, dto.Quantity)
+                .Select(_ => new BookCopy
+                {
+                    NumberOfPages = dto.NumberOfPages,
+                    Status = dto.Status,
+                    Edition = dto.Edition,
+                    Quantity = dto.Quantity,
+                })
+                .ToList();
+        }
+
+
+        private async Task AddBookCopiesToRepository(Guid bookId, Guid publisherId, List<BookCopy> bookCopies)
+        {
+            _repositoryManager.BookCopyRepository.AddBookCopies(bookId, publisherId, bookCopies);
+            await _repositoryManager.SaveAsync();
+        }
+
+        private async Task AddBookCopiesToShelf(Guid roomId, Guid shelfId, List<BookCopy> bookCopies)
+        {
+            var shelf = await _repositoryManager.ShelfRepository.GetShelf(roomId, shelfId, false);
+
+
+            foreach (var bookCopy in bookCopies)
+            {
+                _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopy, shelf);
+            }
+            await _repositoryManager.SaveAsync();
         }
 
         public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
+
     }
 }

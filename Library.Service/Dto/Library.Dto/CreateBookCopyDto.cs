@@ -11,7 +11,11 @@ namespace Library.Service.Dto.Library.Dto
        int NumberOfPages,
        string Edition,
        Status Status,
-       int Quantity
+       int Quantity,
+       Guid SelectedBookId,
+       Guid SelectedPublisherId,
+       Guid SelectedRoomId,
+       Guid SelectedShelfId
        );
 
 

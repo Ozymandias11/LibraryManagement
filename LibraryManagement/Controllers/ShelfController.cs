@@ -15,12 +15,10 @@ namespace LibraryManagement.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> GetShelvesForDropDown(Guid bookId)
+        public async Task<IActionResult> GetRoomShelvesForSelect2(Guid id)
         {
-            var shelvesDto = await _serviceManager.ShelfService.GetShelves(bookId, false);
-
-            return Json(shelvesDto);
-
+            var shelvesDto = await _serviceManager.ShelfService.GetShelves(id, false);
+            return Json(shelvesDto.Select(s => new { id = s.ShelfId, name = s.ShelfNumber}));
         }
 
     }

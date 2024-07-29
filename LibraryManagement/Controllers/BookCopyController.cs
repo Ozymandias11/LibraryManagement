@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using AutoMapper;
 using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
@@ -12,10 +13,12 @@ namespace LibraryManagement.Controllers
 
         private readonly IServiceManager _serviceManager;
         private readonly IMapper _mapper;
-        public BookCopyController(IServiceManager serviceManager, IMapper mapper)
+        private readonly INotyfService _notyf;
+        public BookCopyController(IServiceManager serviceManager, IMapper mapper, INotyfService notyf)
         {
             _serviceManager = serviceManager;
             _mapper = mapper;
+            _notyf = notyf;
         }
 
         public async Task<IActionResult> BookCopies([FromQuery] BookCopyParameters bookCopyParameters)
@@ -41,18 +44,17 @@ namespace LibraryManagement.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateBookCopy(CreateBookCopyViewModel createBookCopyViewModel)
-
         {
-
             var CreateBookCopyDto = _mapper.Map<CreateBookCopyDto>(createBookCopyViewModel);
 
-            await _serviceManager.BookCopyService.CreateBookCopy(
-                createBookCopyViewModel.SelectedBookId,
-                createBookCopyViewModel.SelectedPublisherId,
-                createBookCopyViewModel.SelectedShelfId,
-                createBookCopyViewModel.SelectedRoomId,
-                CreateBookCopyDto);
+            var result = await _serviceManager.BookCopyService.CreateBookCopy(CreateBookCopyDto);
 
+            if (result.IsFailed)
+            {
+                _notyf.Error("Soemting went wrong please try again");
+            }
+
+            _notyf.Success("Copies created successfully");
             return RedirectToAction("BookCopies");
 
         }

@@ -127,5 +127,11 @@ namespace LibraryManagement.Controllers
             return Json(bookPublishers.Select(p => p.PublisherId));
         }
 
+        public async Task<IActionResult> GetBookPublishersForSelect2(Guid id)
+        {
+            var bookPublishers = await _serviceManager.PublisherService.GetBookPublishers(id, false);
+            return Json(bookPublishers.Select(p => new { id = p.PublisherId, name = p.PublisherName }));
+        }
+
     }
 }
