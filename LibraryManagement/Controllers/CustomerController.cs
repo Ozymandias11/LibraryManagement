@@ -110,10 +110,12 @@ namespace LibraryManagement.Controllers
 
             _notyf.Success("Customer updated successfully");
             return View(model);
+        }
 
-
-
-
+        public async Task<IActionResult> GetCustomersForDropDown()
+        {
+            var customers = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
+            return Json(customers.Select(c => new { id = c.CustomerId, name = c.CustomerPersonalId }));
         }
     }
 }

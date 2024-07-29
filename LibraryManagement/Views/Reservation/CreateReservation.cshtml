@@ -1,5 +1,6 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateReservationViewModel
 
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -9,17 +10,9 @@
                     <form asp-action="CreateReservation" method="post" id="reservationForm">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="CustomerID" class="text-primary">Customer ID:</label>
-                            <select asp-for="CustomerID" class="form-control customer-select" required>
-                                <div id="createNewCustomerContainer" style="display: none;">
-                                    <a href="/Customer/Create" class="text-primary">Create New Customer</a>
-                                </div>
-                                <option value="">Select a customer</option>
-                                @foreach (var customer in Model.AllCustomers)
-                                {
-                                    <option value="@customer.Id">@customer.CustomerPersonalId : @customer.FirstName,@customer.lastName</option>
-                                }
-                            </select>
+                            <label asp-for="CustomerID" class="text-primary">Customer:</label>
+                            <select asp-for="CustomerID" id="CustomerID" class="form-control" required
+                                    data-create-url="/Customer/CreateCustomer" data-entity-name="Customer"></select>
                             <span asp-validation-for="CustomerID" class="text-danger"></span>
                         </div>
                         <div class="form-group">
@@ -32,13 +25,11 @@
                             <input asp-for="SupposedReturnDate" type="date" class="form-control" value="@DateTime.Now.AddDays(14).ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="SupposedReturnDate" class="text-danger"></span>
                         </div>
-
                         <h4 class="text-primary mt-4">Book Copy Reservations</h4>
                         <div id="bookCopySummary" class="mb-3">
                             <!-- Summary of added book copies will appear here -->
                         </div>
                         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#addBookCopyModal">Add Book Copy</button>
-
                         <div class="form-group text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-block btn-lg">Create Reservation</button>
                             <a asp-controller="Reservation" asp-action="Reservations" class="btn btn-neutral btn-block btn-lg">Cancel</a>
@@ -52,11 +43,11 @@
 
 @await Html.PartialAsync("_AddBookCopyModal", Model)
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-    <script src="~/js/createReservation.js"></script>
+    <script src="~/js/Reservation/create-reservation.js"></script>
 }
-
 @section Styles {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
     <link rel="stylesheet" href="~/css/createReservation.css" />

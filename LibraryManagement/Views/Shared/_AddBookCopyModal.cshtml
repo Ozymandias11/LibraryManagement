@@ -10,13 +10,8 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="text-primary">Original Book:</label>
-                    <select id="modalOriginalBookId" class="form-control" required>
-                        <option value="">Select a book</option>
-                        @foreach (var book in Model.AllBooks)
-                        {
-                            <option value="@book.Id">@book.Title</option>
-                        }
-                    </select>
+                    <select id="modalOriginalBookId" class="form-control" required
+                            data-create-url="/Book/CreateBook" data-entity-name="Book"></select>
                 </div>
                 <div class="form-group">
                     <label class="text-primary">Edition:</label>
@@ -24,9 +19,8 @@
                 </div>
                 <div class="form-group">
                     <label class="text-primary">Publisher:</label>
-                    <select id="modalPublisherId" class="form-control" required>
-                        <option value="">Select a publisher</option>
-                    </select>
+                    <select id="modalPublisherId" class="form-control" required
+                            data-create-url="/Publisher/CreatePublisher" data-entity-name="Publisher"></select>
                 </div>
                 <div class="form-group">
                     <label class="text-primary">Quantity:</label>
@@ -36,7 +30,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="addBookCopy()">Add Book Copy</button>
+                <button type="button" class="btn btn-primary" id="addBookCopyBtn">Add Book Copy</button>
             </div>
         </div>
     </div>
