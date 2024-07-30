@@ -7,61 +7,20 @@ $(document).ready(function () {
 });
 
 function initializeSelects() {
-    loadAndInitializeSelect('#CustomerID', '/Customer/GetCustomersForDropDown', false);
-    loadAndInitializeSelect('#modalOriginalBookId', '/Book/GetBooksForDropDown', false, populatePublishers);
-    $('#modalPublisherId').prop('disabled', true);
-}
-
-function loadAndInitializeSelect(selectElement, url, isMultiple, onChangeCallback = null) {
-    $.getJSON(url, function (allData) {
-        console.log(`Data loaded for ${selectElement}:`, allData);
-        const options = [{ id: '', text: 'Search for customer' }].concat(allData.map(item => ({
-            id: item.id,
-            text: item.name
-        })));
-        console.log(`Mapped options for ${selectElement}:`, options);
-
-
-        $(selectElement).select2({
-            data: options,
-            placeholder: "Select an option",
-            allowClear: true,
-            multiple: isMultiple,
-            escapeMarkup: function (markup) {
-                return markup;
-            }
-        });
-
-        console.log(`Select2 initialized for ${selectElement}`);
-
-        if (onChangeCallback) {
-            $(selectElement).on('change', onChangeCallback);
-        }
-
-        if (selectElement === '#CustomerID') {
-            addCreateNewCustomerOption(selectElement);
-        }
-
-        $(selectElement).trigger('change');
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error(`Error loading data for ${selectElement}:`, textStatus, errorThrown);
-    });
-}
-function addCreateNewCustomerOption(selectElement) {
-    $(selectElement).on('select2:open', function () {
-        if (!$(".select2-results__options").find(".create-customer-link").length) {
-            $(".select2-results__options").append(
-                '<li class="select2-results__option create-customer-link" role="option">' +
-                '<a href="/Customer/CreateCustomer">Create New Customer</a></li>'
-            );
-        }
+    loadAndInitializeSelect('#CustomerID', '/Customer/GetCustomersForDropDown', false, null, {
+        createUrl: '/Customer/CreateCustomer',
+        entityName: 'Customer'
     });
 
-    $(document).on('click', '.create-customer-link', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.location.href = $(this).find('a').attr('href');
+    loadAndInitializeSelect('#modalOriginalBookId', '/Book/GetBooksForDropDown', false, populatePublishers, null, {
+        placeholder: "Select a book",
+        allowClear: true
     });
+
+    $('#modalPublisherId').select2({
+        placeholder: "Select a publisher",
+        allowClear: true
+    }).prop('disabled', true);
 }
 
 function populatePublishers() {
@@ -104,12 +63,7 @@ function checkAvailability() {
         $.ajax({
             url: '/Reservation/CheckBookCopyAvailability',
             type: 'GET',
-            data: {
-                originalBookId: originalBookId,
-                edition: edition,
-                publisherId: publisherId,
-                quantity: quantity
-            },
+            data: { originalBookId, edition, publisherId, quantity },
             success: function (response) {
                 updateAvailabilityStatus(response.isAvailable, response.message);
             },
