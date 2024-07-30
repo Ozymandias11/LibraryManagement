@@ -5,7 +5,6 @@ using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
-using LibraryManagement.Helper;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 

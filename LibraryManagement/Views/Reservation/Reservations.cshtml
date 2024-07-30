@@ -66,6 +66,7 @@
 @await Html.PartialAsync("_DeleteConfirmationModal", ("reservation-id", "reservation-title", "DeleteReservation"))
 @section Scripts {
     <script src="~/js/deleteModal.js"></script>
+    <script src="~/js/Shared/pagination.js"></script>
     <script>
         $.noConflict();
         jQuery(document).ready(function ($) {
