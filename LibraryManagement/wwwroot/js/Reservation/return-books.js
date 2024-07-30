@@ -4,54 +4,17 @@
 
 function initializeReturnBook() {
     initializeCustomerSelect();
-    populateCustomers();
     setupEventListeners();
 }
 
 function initializeCustomerSelect() {
-    $('#customerSelect').select2({
-        placeholder: "Search for a customer",
-        allowClear: true,
-        dropdownParent: $('#returnBookModal'),
-        language: {
-            noResults: function () {
-                return "No results found. <a href='/Customer/CreateCustomer' class='create-customer-link'>Create New Customer</a>";
-            }
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }
-    }).on('select2:open', function () {
-        $('.select2-results__options').off('click', '.create-customer-link').on('click', '.create-customer-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            window.location.href = $(this).attr('href');
-        });
+    loadAndInitializeSelect('#customerSelect', '/Customer/GetCustomersForDropDown', false, null, {
+        createUrl: '/Customer/CreateCustomer',
+        entityName: 'Customer'
     });
-}
 
-function populateCustomers() {
-    $.ajax({
-        url: '/Customer/GetCustomersForDropDown',
-        type: 'GET',
-        success: function (data) {
-            var customerSelect = $("#customerSelect");
-            customerSelect.empty();
-
-            // Add placeholder option
-            customerSelect.append($("<option>").val("").text("Search for a customer"));
-
-            $.each(data, function (index, customer) {
-                customerSelect.append($("<option>")
-                    .val(customer.id)
-                    .text(customer.name));
-            });
-
-            customerSelect.trigger('change');
-        },
-        error: function () {
-            alert("Error occurred while fetching customers.");
-        }
+    $('#customerSelect').select2({
+        dropdownParent: $('#returnBookModal')
     });
 }
 
