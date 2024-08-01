@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<LibraryManagement.ViewModels.NavigationMenuViewModel>
-
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <nav class="navbar">
     <ul class="nav ms-auto">
@@ -10,7 +10,7 @@
             {
                 <li class="nav-item dropdown dropdown-toggle-centered">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        @item.Name
+                        @Localizer[item.Name]
                     </a>
                     <div class="dropdown-menu">
                         @foreach (var child in item.Children)
@@ -29,7 +29,7 @@
                             }
                             else
                             {
-                                <a class="dropdown-item" asp-controller="@child.ControllerName" asp-action="@child.ActionName">@child.Name</a>
+                                <a class="dropdown-item" asp-controller="@child.ControllerName" asp-action="@child.ActionName">@Localizer[child.Name]</a>
                             }
                         }
                     </div>
@@ -38,7 +38,7 @@
             else
             {
                 <li class="nav-item">
-                    <a class="nav-link" asp-controller="@item.ControllerName" asp-action="@item.ActionName">@item.Name</a>
+                    <a class="nav-link" asp-controller="@item.ControllerName" asp-action="@item.ActionName">@Localizer[item.Name]</a>
                 </li>
             }
         }

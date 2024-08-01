@@ -1,32 +1,33 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.CreateAuthorViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-primary" style="border-width: 5px; border-radius: 30px; background-color: #FCF7FF;">
                 <div class="card-body">
-                    <h2 class="text-primary text-center mb-4">Create Author</h2>
+                    <h2 class="text-primary text-center mb-4">@Localizer["CreateAuthor"]</h2>
                     <form asp-action="CreateAuthor" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="form-group">
-                            <label asp-for="FirstName" class="text-primary">First Name:</label>
+                            <label asp-for="FirstName" class="text-primary">@Localizer["FirstName"]:</label>
                             <input asp-for="FirstName" class="form-control" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="LastName" class="text-primary">Last Name:</label>
+                            <label asp-for="LastName" class="text-primary">@Localizer["LastName"]:</label>
                             <input asp-for="LastName" class="form-control" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label asp-for="DateOfBirth" class="text-primary">Date of Birth:</label>
+                            <label asp-for="DateOfBirth" class="text-primary">@Localizer["DateOfBirth"]:</label>
                             <input asp-for="DateOfBirth" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
                             <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                         </div>
-
                         <div class="form-group text-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-block btn-lg">Create Author</button>
-                            <a asp-controller="Author" asp-action="Authors" class="btn btn-neutral btn-block btn-lg">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-block btn-lg">@Localizer["CreateAuthor"]</button>
+                            <a asp-controller="Author" asp-action="Authors" class="btn btn-neutral btn-block btn-lg">@Localizer["Cancel"]</a>
                         </div>
                     </form>
                 </div>
@@ -34,3 +35,14 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $.extend($.validator.messages, {
+            required: '@Localizer["Required"]',
+            date: '@Localizer["InvalidDate"]',
+            // Add more messages as needed
+        });
+    </script>
+}

@@ -1,19 +1,24 @@
 ﻿@model LibraryManagement.ViewModels.Library.ViewModels.PagedViewModel<LibraryManagement.ViewModels.Library.ViewModels.AuthorViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Authors";
+    ViewData["Title"] = Localizer["Authors"];
     ViewData["ActionUrl"] = "Authors";
     ViewData["ActionName"] = "Authors";
     var sortableColumns = new[]
     {
-        ("First Name", "FirstName"),
-        ("Last Name", "LastName"),
-        ("Date of Birth", "DateOfBirth")
+        (Localizer["First Name"].Value, "FirstName"),
+        (Localizer["Last Name"].Value, "LastName"),
+        (Localizer["Date of Birth"].Value, "DateOfBirth")
     };
 }
+
+
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-center mb-3">
-            <h2 class="text-primary mb-0">Authors</h2>
+            <h2 class="text-primary mb-0">@Localizer["Authors"]</h2>
         </div>
         <table>
             <tr>
@@ -25,7 +30,7 @@
                 <thead>
                     <tr>
                         @await Html.PartialAsync("_SortableHeader", sortableColumns)
-                        <th class="text-primary text-center">Actions</th>
+                        <th class="text-primary text-center">@Localizer["Actions"]</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -37,15 +42,15 @@
                             <td class="text-center">@author.DateOfBirth.ToShortDateString()</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                    <a asp-controller="Author" asp-action="UpdateAuthor" asp-route-id="@author.AuthorId" class="btn btn-primary btn-sm mr-2">Edit</a>
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-author-id="@author.AuthorId" data-author-name="@($"{author.FirstName} {author.LastName}")">Delete</button>
+                                    <a asp-controller="Author" asp-action="UpdateAuthor" asp-route-id="@author.AuthorId" class="btn btn-primary btn-sm mr-2">@Localizer["Edit"]</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-author-id="@author.AuthorId" data-author-name="@($"{author.FirstName} {author.LastName}")">@Localizer["Delete"]</button>
                                 </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-            <a asp-action="CreateAuthor" class="btn btn-primary">Add Author</a>
+            <a asp-action="CreateAuthor" class="btn btn-primary">@Localizer["Add Author"]</a>
         </div>
 
         @await Html.PartialAsync("_Pagination", (
@@ -64,7 +69,7 @@
 
 @section Scripts {
     <script src="~/js/Modals/delete-modal.js"></script>
-    <script src="~/js/Shared/pagination.js"></<script>
+    <script src="~/js/Shared/pagination.js"></script>
     <script>
         $.noConflict();
         jQuery(document).ready(function ($) {

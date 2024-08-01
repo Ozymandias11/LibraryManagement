@@ -1,70 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocalizationOptions
+
+@{
+    ViewData["Title"] = Localizer["HomePage"];
 }
-
-
-@if (TempData["SuccessMessage"] != null)
-{
-    <div id="successMessage" class="alert alert-success">@TempData["SuccessMessage"]</div>
-}
-
-@if (TempData["LogoutMessage"] != null)
-{
-    <div id="logoutMessage" class="alert alert-info">@TempData["LogoutMessage"]</div>
-}
-
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Hide success message after 5 seconds
-            setTimeout(function () {
-                $("#successMessage").fadeOut("slow", function () {
-                    $(this).remove();
-                });
-            }, 5000);
-
-            
-            setTimeout(function () {
-                $("#logoutMessage").fadeOut("slow", function () {
-                    $(this).remove();
-                });
-            }, 5000);
-        });
-    </script>
-}
-
-
-
-
 <div class="hero_area">
-
     <div class="hero_bg_box">
         <div class="bg_img_box">
             <img src="images/hero-bg.png" alt="">
         </div>
     </div>
-
-<section class="slider_section ">
-    <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="container ">
-                    <div class="row justify-content-center">
-                        <div class="col-md-6 ">
-                            <div class="detail-box">
-                                <h1>
-                                        Library Management  System
-                                    </h1>                         
+    <section class="slider_section ">
+        <div id="customCarousel1" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container ">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 ">
+                                <div class="detail-box">
+                                    <h1>
+                                        @Localizer["LibraryManagementSystem"]
+                                    </h1>
+                                </div>
                             </div>
-                        </div>                     
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-</section>
-</<div>
-<!-- end slider section -->
-  </div>
+    </section>
+</div>

@@ -1,6 +1,4 @@
-﻿
-
-function initializeDeleteModal(idAttr, nameAttr) {
+﻿function initializeDeleteModal(idAttr, nameAttr) {
     console.log("initializeDeleteModal called");
     $('#deleteModal').on('show.bs.modal', function (event) {
         console.log("Modal show event triggered");

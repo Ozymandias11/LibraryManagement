@@ -1,8 +1,11 @@
-﻿@model (int CurrentPage, int TotalPages, int PageSize, int TotalCount, object OrderBy, string SearchString, string ControllerName, string ActionName)
-<nav aria-label="Page navigation">
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model (int CurrentPage, int TotalPages, int PageSize, int TotalCount, object OrderBy, string SearchString, string ControllerName, string ActionName)
+
+<nav aria-label="@Localizer["Page navigation"]">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-4">
         <div class="d-none d-md-block">
-            Showing @((Model.CurrentPage - 1) * Model.PageSize + 1) to @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount) of @Model.TotalCount items
+            @Localizer["Showing"] @((Model.CurrentPage - 1) * Model.PageSize + 1) @Localizer["to"] @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount) @Localizer["of"] @Model.TotalCount @Localizer["items"]
         </div>
         <ul class="pagination justify-content-center mb-0 flex-grow-1">
             @{
@@ -10,7 +13,7 @@
                 var nextDisabled = Model.CurrentPage == Model.TotalPages ? "disabled" : "";
             }
             <li class="page-item @prevDisabled">
-                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">Previous</a>
+                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage - 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">@Localizer["Previous"]</a>
             </li>
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
@@ -19,11 +22,11 @@
                 </li>
             }
             <li class="page-item @nextDisabled">
-                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">Next</a>
+                <a class="page-link" href="@Url.Action(Model.ActionName, Model.ControllerName, new { pageNumber = Model.CurrentPage + 1, pageSize = Model.PageSize, orderBy = Model.OrderBy ?? "", searchString = Model.SearchString })">@Localizer["Next"]</a>
             </li>
         </ul>
         <div class="mb-2 mb-md-0">
-            <label for="pageSize" class="mr-2">Items per page:</label>
+            <label for="pageSize" class="mr-2">@Localizer["Items per page"]:</label>
             <select id="pageSize" class="form-control d-inline-block w-auto">
                 <option value="10">10</option>
                 <option value="20">20</option>
@@ -32,5 +35,5 @@
     </div>
 </nav>
 <script>
-    var pageSize = @Model.PageSize; 
+    var pageSize = @Model.PageSize;
 </script>

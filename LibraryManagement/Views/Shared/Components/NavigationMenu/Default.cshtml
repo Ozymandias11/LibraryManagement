@@ -1,17 +1,15 @@
 ﻿@model IEnumerable<LibraryManagement.ViewModels.NavigationMenuViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "NavigationMenu";
 }
 
 
-
-
-
-
 <div class="navbar-collapse collapse d-sm-inline-flex">
     <ul class="navbar-nav flex-grow-1 d-flex align-items-center">
         <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-            <span>Library Management</span>
+            <span>@Localizer["Library"]</span>
         </a>
         @*Menu Items from the database*@
         @await Html.PartialAsync("_MenuPartial", Model)
