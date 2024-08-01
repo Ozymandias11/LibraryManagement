@@ -58,6 +58,23 @@ namespace LibraryManagement.Controllers
             return RedirectToAction("BookCopies");
 
         }
+        [HttpPost]
+        public async Task<IActionResult> ModifyBookCopies(ModifyBookCopiesViewModel modifyBookCopiesViewModel)
+        {
+            var modifyBookCopiesDto = _mapper.Map<ModifyBookCopiesDto>(modifyBookCopiesViewModel);  
+
+            var result = await _serviceManager.BookCopyService.ModifyBookCopies(modifyBookCopiesDto);   
+
+            if (result.IsFailed)
+            {
+                _notyf.Error("Something went wrong please try again");
+                return RedirectToAction("BookCopies");
+            }
+
+            _notyf.Success($"Book Copies {modifyBookCopiesViewModel.State.ToLower()} successfully");
+            return RedirectToAction("BookCopies");
+
+        }
 
     }
 }

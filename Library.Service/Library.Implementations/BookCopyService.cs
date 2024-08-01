@@ -92,5 +92,57 @@ namespace Library.Service.Library.Implementations
 
         public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
 
+        public async Task<Result> ModifyBookCopies(ModifyBookCopiesDto modifyBookCopiesDto)
+        {
+            if(modifyBookCopiesDto.State == "Added")
+            {
+                await AddBookCopies(modifyBookCopiesDto);
+
+            }else if(modifyBookCopiesDto.State == "Deleted")
+            {
+                await DeleteBookCopies(modifyBookCopiesDto);
+            }
+
+            _repositoryManager.BookCopyLogRepository.CreateBookCopy(new BookCopyLog
+            {
+                OriginalBookId = modifyBookCopiesDto.OriginalBookId,
+                PublishersId = modifyBookCopiesDto.PublisherId,
+                Edition = modifyBookCopiesDto.Edition,
+                State = modifyBookCopiesDto.State,
+                Message = modifyBookCopiesDto.Message,
+                QuantityModified = modifyBookCopiesDto.QuantityModified
+            });
+
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
+                
+
+
+        }
+
+        private async Task AddBookCopies(ModifyBookCopiesDto dto)
+        {
+            var createBookCopyDto = _mapper.Map<CreateBookCopyDto>(dto);
+
+            var newCopies = CreateBookCopies(createBookCopyDto);
+
+            await AddBookCopiesToRepository(dto.OriginalBookId, dto.PublisherId, newCopies);
+
+            await AddBookCopiesToShelf(dto.ShelfId, dto.RoomId, newCopies);
+
+        }
+
+        private async Task DeleteBookCopies(ModifyBookCopiesDto dto)
+        {
+            var bookCopies = await _repositoryManager.BookCopyRepository.
+                GetCustomerNumberOfCopies(dto.OriginalBookId, dto.Edition, dto.PublisherId, dto.QuantityModified);
+
+            foreach(var bookCopy in bookCopies)
+            {
+                _repositoryManager.BookCopyRepository.DeleteBookCopy(bookCopy);
+            }
+
+        }
     }
 }

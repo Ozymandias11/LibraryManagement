@@ -53,12 +53,10 @@
                                     <button class="btn btn-sm btn-primary me-2" data-toggle="modal" data-target="#addQuantityModal"
                                             data-book-id="@bookCopy.OriginaBookId"
                                             data-publisher-id="@bookCopy.PublisherId"
-                                            data-room-id="@bookCopy.RoomId"
-                                            data-shelf-id="@bookCopy.ShelfId"
-                                            data-number-of-pages="@bookCopy.NumberOfPages"
                                             data-edition="@bookCopy.Edition"
-                                            data-status="@bookCopy.Status"
-                                            data-book-title="@bookCopy.BookTitle">
+                                            data-book-title="@bookCopy.BookTitle"
+                                            data-room-id="@bookCopy.RoomId"
+                                            data-shelf-id="@bookCopy.ShelfId">
                                         +
                                     </button>
                                 </div>
@@ -82,10 +80,10 @@
     </div>
 </div>
 
-@await Html.PartialAsync("_AddQuantityModal", new LibraryManagement.ViewModels.Library.ViewModels.CreateBookCopyViewModel())
+@await Html.PartialAsync("_AddQuantityModal", new LibraryManagement.ViewModels.Library.ViewModels.ModifyBookCopiesViewModel())
 
 @section Scripts {
-    <script src="~/js/addQuantityModal.js"></script>
+    <script src="~/js/Modals/add-quantity-modal.js"></script>
      <script src="~/js/Shared/pagination.js"></script>
     <script>
         $.noConflict();

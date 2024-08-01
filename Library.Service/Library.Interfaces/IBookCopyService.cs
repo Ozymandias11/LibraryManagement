@@ -12,6 +12,7 @@ namespace Library.Service.Library.Interfaces
     public interface IBookCopyService
     {
         Task<(IEnumerable<BookCopyDto> bookCopies, MetaData metaData)> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges);
+        Task<Result> ModifyBookCopies(ModifyBookCopiesDto modifyBookCopiesDto);
         Task<Result> CreateBookCopy(CreateBookCopyDto createBookCopyDto);
         Task<int> GetTotalBookCopiesCount();
 

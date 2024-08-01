@@ -12,22 +12,14 @@ namespace Library.Data.Library.Interfaces
     {
         Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges);
         Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges);
-        
-        void AddBookCopies(
-            Guid originalBookId,
-            Guid PublisherId,
-            IEnumerable<BookCopy> bookCopies);
-        void DeleteBookCopy(BookCopy bookCopy);
-        Task<int> GetTotalBookCopiesCount();
-        Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(
-            Guid originalBookId,
-            string edition,
-            Guid publisherId,
-            int quantity
-            );
-
-        void UpdateBookCopyStatus(BookCopy bookCopy);
         Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId);
+        Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(Guid originalBookId, string edition, Guid publisherId, int quantity);
+        Task<IEnumerable<BookCopy>> GetCustomerNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity);
+        Task<int> GetTotalBookCopiesCount();
+        void UpdateBookCopyStatus(BookCopy bookCopy);
+        void DeleteBookCopy(BookCopy bookCopy);
+        void AddBookCopies(Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies);
+
 
 
     }
