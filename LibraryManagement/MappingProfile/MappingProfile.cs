@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Library.Model.Enums;
 using Library.Model.Models;
 using Library.Service.Dto;
 using Library.Service.Dto.Library.Dto;
@@ -176,6 +177,14 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<ReturnBookViewModel, ReturnBookDto>();
             CreateMap<ReturnActionViewModel, ReturnActionDto>();
+
+            //Book Copy Logs
+
+            CreateMap<CreateBookCopyLogDto, BookCopyLog>();
+            CreateMap<BookCopyLog, BookCopyDto>();
+            CreateMap<ModifyBookCopiesDto, CreateBookCopyDto>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Status.Available))
+                .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.QuantityModified));
 
 
 

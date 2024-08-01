@@ -18,15 +18,11 @@ namespace Library.Data.Library.Implementations
         {
         }
 
-        public void AddBookCopies(
-            Guid originalBookId, 
-            Guid PublisherId, 
-            IEnumerable<BookCopy> bookCopies)
+        public void AddBookCopies(Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies)
         {
 
             var modifiedBookCopies = new List<BookCopy>();
 
-            // Modify the properties of each book copy
             foreach (var bookCopy in bookCopies)
             {
                 bookCopy.PublisherId = PublisherId;
@@ -40,18 +36,45 @@ namespace Library.Data.Library.Implementations
 
         }
        
-
-
         public void DeleteBookCopy(BookCopy bookCopy) => Delete(bookCopy);
+
 
         public async Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
           => await FindByCondition(bc => bc.OriginaBookId == originalBookId &&
                                    bc.Edition == edition &&
                                    bc.PublisherId == publisherId &&
-                                   bc.Status == Model.Enums.Status.Available,
+                                   bc.Status == Status.Available,
                                    trackChanges: false)
                                    .Take(quantity)
                                    .ToListAsync();
+
+        public async Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId)
+            => await FindByCondition(bc => bc.ReservationItems!.Any(ri => ri.ReservationId == ReservationId), false).ToListAsync();
+        
+
+        public Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<BookCopy>> GetCustomerNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
+            => await FindByCondition(bc => bc.OriginaBookId == originalBookId &&
+                                           bc.PublisherId == publisherId &&
+                                           bc.Edition == edition,
+                                           trackChanges: false)
+                                        .Take(quantity).ToListAsync();
+                                           
+       
+
+        public async Task<int> GetTotalBookCopiesCount()
+        {
+            var allBookCopies = await FindAll(false).ToListAsync();
+            return allBookCopies
+                .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
+                .Count();
+        }
+
+        public void UpdateBookCopyStatus(BookCopy bookCopy) => Update(bookCopy);
 
         public async Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
@@ -95,24 +118,5 @@ namespace Library.Data.Library.Implementations
                 bookCopyParameters.PageSize);
         }
 
-        public async Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId)
-            => await FindByCondition(bc => bc.ReservationItems.Any(ri => ri.ReservationId == ReservationId), false).ToListAsync();
-        
-
-        public Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<int> GetTotalBookCopiesCount()
-        {
-            var allBookCopies = await FindAll(false).ToListAsync();
-            return allBookCopies
-                .GroupBy(bc => new { bc.OriginaBookId, bc.PublisherId, bc.Edition })
-                .Count();
-        }
-
-        public void UpdateBookCopyStatus(BookCopy bookCopy) => Update(bookCopy);
-      
     }
 }

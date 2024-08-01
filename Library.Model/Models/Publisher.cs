@@ -13,7 +13,9 @@ namespace Library.Model.Models
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public ICollection<BookPublisher>? Books { get; set; }
-       
+        public ICollection<BookCopyLog>? BookCopyLogs { get; set; }
+
+
 
     }
 }
