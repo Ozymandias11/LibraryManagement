@@ -14,7 +14,7 @@ namespace Library.Data.Library.Interfaces
         Task<BookCopy?> GetBookCopy(Guid id, bool trackChanges);
         Task<IEnumerable<BookCopy>> GetBookCopiesOfReservation(Guid ReservationId);
         Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(Guid originalBookId, string edition, Guid publisherId, int quantity);
-        Task<IEnumerable<BookCopy>> GetCustomerNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity);
+        Task<IEnumerable<BookCopy>> GetCustomNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity);
         Task<int> GetTotalBookCopiesCount();
         void UpdateBookCopyStatus(BookCopy bookCopy);
         void DeleteBookCopy(BookCopy bookCopy);

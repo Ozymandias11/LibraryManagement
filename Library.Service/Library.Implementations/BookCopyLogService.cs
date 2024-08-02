@@ -2,6 +2,7 @@
 using FluentResults;
 using Library.Data.Library.Interfaces;
 using Library.Data.NewFolder;
+using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Library.Interfaces;
@@ -36,12 +37,13 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<BookCopyLogDto>> GetBookCopyLogs(Guid originalBookId, Guid publisherId, string edition)
+        public async Task<(IEnumerable<BookCopyLogDto> bookCopyLogs, MetaData metaData)> GetBookCopyLogs(BookCopyLogParameters parameters,Guid originalBookId, Guid publisherId, string edition)
         {
-            var bookCopyLogs = await _repositoryManager.BookCopyLogRepository.GetBookCopyLogs(originalBookId, publisherId, edition);
-            var bookCopyLogsDto = _mapper.Map<IEnumerable<BookCopyLogDto>>(bookCopyLogs);
+            var bookCopyLogsWithMetaData = await _repositoryManager.BookCopyLogRepository.GetBookCopyLogs(parameters,originalBookId, publisherId, edition);
 
-            return bookCopyLogsDto;
+            var bookCopyLogsDto = _mapper.Map<IEnumerable<BookCopyLogDto>>(bookCopyLogsWithMetaData);
+
+            return (bookCopyLogsDto, bookCopyLogsWithMetaData.MetaData);
 
         }
     }

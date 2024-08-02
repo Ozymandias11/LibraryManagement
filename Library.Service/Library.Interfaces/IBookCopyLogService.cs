@@ -1,4 +1,5 @@
 ﻿using FluentResults;
+using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Library.Service.Library.Interfaces
 {
    public interface IBookCopyLogService
     {
-        Task<IEnumerable<BookCopyLogDto>> GetBookCopyLogs(Guid originalBookId, Guid publisherId, string edition);
+        Task<(IEnumerable<BookCopyLogDto> bookCopyLogs, MetaData metaData)> GetBookCopyLogs(BookCopyLogParameters parameters,Guid originalBookId, Guid publisherId, string edition);
         Task<Result> CreateBookCopyLog(CreateBookCopyLogDto createBookCopyLogDto);
     }
 }

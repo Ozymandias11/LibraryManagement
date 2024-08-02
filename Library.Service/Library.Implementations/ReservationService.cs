@@ -68,7 +68,7 @@ namespace Library.Service.Library.Implementations
 
                 foreach(var bookCopy in availableBookCopies)
                 {
-                    bookCopy.Status = Model.Enums.Status.CheckedOut;
+                    bookCopy.Status = Status.CheckedOut;
                     reservation.ReservationItems.Add(new ReservationItem()
                     {
                         BookCopyID = bookCopy.BookCopyId,

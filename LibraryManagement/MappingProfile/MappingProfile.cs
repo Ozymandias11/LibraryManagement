@@ -186,6 +186,10 @@ namespace LibraryManagement.MappingProfile
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Status.Available))
                 .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.QuantityModified));
 
+            CreateMap<BookCopyLog, BookCopyLogDto>();
+            CreateMap<ModifyBookCopiesViewModel, ModifyBookCopiesDto>();
+            CreateMap<BookCopyLogDto, BookCopyLogsViewModel>();
+
 
 
         }
