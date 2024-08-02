@@ -58,6 +58,35 @@ namespace Library.Service.Library.Implementations
         }
 
 
+        public async Task<Result> ModifyBookCopies(ModifyBookCopiesDto modifyBookCopiesDto)
+        {
+            if (modifyBookCopiesDto.State == "Added")
+            {
+                await AddBookCopies(modifyBookCopiesDto);
+
+            }
+            else if (modifyBookCopiesDto.State == "Deleted")
+            {
+                await DeleteBookCopies(modifyBookCopiesDto);
+            }
+
+            _repositoryManager.BookCopyLogRepository.CreateBookCopy(new BookCopyLog
+            {
+                OriginalBookId = modifyBookCopiesDto.OriginalBookId,
+                PublishersId = modifyBookCopiesDto.PublisherId,
+                Edition = modifyBookCopiesDto.Edition,
+                State = modifyBookCopiesDto.State,
+                Message = modifyBookCopiesDto.Message,
+                QuantityModified = modifyBookCopiesDto.QuantityModified,
+                TimeStamp = DateTime.Now
+            });
+
+            await _repositoryManager.SaveAsync();
+
+            return Result.Ok();
+
+        }
+
         private static List<BookCopy> CreateBookCopies(CreateBookCopyDto dto)
         {
             return Enumerable.Range(0, dto.Quantity)
@@ -66,7 +95,7 @@ namespace Library.Service.Library.Implementations
                     NumberOfPages = dto.NumberOfPages,
                     Status = dto.Status,
                     Edition = dto.Edition,
-                    Quantity = dto.Quantity,
+                    Quantity = 1
                 })
                 .ToList();
         }
@@ -82,7 +111,6 @@ namespace Library.Service.Library.Implementations
         {
             var shelf = await _repositoryManager.ShelfRepository.GetShelf(roomId, shelfId, false);
 
-
             foreach (var bookCopy in bookCopies)
             {
                 _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopy, shelf);
@@ -92,34 +120,6 @@ namespace Library.Service.Library.Implementations
 
         public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
 
-        public async Task<Result> ModifyBookCopies(ModifyBookCopiesDto modifyBookCopiesDto)
-        {
-            if(modifyBookCopiesDto.State == "Added")
-            {
-                await AddBookCopies(modifyBookCopiesDto);
-
-            }else if(modifyBookCopiesDto.State == "Deleted")
-            {
-                await DeleteBookCopies(modifyBookCopiesDto);
-            }
-
-            _repositoryManager.BookCopyLogRepository.CreateBookCopy(new BookCopyLog
-            {
-                OriginalBookId = modifyBookCopiesDto.OriginalBookId,
-                PublishersId = modifyBookCopiesDto.PublisherId,
-                Edition = modifyBookCopiesDto.Edition,
-                State = modifyBookCopiesDto.State,
-                Message = modifyBookCopiesDto.Message,
-                QuantityModified = modifyBookCopiesDto.QuantityModified
-            });
-
-            await _repositoryManager.SaveAsync();
-
-            return Result.Ok();
-                
-
-
-        }
 
         private async Task AddBookCopies(ModifyBookCopiesDto dto)
         {
@@ -129,19 +129,21 @@ namespace Library.Service.Library.Implementations
 
             await AddBookCopiesToRepository(dto.OriginalBookId, dto.PublisherId, newCopies);
 
-            await AddBookCopiesToShelf(dto.ShelfId, dto.RoomId, newCopies);
+            await AddBookCopiesToShelf(dto.RoomId, dto.ShelfId, newCopies);
 
         }
 
         private async Task DeleteBookCopies(ModifyBookCopiesDto dto)
         {
             var bookCopies = await _repositoryManager.BookCopyRepository.
-                GetCustomerNumberOfCopies(dto.OriginalBookId, dto.Edition, dto.PublisherId, dto.QuantityModified);
+                GetCustomNumberOfCopies(dto.OriginalBookId, dto.Edition, dto.PublisherId, dto.QuantityModified);
 
             foreach(var bookCopy in bookCopies)
             {
                 _repositoryManager.BookCopyRepository.DeleteBookCopy(bookCopy);
             }
+
+            await _repositoryManager.SaveAsync();
 
         }
     }

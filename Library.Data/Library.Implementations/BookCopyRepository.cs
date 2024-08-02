@@ -57,10 +57,11 @@ namespace Library.Data.Library.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<BookCopy>> GetCustomerNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
+        public async Task<IEnumerable<BookCopy>> GetCustomNumberOfCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
             => await FindByCondition(bc => bc.OriginaBookId == originalBookId &&
                                            bc.PublisherId == publisherId &&
-                                           bc.Edition == edition,
+                                           bc.Edition == edition &&
+                                           bc.DeletedDate == null,
                                            trackChanges: false)
                                         .Take(quantity).ToListAsync();
                                            
@@ -78,7 +79,7 @@ namespace Library.Data.Library.Implementations
 
         public async Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
-            var query = FindAll(trackChanges)
+            var query = FindByCondition(bc => bc.DeletedDate == null, trackChanges)
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
                 .Include(bc => bc.Shelves)

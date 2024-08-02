@@ -43,9 +43,6 @@ namespace Library.Data
 
 
         }
-
-
-
         // trackChanges helps us to speed up read-only queries
         // and do connected updates
         public IQueryable<T> FindAll(bool trackChanges) =>

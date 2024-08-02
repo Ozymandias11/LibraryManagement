@@ -50,15 +50,23 @@
                             <td class="text-center">@bookCopy.ShelfNumber</td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center">
-                                    <button class="btn btn-sm btn-primary me-2" data-toggle="modal" data-target="#addQuantityModal"
+                                    <button class="btn btn-sm btn-primary me-2"
+                                            style="margin-right: 5px;"
+                                            data-toggle="modal"
+                                            data-target="#addQuantityModal"
                                             data-book-id="@bookCopy.OriginaBookId"
                                             data-publisher-id="@bookCopy.PublisherId"
                                             data-edition="@bookCopy.Edition"
                                             data-book-title="@bookCopy.BookTitle"
                                             data-room-id="@bookCopy.RoomId"
                                             data-shelf-id="@bookCopy.ShelfId">
-                                        +
+                                        Modify
                                     </button>
+                                    <a href="@Url.Action("Index", "BookCopyLogs", new { originalBookId = bookCopy.OriginaBookId, publisherId = bookCopy.PublisherId, edition = bookCopy.Edition })"
+                                       class="btn btn-sm btn-info"
+                                       style="margin-left: 10px;">
+                                        Logs
+                                    </a>
                                 </div>
                             </td>
                         </tr>
