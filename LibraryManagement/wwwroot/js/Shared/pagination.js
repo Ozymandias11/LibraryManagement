@@ -1,8 +1,7 @@
-﻿$(document).ready(function () {
+﻿jQuery(document).ready(function ($) {
     var $pageSize = $('#pageSize');
     var $startDate = $('#startDate');
     var $endDate = $('#endDate');
-    var $pagination = $('.pagination');
 
     $pageSize.on('change', updateUrl);
     $startDate.add($endDate).on('change', updateUrl);
@@ -18,9 +17,9 @@
 
         updateSearchParam(currentUrl, 'StartDate', startDate);
         updateSearchParam(currentUrl, 'EndDate', endDate);
-        updateSearchParam(currentUrl, 'originalBookId', originalBookId);
-        updateSearchParam(currentUrl, 'publisherId', publisherId);
-        updateSearchParam(currentUrl, 'edition', edition);
+        updateSearchParam(currentUrl, 'originalBookId', typeof originalBookId !== 'undefined' ? originalBookId : null);
+        updateSearchParam(currentUrl, 'publisherId', typeof publisherId !== 'undefined' ? publisherId : null);
+        updateSearchParam(currentUrl, 'edition', typeof edition !== 'undefined' ? edition : null);
 
         window.location.href = currentUrl.toString();
     }
@@ -39,12 +38,18 @@
     }
 
     function adjustPagination() {
+        var $pagination = $('.pagination');
         var $pageItems = $pagination.find('.page-item:not(:first-child):not(:last-child)');
-        if ($(window).width() < 768 && $pageItems.length > 5) {
-            $pageItems.hide();
-            var $currentPage = $pagination.find('.page-item.active');
-            $currentPage.add($currentPage.prev()).add($currentPage.next()).show();
-            $pagination.find('.page-item:nth-child(2), .page-item:nth-last-child(2)').show();
+        if ($(window).width() < 768) {
+            if ($pageItems.length > 5) {
+                $pageItems.hide();
+                var $currentPage = $pagination.find('.page-item.active');
+                $currentPage.show();
+                $currentPage.prev().show();
+                $currentPage.next().show();
+                $pagination.find('.page-item:nth-child(2)').show();
+                $pagination.find('.page-item:nth-last-child(2)').show();
+            }
         } else {
             $pageItems.show();
         }
@@ -58,9 +63,9 @@
         var href = $this.attr('href');
         if (href) {
             var url = new URL(href, window.location.origin);
-            updateSearchParam(url, 'originalBookId', originalBookId);
-            updateSearchParam(url, 'publisherId', publisherId);
-            updateSearchParam(url, 'edition', edition);
+            updateSearchParam(url, 'originalBookId', typeof originalBookId !== 'undefined' ? originalBookId : null);
+            updateSearchParam(url, 'publisherId', typeof publisherId !== 'undefined' ? publisherId : null);
+            updateSearchParam(url, 'edition', typeof edition !== 'undefined' ? edition : null);
             $this.attr('href', url.toString());
         }
     });
