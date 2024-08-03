@@ -9,6 +9,6 @@ namespace Library.Data.Library.Interfaces
 {
    public interface IBookShelfRepository
     {
-        void CreateBookCopyShelf(BookCopy bookCopy, Shelf shelf);
+        Guid CreateBookCopyShelf(List<BookCopy> bookCopies ,Shelf shelf);
     }
 }

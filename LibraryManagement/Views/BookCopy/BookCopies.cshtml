@@ -59,7 +59,8 @@
                                             data-edition="@bookCopy.Edition"
                                             data-book-title="@bookCopy.BookTitle"
                                             data-room-id="@bookCopy.RoomId"
-                                            data-shelf-id="@bookCopy.ShelfId">
+                                            data-shelf-id="@bookCopy.ShelfId"
+                                            data-book-shelf-id="@bookCopy.BookCopyShelfId">
                                         Modify
                                     </button>
                                     <a href="@Url.Action("Index", "BookCopyLogs", new { originalBookId = bookCopy.OriginaBookId, publisherId = bookCopy.PublisherId, edition = bookCopy.Edition })"

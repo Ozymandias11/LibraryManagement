@@ -14,16 +14,18 @@ namespace Library.Data.Library.Implementations
         {
         }
 
-        public void CreateBookCopyShelf(BookCopy bookCopy, Shelf shelf)
+        public Guid CreateBookCopyShelf(List<BookCopy> bookCopies, Shelf shelf)
         {
-            var BookCopyShelf = new BookCopyShelf
+            var bookCopyShelf = new BookCopyShelf
             {
-                BookCopyId = bookCopy.BookCopyId,
+                BookCopyShelfId = Guid.NewGuid(),
                 RoomId = shelf.RoomId,
                 ShelfId = shelf.ShelfId
             };
 
-            Create(BookCopyShelf);
+            Create(bookCopyShelf);
+
+            return bookCopyShelf.BookCopyShelfId;
         }
     }
 }

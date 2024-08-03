@@ -22,8 +22,8 @@ namespace Library.Data.Library.Implementations
         public async Task<PagedList<BookCopyLog>> GetBookCopyLogs(BookCopyLogParameters parameters,Guid originalBookId, Guid publisherId, string edition)
         {
             var bookCopyLogs = await FindByCondition(bcl =>
-                        (bcl.OriginalBookId == originalBookId ||
-                         bcl.PublishersId == publisherId ||
+                        (bcl.OriginalBookId == originalBookId &&
+                         bcl.PublishersId == publisherId &&
                          bcl.Edition == edition) &&
                         (!parameters.StartDate.HasValue || bcl.TimeStamp >= parameters.StartDate.Value) &&
                         (!parameters.EndDate.HasValue || bcl.TimeStamp <= parameters.EndDate.Value),

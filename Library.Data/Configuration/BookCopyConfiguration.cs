@@ -22,12 +22,6 @@ namespace Library.Data.Configuration
             builder.Property(bc => bc.Edition).IsRequired();
 
            
-           
-
-
-            builder.HasMany(bc => bc.Shelves)
-                .WithOne(s => s.BookCopy)
-                .HasForeignKey(s => s.BookCopyId);
 
             builder.HasOne(bc => bc.Publisher)
                 .WithMany()
@@ -36,6 +30,12 @@ namespace Library.Data.Configuration
             builder.HasMany(bc => bc.ReservationItems)
                 .WithOne(ri => ri.BookCopy)
                 .HasForeignKey(ri => ri.BookCopyID);
+
+            builder.HasOne(bc => bc.BookCopyShelf)
+                .WithMany(bcs => bcs.BookCopies)
+                .HasForeignKey(bc => bc.BookCopyShelfId)
+                .OnDelete(DeleteBehavior.SetNull);
+                
 
            
 

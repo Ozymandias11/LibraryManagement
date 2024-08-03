@@ -5,11 +5,13 @@ using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Library.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vonage.Voice.EventWebhooks;
 
 namespace Library.Service.Library.Implementations
 {
@@ -27,8 +29,22 @@ namespace Library.Service.Library.Implementations
         public async Task<Result> CreateBookCopy(CreateBookCopyDto dto)
         {
             var bookCopies = CreateBookCopies(dto);
-            await AddBookCopiesToRepository(dto.SelectedBookId, dto.SelectedPublisherId, bookCopies);
-            await AddBookCopiesToShelf(dto.SelectedRoomId, dto.SelectedShelfId, bookCopies);
+
+            var allocateShelfResult = await AddBookCopiesToShelf(dto.SelectedRoomId, dto.SelectedShelfId, bookCopies);
+
+            if (allocateShelfResult.IsFailed)
+            {
+                return Result.Fail(allocateShelfResult.Errors);
+            }
+
+            var addingBookCopiesResult = AddBookCopiesToRepository(allocateShelfResult.Value, dto.SelectedBookId, dto.SelectedPublisherId, bookCopies);
+
+            if (addingBookCopiesResult.IsFailed)
+            {
+                return Result.Fail(addingBookCopiesResult.Errors);
+            }
+
+            await _repositoryManager.SaveAsync();
 
             return Result.Ok();
         }
@@ -36,23 +52,8 @@ namespace Library.Service.Library.Implementations
         public async Task<(IEnumerable<BookCopyDto> bookCopies, MetaData metaData)> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
             var bookCopiesWithMetaData = await _repositoryManager.BookCopyRepository.GetAllBookCopies(bookCopyParameters, trackChanges);
+
             var bookCopyDtos = _mapper.Map<IEnumerable<BookCopyDto>>(bookCopiesWithMetaData);
-
-            foreach (var dto in bookCopyDtos)
-            {
-                var bookCopy = bookCopiesWithMetaData.FirstOrDefault(bc => bc.BookCopyId == dto.BookCopyId);
-                var bookCopyShelf = bookCopy?.Shelves?.FirstOrDefault();
-                var shelf = bookCopyShelf?.Shelf;
-                var room = shelf?.Room;
-
-                if (room != null && shelf != null)
-                {
-                    dto.RoomId = room.RoomId;
-                    dto.RoomNumber = room.RoomNumber;
-                    dto.ShelfNumber = shelf.ShelfNumber;
-                    dto.ShelfId = shelf.ShelfId;
-                }
-            }
 
             return (bookCopyDtos, bookCopiesWithMetaData.MetaData);
         }
@@ -62,7 +63,7 @@ namespace Library.Service.Library.Implementations
         {
             if (modifyBookCopiesDto.State == "Added")
             {
-                await AddBookCopies(modifyBookCopiesDto);
+                 AddBookCopies(modifyBookCopiesDto);
 
             }
             else if (modifyBookCopiesDto.State == "Deleted")
@@ -87,6 +88,7 @@ namespace Library.Service.Library.Implementations
 
         }
 
+
         private static List<BookCopy> CreateBookCopies(CreateBookCopyDto dto)
         {
             return Enumerable.Range(0, dto.Quantity)
@@ -101,35 +103,51 @@ namespace Library.Service.Library.Implementations
         }
 
 
-        private async Task AddBookCopiesToRepository(Guid bookId, Guid publisherId, List<BookCopy> bookCopies)
+        private Result AddBookCopiesToRepository(Guid bookShelfId ,Guid bookId, Guid publisherId, List<BookCopy> bookCopies)
         {
-            _repositoryManager.BookCopyRepository.AddBookCopies(bookId, publisherId, bookCopies);
-            await _repositoryManager.SaveAsync();
-        }
-
-        private async Task AddBookCopiesToShelf(Guid roomId, Guid shelfId, List<BookCopy> bookCopies)
-        {
-            var shelf = await _repositoryManager.ShelfRepository.GetShelf(roomId, shelfId, false);
-
-            foreach (var bookCopy in bookCopies)
+            try
             {
-                _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopy, shelf);
+                _repositoryManager.BookCopyRepository.AddBookCopies(bookShelfId,bookId, publisherId, bookCopies);
+                return Result.Ok();
             }
-            await _repositoryManager.SaveAsync();
+            catch(Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
         }
 
-        public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
+        private async Task<Result<Guid>> AddBookCopiesToShelf(Guid roomId, Guid shelfId, List<BookCopy> bookCopies)
+        {
+            try
+            {
+                var shelf = await _repositoryManager.ShelfRepository.GetShelf(roomId, shelfId, false);
 
+                var bookShelfId = _repositoryManager.BookShelfRepository.CreateBookCopyShelf(bookCopies, shelf);
 
-        private async Task AddBookCopies(ModifyBookCopiesDto dto)
+                return Result.Ok(bookShelfId);
+
+            }catch(Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
+        
+           
+        }
+
+        private Result AddBookCopies(ModifyBookCopiesDto dto)
         {
             var createBookCopyDto = _mapper.Map<CreateBookCopyDto>(dto);
 
             var newCopies = CreateBookCopies(createBookCopyDto);
 
-            await AddBookCopiesToRepository(dto.OriginalBookId, dto.PublisherId, newCopies);
+            var createBookCopiesResult = AddBookCopiesToRepository(dto.BookCopyShelfId ,dto.OriginalBookId, dto.PublisherId, newCopies);
 
-            await AddBookCopiesToShelf(dto.RoomId, dto.ShelfId, newCopies);
+            if (createBookCopiesResult.IsFailed)
+            {
+                return Result.Fail(createBookCopiesResult.Errors);
+            }
+
+            return Result.Ok();
 
         }
 
@@ -142,9 +160,8 @@ namespace Library.Service.Library.Implementations
             {
                 _repositoryManager.BookCopyRepository.DeleteBookCopy(bookCopy);
             }
-
-            await _repositoryManager.SaveAsync();
-
         }
+
+        public async Task<int> GetTotalBookCopiesCount() => await _repositoryManager.BookCopyRepository.GetTotalBookCopiesCount();
     }
 }
