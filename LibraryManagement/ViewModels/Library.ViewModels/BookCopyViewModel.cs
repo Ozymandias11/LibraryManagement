@@ -18,6 +18,7 @@ namespace LibraryManagement.ViewModels.Library.ViewModels
         public int ShelfNumber { get; set; }
         public Guid RoomId { get; set; }
         public Guid ShelfId { get; set; }
+        public Guid BookCopyShelfId { get; set; }
 
 
     }

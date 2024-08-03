@@ -13,7 +13,12 @@ namespace Library.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<BookCopyShelf> builder)
         {
-            builder.HasKey(bcs => new { bcs.BookCopyId, bcs.ShelfId , bcs.RoomId});
+            builder.HasKey(bcs => bcs.BookCopyShelfId);
+
+            builder.HasOne(bcs => bcs.Shelf)
+                .WithMany()
+                .HasForeignKey(bcs => bcs.ShelfId);
+
         }
     }
 }

@@ -17,9 +17,10 @@ namespace Library.Model.Models
         public Guid PublisherId { get; set; }
         public Publisher? Publisher { get; set; }
         public Guid OriginaBookId { get; set; }
+        public Guid? BookCopyShelfId { get; set; }
         public Book? OriginalBook { get; set; }
         public ICollection<Reservation>? Reservations { get; set; }
-        public ICollection<BookCopyShelf>? Shelves { get; set; }
+        public BookCopyShelf? BookCopyShelf { get; set; }
         public ICollection<ReservationItem>? ReservationItems { get; set; }
         
 

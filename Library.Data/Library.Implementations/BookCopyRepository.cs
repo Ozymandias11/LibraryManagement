@@ -18,7 +18,7 @@ namespace Library.Data.Library.Implementations
         {
         }
 
-        public void AddBookCopies(Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies)
+        public void AddBookCopies(Guid bookShelfId, Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies)
         {
 
             var modifiedBookCopies = new List<BookCopy>();
@@ -28,6 +28,7 @@ namespace Library.Data.Library.Implementations
                 bookCopy.PublisherId = PublisherId;
                 bookCopy.OriginaBookId = originalBookId;
                 bookCopy.CreatedDate = DateTime.Now;
+                bookCopy.BookCopyShelfId = bookShelfId;
                 modifiedBookCopies.Add(bookCopy);
             }
 
@@ -82,9 +83,9 @@ namespace Library.Data.Library.Implementations
             var query = FindByCondition(bc => bc.DeletedDate == null, trackChanges)
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
-                .Include(bc => bc.Shelves)
+                .Include(bc => bc.BookCopyShelf)
                       .ThenInclude(bcs => bcs.Shelf)
-                        .ThenInclude(s => s.Room)
+                         .ThenInclude(s => s.Room)
                 .Search(bookCopyParameters.SearchTerm)
                 .Sort(bookCopyParameters.OrderBy);
 
@@ -105,7 +106,7 @@ namespace Library.Data.Library.Implementations
                                  bc.Status == Status.Available)
                     .ToListAsync();
 
-                if (bookCopies.Any())
+                if (bookCopies.Count != 0)
                 {
                     var firstCopy = bookCopies.First();
                     firstCopy.Quantity = bookCopies.Count;

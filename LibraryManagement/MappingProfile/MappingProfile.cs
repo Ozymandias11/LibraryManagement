@@ -119,7 +119,12 @@ namespace LibraryManagement.MappingProfile
 
             CreateMap<BookCopy, BookCopyDto>()
                 .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.OriginalBook.Title))
-                .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.PublisherName));
+                .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.PublisherName))
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.Room.RoomNumber))
+                .ForMember(dest => dest.ShelfNumber, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.ShelfNumber))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.Room.RoomId))
+                .ForMember(dest => dest.ShelfId, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.ShelfId));
+
                 
             CreateMap<BookCopyDto, BookCopyViewModel>();
 

@@ -18,7 +18,7 @@ namespace Library.Data.Library.Interfaces
         Task<int> GetTotalBookCopiesCount();
         void UpdateBookCopyStatus(BookCopy bookCopy);
         void DeleteBookCopy(BookCopy bookCopy);
-        void AddBookCopies(Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies);
+        void AddBookCopies(Guid bookShelfId,Guid originalBookId, Guid PublisherId, IEnumerable<BookCopy> bookCopies);
 
 
 

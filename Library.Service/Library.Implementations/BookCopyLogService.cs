@@ -27,6 +27,7 @@ namespace Library.Service.Library.Implementations
         public async Task<Result> CreateBookCopyLog(CreateBookCopyLogDto createBookCopyLogDto)
         {
             var bookcopyLog = _mapper.Map<BookCopyLog>(createBookCopyLogDto);
+
             bookcopyLog.TimeStamp = DateTime.Now;   
 
             _repositoryManager.BookCopyLogRepository.CreateBookCopy(bookcopyLog);

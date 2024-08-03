@@ -44,7 +44,6 @@ namespace Library.Data.Library.Implementations
                 Delete(bookPublisher);
             }
 
-          //  DetachEntities(bookPublishers);
 
         }
     }
