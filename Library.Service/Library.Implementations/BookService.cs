@@ -4,6 +4,7 @@ using Library.Data.NewFolder;
 using Library.Data.RequestFeatures;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Dto.Reports.Dto;
 using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
@@ -115,6 +116,19 @@ namespace Library.Service.Library.Implementations
 
                 return Result.Ok();
             }
+
+
+
+
+        public async Task<IEnumerable<PopularityReportDto>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var genrePopularity = await _repositoryManager.BookRepository.GetPopularityReport(startDate, endDate, reportType);
+
+            var genrePopularityDto = _mapper.Map<IEnumerable<PopularityReportDto>> (genrePopularity);
+
+            return genrePopularityDto;
+
+        }
 
 
         private async Task UpdateRelatedEntities(Book bookEntity, IEnumerable<Guid> authorIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds)
@@ -241,7 +255,7 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
         }
 
-     
+      
     }
 }
 

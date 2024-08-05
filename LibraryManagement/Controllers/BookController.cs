@@ -5,6 +5,7 @@ using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
+using LibraryManagement.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Controllers
@@ -104,6 +105,24 @@ namespace LibraryManagement.Controllers
 
 
         }
+
+        public IActionResult PopularityReport()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var genrePopularityDto = await _serviceManager.BookService.GetPopularityReport(startDate, endDate, reportType);
+
+            var genrePopularityViewModel = _mapper.Map<IEnumerable<PopularityReportViewModel>>(genrePopularityDto);
+
+            return PartialView("_PopularityReportTable", genrePopularityViewModel);
+
+
+        }
+
 
         // below are methods used for populating dropdowns
 

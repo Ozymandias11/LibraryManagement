@@ -1,5 +1,6 @@
 ﻿using Library.Data.NewFolder;
 using Library.Model.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -68,8 +69,6 @@ namespace Library.Data
             _repositoryContext.DetachEntries(entities);
         }
 
-
-        //
         private bool IsJunctionTable(Type entityType)
         {
             return entityType.Name.EndsWith("BookAuthor") ||
@@ -81,5 +80,18 @@ namespace Library.Data
         {
             _repositoryContext.Set<T>().AddRange(entities);
         }
+
+        protected async Task<IEnumerable<TResult>> ExecuteStoredProcedureAsync<TResult>(string storedProcedure, params SqlParameter[] parameters) where TResult : class
+        {
+            var result = await _repositoryContext
+                .Set<TResult>() 
+                .FromSqlRaw(storedProcedure, parameters)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return result;
+        }
+
+
     }
 }
