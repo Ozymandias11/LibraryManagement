@@ -1,4 +1,5 @@
 ﻿using Library.Data.RequestFeatures;
+using Library.Model.Helpers;
 using Library.Model.Models;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Library.Data.Library.Interfaces
         Task<PagedList<Book>> GetAllBooks(BookParameters bookParameters ,bool trackChanges);
         Task<IEnumerable<Book>> GetBooksForDropDown(bool trackChanges); 
         Task<Book?> GetBook(Guid id, bool trackChanges);
+        Task<IEnumerable<PopularityReport>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType);
         void CreateBook(Book book);
         void DeleteBook(Book book);
     }

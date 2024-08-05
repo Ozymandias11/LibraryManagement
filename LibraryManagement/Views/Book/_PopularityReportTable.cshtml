@@ -1,0 +1,21 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.PopularityReportViewModel>
+
+<div class="table-responsive mt-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">Reservations</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@item.Name</td>
+                    <td class="text-center">@item.Reservations</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

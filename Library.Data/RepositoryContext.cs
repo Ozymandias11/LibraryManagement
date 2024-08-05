@@ -1,5 +1,6 @@
 ﻿
 
+using Library.Model.Helpers;
 using Library.Model.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Library.Data
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.Entity<PopularityReport>().HasNoKey();
 
         }
 

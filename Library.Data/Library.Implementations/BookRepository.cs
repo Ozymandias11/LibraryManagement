@@ -1,10 +1,14 @@
 ﻿using Library.Data.Extensions;
 using Library.Data.Library.Interfaces;
 using Library.Data.RequestFeatures;
+using Library.Model.Helpers;
 using Library.Model.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -55,6 +59,19 @@ namespace Library.Data.Library.Implementations
             => await FindByCondition(b => b.DeletedDate == null, trackChanges)
               .OrderBy(b => b.Title)
               .ToListAsync();
-      
+
+        public async Task<IEnumerable<PopularityReport>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var startDateParam = new SqlParameter("@StartDate", SqlDbType.Date) { Value = startDate };
+            var endDateParam = new SqlParameter("@EndDate", SqlDbType.Date) { Value = endDate };
+            var reportTypeParam = new SqlParameter("@ReportType", SqlDbType.VarChar, 50) { Value = reportType };
+
+            string storedProcedure = "EXEC dbo.GetPopularityReport @StartDate, @EndDate, @ReportType";
+
+            var result = await ExecuteStoredProcedureAsync<PopularityReport>(storedProcedure, startDateParam, endDateParam, reportTypeParam);
+            return result;
+        }
+
+
     }
 }

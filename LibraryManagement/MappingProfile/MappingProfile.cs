@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Library.Model.Enums;
+using Library.Model.Helpers;
 using Library.Model.Models;
 using Library.Service.Dto;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Dto.Reports.Dto;
 using LibraryManagement.ViewModels;
 using LibraryManagement.ViewModels.Library.ViewModels;
+using LibraryManagement.ViewModels.Reports;
 
 namespace LibraryManagement.MappingProfile
 {
@@ -194,6 +197,12 @@ namespace LibraryManagement.MappingProfile
             CreateMap<BookCopyLog, BookCopyLogDto>();
             CreateMap<ModifyBookCopiesViewModel, ModifyBookCopiesDto>();
             CreateMap<BookCopyLogDto, BookCopyLogsViewModel>();
+
+
+            //Reports
+
+            CreateMap<PopularityReport, PopularityReportDto>();
+            CreateMap<PopularityReportDto, PopularityReportViewModel>();
 
 
 
