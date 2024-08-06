@@ -1,10 +1,13 @@
 ﻿using Library.Data.Extensions;
 using Library.Data.Library.Interfaces;
 using Library.Data.RequestFeatures;
+using Library.Model.Helpers;
 using Library.Model.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,8 +52,22 @@ namespace Library.Data.Library.Implementations
       
 
         public Task<int> GetTotalCustomersCount() => FindAll(false).CountAsync();
-        
-            
-        
+
+
+        public async Task<IEnumerable<MonthlyRegistrationReport>> GetMonthlyRegistrations(int year)
+        {
+            var yearParam = new SqlParameter("@Year", SqlDbType.Int) { Value = year };
+
+            string storedProcedure = "EXEC dbo.GetMonthlyRegistrations @Year";
+
+            var result = await ExecuteStoredProcedureAsync<MonthlyRegistrationReport>(storedProcedure, yearParam);
+
+            return result;
+
+
+        }
+
+
+
     }
 }

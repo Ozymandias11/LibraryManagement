@@ -4,9 +4,11 @@ using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.ActionFilters;
+using LibraryManagement.Extensions;
 using LibraryManagement.ViewModels.Library.ViewModels;
 using LibraryManagement.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
 
 namespace LibraryManagement.Controllers
 {
@@ -124,6 +126,18 @@ namespace LibraryManagement.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<FileResult> ExportPopularityReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var popularityReportDto = await _serviceManager.BookService.GetPopularityReport(startDate, endDate, reportType);
+
+            var fileContents = ExcelExporter.ExportToExcel(popularityReportDto, $"Popularity by {reportType}");
+
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PopularityBy_{reportType}.xlsx");
+
+        }
+
+
         // below are methods used for populating dropdowns
 
         public async Task<IActionResult> GetBooksForDropDown()
@@ -136,7 +150,7 @@ namespace LibraryManagement.Controllers
         }
 
 
-   
+
 
     }
 }

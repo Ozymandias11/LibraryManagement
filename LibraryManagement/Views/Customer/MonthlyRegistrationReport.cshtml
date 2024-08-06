@@ -1,0 +1,29 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.MonthlyRegistrationViewModel>
+@{
+    ViewData["Title"] = "Monthly Registration Report";
+}
+<div class="card">
+    <div class="card-body">
+        <h2 class="text-primary mb-3">Monthly Registration Report</h2>
+        <form id="reportForm" class="mb-3">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="year">Year:</label>
+                    <input type="number" id="year" name="year" class="form-control" required min="2000" max="@DateTime.Now.Year">
+                </div>
+                <div class="col-md-3 align-self-end">
+                    <button type="submit" class="btn btn-primary">Generate Report</button>
+                </div>
+            </div>
+            <div id="reportTable"></div>
+        </form>
+        <form id="exportForm" method="post" action="@Url.Action("ExportMonthlyRegistrations", "Customer")">
+            <input type="hidden" name="year" />
+            <button type="submit" id="exportButton" class="btn btn-success" style="display: none;">Export to Excel</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+  <script src="~/js/Reports/monthly-registration-report.js"></script>
+}
