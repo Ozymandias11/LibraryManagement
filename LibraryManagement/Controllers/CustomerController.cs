@@ -6,8 +6,11 @@ using Library.Service.Interfaces;
 using Library.Service.Library.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
+using LibraryManagement.Extensions;
 using LibraryManagement.ViewModels.Library.ViewModels;
+using LibraryManagement.ViewModels.Reports;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml.Table.PivotTable;
 
 namespace LibraryManagement.Controllers
 {
@@ -112,10 +115,41 @@ namespace LibraryManagement.Controllers
             return View(model);
         }
 
+        public IActionResult MonthlyRegistrationReport()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMonthlyRegistrationReport(int year)
+        {
+            var customerRegistrationsDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(year);
+
+            var customerRegistrationsViewModel = _mapper.Map<IEnumerable<MonthlyRegistrationViewModel>>(customerRegistrationsDto);
+
+            return PartialView("_CustomerRegistrationReportTable", customerRegistrationsViewModel);
+
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ExportMonthlyRegistrations(int year)
+        {
+            var customerRegistrationsDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(year);
+
+            var fileContents = ExcelExporter.ExportToExcel(customerRegistrationsDto, "Customer Monthly Registration Report");
+
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Customer_Monthly_Registration_Report.xlsx");
+
+
+        }
+
+
         public async Task<IActionResult> GetCustomersForDropDown()
         {
             var customers = await _serviceManager.CustomerService.GetAllCustomersUnfiltered(false);
             return Json(customers.Select(c => new { id = c.CustomerId, name = c.CustomerPersonalId }));
         }
+
     }
 }

@@ -2,8 +2,10 @@
 using FluentResults;
 using Library.Data.NewFolder;
 using Library.Data.RequestFeatures;
+using Library.Model.Helpers;
 using Library.Model.Models;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Dto.Reports.Dto;
 using Library.Service.Errors.NotFoundError;
 using Library.Service.Library.Interfaces;
 using System;
@@ -89,6 +91,16 @@ namespace Library.Service.Library.Implementations
             var customer = await _repositoryManager.CustomerRepository.GetCustomerByPersonalId(id, trackChanges);
             var customerDto = _mapper.Map<CustomerDto>(customer);
             return customerDto;
+        }
+
+        public async Task<IEnumerable<MonthlyRegistrationReportDto>> GetCustomerRegistrationsByYear(int year)
+        {
+            var customerRegistrations = await _repositoryManager.CustomerRepository.GetMonthlyRegistrations(year);
+
+            var customerRegistartionsDto = _mapper.Map<IEnumerable<MonthlyRegistrationReportDto>>(customerRegistrations);
+
+            return customerRegistartionsDto;
+
         }
 
         public async Task<int> GetTotalCustomersCount() => await _repositoryManager.CustomerRepository.GetTotalCustomersCount();
