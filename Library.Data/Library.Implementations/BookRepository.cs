@@ -60,6 +60,18 @@ namespace Library.Data.Library.Implementations
               .OrderBy(b => b.Title)
               .ToListAsync();
 
+        public async Task<IEnumerable<MonthlyReport>> GetMonthlyReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var startDateParam = new SqlParameter("@StartDate", SqlDbType.Date) { Value = startDate };
+            var endDateParam = new SqlParameter("@EndDate", SqlDbType.Date) { Value = endDate };
+            var reportTypeParam = new SqlParameter("@ReportType", SqlDbType.VarChar, 50) { Value = reportType };
+
+            string storedProcedure = "EXEC dbo.GetMonthlyReport @StartDate, @EndDate, @ReportType";
+
+            var result = await ExecuteStoredProcedureAsync<MonthlyReport>(storedProcedure, startDateParam, endDateParam, reportTypeParam);
+            return result;
+        }
+
         public async Task<IEnumerable<PopularityReport>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType)
         {
             var startDateParam = new SqlParameter("@StartDate", SqlDbType.Date) { Value = startDate };

@@ -29,6 +29,8 @@ namespace Library.Data
 
             builder.Entity<MonthlyRegistrationReport>().HasNoKey();
 
+            builder.Entity<MonthlyReport>().HasNoKey();
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

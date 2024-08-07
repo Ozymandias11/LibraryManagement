@@ -125,6 +125,17 @@ namespace LibraryManagement.Controllers
 
         }
 
+        public async Task<IActionResult> GetAnnualReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var monthlyReport = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, reportType);
+
+            var monthlyReportViewModel = _mapper.Map<IEnumerable<MonthlyReportViewModel>>(monthlyReport);
+
+            return PartialView("_MonthlyReportTable", monthlyReportViewModel);
+
+
+        }
+
 
         [HttpPost]
         public async Task<FileResult> ExportPopularityReport(DateTime startDate, DateTime endDate, string reportType)
@@ -136,6 +147,20 @@ namespace LibraryManagement.Controllers
             return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PopularityBy_{reportType}.xlsx");
 
         }
+
+        [HttpPost]
+        public async Task<FileResult> ExportAnnualReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var monthlyreportDto = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, reportType);
+
+            var fileContents = ExcelExporter.ExportToExcel(monthlyreportDto, $"Popularity by {reportType}");
+
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PopularityBy_{reportType}.xlsx");
+
+        }
+
+
+
 
 
         // below are methods used for populating dropdowns

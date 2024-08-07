@@ -207,6 +207,9 @@ namespace LibraryManagement.MappingProfile
             CreateMap<MonthlyRegistrationReport, MonthlyRegistrationReportDto>();
             CreateMap<MonthlyRegistrationReportDto, MonthlyRegistrationViewModel>();
 
+            CreateMap<MonthlyReport, MonthlyReportDto>();
+            CreateMap<MonthlyReportDto, MonthlyReportViewModel>();
+
 
 
         }
