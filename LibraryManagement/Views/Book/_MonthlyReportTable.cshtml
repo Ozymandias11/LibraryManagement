@@ -1,0 +1,45 @@
+﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.MonthlyReportViewModel>
+
+<div class="table-responsive mt-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="text-center">Name</th>
+                <th class="text-center">January</th>
+                <th class="text-center">February</th>
+                <th class="text-center">March</th>
+                <th class="text-center">April</th>
+                <th class="text-center">May</th>
+                <th class="text-center">June</th>
+                <th class="text-center">July</th>
+                <th class="text-center">August</th>
+                <th class="text-center">September</th>
+                <th class="text-center">October</th>
+                <th class="text-center">November</th>
+                <th class="text-center">December</th>
+                <th class="text-center">Total Reservations</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@item.Name</td>
+                    <td class="text-center">@item.January</td>
+                    <td class="text-center">@item.February</td>
+                    <td class="text-center">@item.March</td>
+                    <td class="text-center">@item.April</td>
+                    <td class="text-center">@item.May</td>
+                    <td class="text-center">@item.June</td>
+                    <td class="text-center">@item.July</td>
+                    <td class="text-center">@item.August</td>
+                    <td class="text-center">@item.September</td>
+                    <td class="text-center">@item.October</td>
+                    <td class="text-center">@item.November</td>
+                    <td class="text-center">@item.December</td>
+                    <td class="text-center">@item.TotalReservations</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

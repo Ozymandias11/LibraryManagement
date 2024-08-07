@@ -130,6 +130,18 @@ namespace Library.Service.Library.Implementations
 
         }
 
+        public async Task<IEnumerable<MonthlyReportDto>> GetMonthlyReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var monthlyReport = await _repositoryManager.BookRepository.GetMonthlyReport(startDate, endDate, reportType);
+
+            var monthlyReportDto = _mapper.Map<IEnumerable<MonthlyReportDto>> (monthlyReport);
+
+            return monthlyReportDto;
+
+
+        }
+
+
 
         private async Task UpdateRelatedEntities(Book bookEntity, IEnumerable<Guid> authorIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds)
         {
@@ -255,7 +267,7 @@ namespace Library.Service.Library.Implementations
             return Result.Ok();
         }
 
-      
+    
     }
 }
 
