@@ -1,10 +1,10 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.PopularityReportViewModel>
+﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.MonthlyLostBooksReportViewModel>
 @{
-    ViewData["Title"] = "Popularity Report";
+    ViewData["Title"] = "Lost Books Report";
 }
 <div class="card">
     <div class="card-body">
-        <h2 class="text-primary mb-3">Report</h2>
+        <h2 class="text-primary mb-3">Lost Books Report</h2>
         <form id="reportForm" class="mb-3">
             <div class="row">
                 <div class="col-md-3">
@@ -41,7 +41,7 @@
                     <select id="reportType" name="reportType" class="form-control" required>
                         <option value="">Select a type</option>
                         <option value="Books">Books</option>
-                        <option value="Authors">Authors</option>
+                        <option value="Categories">Categories</option>
                         <option value="Publishers">Publishers</option>
                         <option value="Genres">Genres</option>
                     </select>
@@ -49,9 +49,9 @@
             </div>
         </form>
         <div id="reportTable"></div>
-        <form id="exportForm" method="post" action="@Url.Action("ExportRangeReport", "Book")"
-              data-annual-url="@Url.Action("ExportAnnualReport", "Book")"
-              data-range-url="@Url.Action("ExportRangeReport", "Book")">
+        <form id="exportForm" method="post" action="@Url.Action("ExportRangeLostBooksReport", "Book")"
+              data-annual-url="@Url.Action("ExportAnnualLostBooksReport", "Book")"
+              data-range-url="@Url.Action("ExportRangeLostBooksReport", "Book")">
             <input type="hidden" name="startDate" />
             <input type="hidden" name="endDate" />
             <input type="hidden" name="year" />
@@ -60,7 +60,6 @@
         </form>
     </div>
 </div>
-
 @section Scripts {
-    <script src="~/js/Reports/popularity-report.js"></script>
+    <script src="~/js/Reports/lost-books-report.js"></script>
 }

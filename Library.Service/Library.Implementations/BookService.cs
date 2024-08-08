@@ -141,6 +141,27 @@ namespace Library.Service.Library.Implementations
 
         }
 
+        public async Task<IEnumerable<MonthlyLostBooksReportDto>> GetMonhtlyLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var monthlyLostBooksReport = await _repositoryManager.BookRepository.GetMonthlyLostBooksReport(startDate, endDate, reportType); 
+
+            var monthlyLostBooksReportDto = _mapper.Map<IEnumerable<MonthlyLostBooksReportDto>>(monthlyLostBooksReport);
+
+            return monthlyLostBooksReportDto;
+
+        }
+
+        public async Task<IEnumerable<LostBooksReportDto>> GetLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var lostBooksReport = await _repositoryManager.BookRepository.GetLostBooksReport(startDate, endDate, reportType);
+
+            var lostBooksDto = _mapper.Map<IEnumerable<LostBooksReportDto>>(lostBooksReport);
+
+            return lostBooksDto;
+
+
+        }
+
 
 
         private async Task UpdateRelatedEntities(Book bookEntity, IEnumerable<Guid> authorIds, IEnumerable<Guid> publisherIds, IEnumerable<Guid> categoryIds)

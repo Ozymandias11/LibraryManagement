@@ -84,5 +84,30 @@ namespace Library.Data.Library.Implementations
             return result;
         }
 
+        public async Task<IEnumerable<MonthlyLostBooksReport>> GetMonthlyLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var startDateParam = new SqlParameter("@StartDate", SqlDbType.Date) { Value = startDate };
+            var endDateParam = new SqlParameter("@EndDate", SqlDbType.Date) { Value = endDate };
+            var reportTypeParam = new SqlParameter("@ReportType", SqlDbType.VarChar, 50) { Value = reportType };
+
+            string storedProcedure = "EXEC dbo.GetMonthlyLostBooksReport @StartDate, @EndDate, @ReportType";
+
+            var result = await ExecuteStoredProcedureAsync<MonthlyLostBooksReport>(storedProcedure, startDateParam, endDateParam, reportTypeParam);
+            return result;
+
+
+        }
+
+        public async Task<IEnumerable<LostBooksReport>> GetLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var startDateParam = new SqlParameter("@StartDate", SqlDbType.Date) { Value = startDate };
+            var endDateParam = new SqlParameter("@EndDate", SqlDbType.Date) { Value = endDate };
+            var reportTypeParam = new SqlParameter("@ReportType", SqlDbType.VarChar, 50) { Value = reportType };
+
+            string storedProcedure = "EXEC dbo.GetLostBooksReport @StartDate, @EndDate, @ReportType";
+
+            var result = await ExecuteStoredProcedureAsync<LostBooksReport>(storedProcedure, startDateParam, endDateParam, reportTypeParam);
+            return result;
+        }
     }
 }
