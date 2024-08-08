@@ -31,6 +31,10 @@ namespace Library.Data
 
             builder.Entity<MonthlyReport>().HasNoKey();
 
+            builder.Entity<MonthlyLostBooksReport>().HasNoKey();
+
+            builder.Entity<LostBooksReport>().HasNoKey();
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

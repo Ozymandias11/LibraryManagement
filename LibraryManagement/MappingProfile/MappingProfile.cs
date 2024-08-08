@@ -202,14 +202,28 @@ namespace LibraryManagement.MappingProfile
             //Reports
 
             CreateMap<PopularityReport, PopularityReportDto>();
-            CreateMap<PopularityReportDto, PopularityReportViewModel>();
+            CreateMap<PopularityReportDto, GenericRangeReportViewModel>()
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.Reservations))
+                .ForMember(dest => dest.TotalLabel, opt => opt.MapFrom(src => "Reservations"));
+
 
             CreateMap<MonthlyRegistrationReport, MonthlyRegistrationReportDto>();
             CreateMap<MonthlyRegistrationReportDto, MonthlyRegistrationViewModel>();
 
             CreateMap<MonthlyReport, MonthlyReportDto>();
-            CreateMap<MonthlyReportDto, MonthlyReportViewModel>();
+            CreateMap<MonthlyReportDto, GenericMonthlyReportViewModel>()
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.TotalReservations))
+                .ForMember(dest => dest.TotalLabel, opt => opt.MapFrom(src => "Total Reservations"));
 
+            CreateMap<MonthlyLostBooksReport, MonthlyLostBooksReportDto>();
+            CreateMap<MonthlyLostBooksReportDto, GenericMonthlyReportViewModel>()
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.TotalLostBooks))
+                .ForMember(dest => dest.TotalLabel, opt => opt.MapFrom(src => "Total Lost Books"));
+
+            CreateMap<LostBooksReport, LostBooksReportDto>();
+            CreateMap<LostBooksReportDto, GenericRangeReportViewModel>()
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.LostBooksCount))
+                .ForMember(dest => dest.TotalLabel, opt => opt.MapFrom(src => "Total Lost Books"));
 
 
         }

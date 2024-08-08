@@ -1,11 +1,15 @@
-﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.PopularityReportViewModel>
+﻿@model IEnumerable<LibraryManagement.ViewModels.Reports.GenericRangeReportViewModel>
+
+@{
+    var totalLabel = Model.FirstOrDefault()?.TotalLabel ?? "Total";
+}
 
 <div class="table-responsive mt-3">
     <table class="table">
         <thead>
             <tr>
                 <th class="text-center">Name</th>
-                <th class="text-center">Reservations</th>
+                <th class="text-center">@totalLabel</th>
             </tr>
         </thead>
         <tbody>
@@ -13,7 +17,7 @@
             {
                 <tr>
                     <td class="text-center">@item.Name</td>
-                    <td class="text-center">@item.Reservations</td>
+                    <td class="text-center">@item.Total</td>
                 </tr>
             }
         </tbody>

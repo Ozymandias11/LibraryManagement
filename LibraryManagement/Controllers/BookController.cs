@@ -2,6 +2,7 @@
 using AutoMapper;
 using Library.Data.RequestFeatures;
 using Library.Service.Dto.Library.Dto;
+using Library.Service.Dto.Reports.Dto;
 using Library.Service.Interfaces;
 using LibraryManagement.ActionFilters;
 using LibraryManagement.Extensions;
@@ -118,18 +119,19 @@ namespace LibraryManagement.Controllers
         {
             var genrePopularityDto = await _serviceManager.BookService.GetPopularityReport(startDate, endDate, reportType);
 
-            var genrePopularityViewModel = _mapper.Map<IEnumerable<PopularityReportViewModel>>(genrePopularityDto);
+            var genrePopularityViewModel = _mapper.Map<IEnumerable<GenericRangeReportViewModel>>(genrePopularityDto);
 
-            return PartialView("_PopularityReportTable", genrePopularityViewModel);
+            return PartialView("_RangeReportTable", genrePopularityViewModel);
 
 
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetAnnualReport(DateTime startDate, DateTime endDate, string reportType)
         {
             var monthlyReport = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, reportType);
 
-            var monthlyReportViewModel = _mapper.Map<IEnumerable<MonthlyReportViewModel>>(monthlyReport);
+            var monthlyReportViewModel = _mapper.Map<IEnumerable<GenericMonthlyReportViewModel>>(monthlyReport);
 
             return PartialView("_MonthlyReportTable", monthlyReportViewModel);
 
@@ -138,7 +140,7 @@ namespace LibraryManagement.Controllers
 
 
         [HttpPost]
-        public async Task<FileResult> ExportPopularityReport(DateTime startDate, DateTime endDate, string reportType)
+        public async Task<FileResult> ExportRangeReport(DateTime startDate, DateTime endDate, string reportType)
         {
             var popularityReportDto = await _serviceManager.BookService.GetPopularityReport(startDate, endDate, reportType);
 
@@ -151,13 +153,68 @@ namespace LibraryManagement.Controllers
         [HttpPost]
         public async Task<FileResult> ExportAnnualReport(DateTime startDate, DateTime endDate, string reportType)
         {
-            var monthlyreportDto = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, reportType);
+            var monthlyReportDto = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, reportType);
 
-            var fileContents = ExcelExporter.ExportToExcel(monthlyreportDto, $"Popularity by {reportType}");
+            var fileContents = ExcelExporter.ExportToExcel(monthlyReportDto, $"Annual Report {startDate}, {endDate} - {reportType}");
 
-            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"PopularityBy_{reportType}.xlsx");
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"AnnualReport_{startDate}_{endDate}_{reportType}.xlsx");
 
         }
+
+      
+
+        public IActionResult LostBooksReport()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAnnualLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var lostBooksDto = await _serviceManager.BookService.GetMonhtlyLostBooksReport(startDate, endDate, reportType); 
+
+            var lostBooksViewModel = _mapper.Map<IEnumerable<GenericMonthlyReportViewModel>>(lostBooksDto);
+
+            return PartialView("_MonthlyReportTable", lostBooksViewModel);
+
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var lostBooksDto = await _serviceManager.BookService.GetLostBooksReport(startDate, endDate, reportType);
+
+            var lostBooksViewModel = _mapper.Map<IEnumerable<GenericRangeReportViewModel>>(lostBooksDto);
+
+            return PartialView("_RangeReportTable", lostBooksViewModel);
+
+
+        }
+
+        [HttpPost]
+        public async Task<FileResult> ExportAnnualLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var lostBooksDto = await _serviceManager.BookService.GetMonhtlyLostBooksReport(startDate, endDate, reportType);
+
+            var fileContents = ExcelExporter.ExportToExcel(lostBooksDto, $"Annual Report {startDate}, {endDate} - {reportType}");
+
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"AnnualReport_{startDate}_{endDate}_{reportType}.xlsx");
+
+        }
+        [HttpPost]
+        public async Task<FileResult> ExportRangeLostBooksReport(DateTime startDate, DateTime endDate, string reportType)
+        {
+            var lostBooksDto = await _serviceManager.BookService.GetLostBooksReport(startDate, endDate, reportType);
+
+            var fileContents = ExcelExporter.ExportToExcel(lostBooksDto, $"Annual Report {startDate}, {endDate} - {reportType}");
+
+            return File(fileContents, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"AnnualReport_{startDate}_{endDate}_{reportType}.xlsx");
+
+        }
+
+
+
 
 
 

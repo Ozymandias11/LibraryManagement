@@ -16,6 +16,8 @@ namespace Library.Data.Library.Interfaces
         Task<Book?> GetBook(Guid id, bool trackChanges);
         Task<IEnumerable<PopularityReport>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType);
         Task<IEnumerable<MonthlyReport>> GetMonthlyReport(DateTime startDate, DateTime endDate, string reportType);
+        Task<IEnumerable<MonthlyLostBooksReport>> GetMonthlyLostBooksReport(DateTime startDate, DateTime endDate, string reportType);
+        Task<IEnumerable<LostBooksReport>> GetLostBooksReport(DateTime startDate, DateTime endDate, string reportType);
         void CreateBook(Book book);
         void DeleteBook(Book book);
     }

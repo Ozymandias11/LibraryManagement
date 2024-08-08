@@ -23,6 +23,8 @@ namespace Library.Service.Library.Interfaces
         Task<Result> DeleteBook(Guid id, bool trackChanges);
         Task<IEnumerable<PopularityReportDto>> GetPopularityReport(DateTime startDate, DateTime endDate, string reportType);
         Task<IEnumerable<MonthlyReportDto>> GetMonthlyReport(DateTime startDate, DateTime endDate, string reportType);
+        Task<IEnumerable<MonthlyLostBooksReportDto>> GetMonhtlyLostBooksReport(DateTime startDate, DateTime endDate, string reportType);
+        Task<IEnumerable<LostBooksReportDto>> GetLostBooksReport(DateTime startDate, DateTime endDate, string reportType);
 
     }
 }

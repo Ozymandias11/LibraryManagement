@@ -38,7 +38,7 @@
             year: year,
             reportType: $('#reportType').val()
         };
-        var url = reportPeriod === 'Annual' ? '/Book/GetAnnualReport' : '/Book/GetPopularityReport';
+        var url = reportPeriod === 'Annual' ? '/Book/GetAnnualLostBooksReport' : '/Book/GetLostBooksReport';
         $.get(url, formData, function (data) {
             $('#reportTable').html(data);
             $('#exportButton').show();
@@ -47,7 +47,6 @@
             $('#exportForm input[name="year"]').val(year);
             $('#exportForm input[name="reportType"]').val($('#reportType').val());
 
-           
             if (reportPeriod === 'Annual') {
                 $('#exportForm').attr('action', $('#exportForm').data('annual-url'));
             } else {
