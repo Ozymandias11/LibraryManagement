@@ -1,4 +1,5 @@
 ﻿using OfficeOpenXml;
+using OfficeOpenXml.Drawing.Chart;
 
 namespace LibraryManagement.Extensions
 {
@@ -32,6 +33,22 @@ namespace LibraryManagement.Extensions
 
 
             worksheet.Cells.AutoFitColumns();
+
+
+            var chart = worksheet.Drawings.AddChart("chart", eChartType.ColumnClustered);
+
+           
+            chart.Title.Text = $"{worksheetName} Overview";
+            chart.SetPosition(1, 0, properties.Length + 1, 0);
+            chart.SetSize(600, 400);
+
+           
+            var xAxisRange = worksheet.Cells[2, 1, row - 1, 1]; 
+            var yAxisRange = worksheet.Cells[2, properties.Length, row - 1, properties.Length]; 
+
+            var series = chart.Series.Add(yAxisRange, xAxisRange);
+            series.Header = "Totals";
+
 
             return package.GetAsByteArray();
         }

@@ -215,11 +215,6 @@ namespace LibraryManagement.Controllers
 
 
 
-
-
-
-
-
         // below are methods used for populating dropdowns
 
         public async Task<IActionResult> GetBooksForDropDown()
