@@ -41,7 +41,7 @@ namespace Library.Data.Library.Implementations
 
 
         public async Task<IEnumerable<BookCopy>> GetAllAvailableBookCopies(Guid originalBookId, string edition, Guid publisherId, int quantity)
-          => await FindByCondition(bc => bc.OriginaBookId == originalBookId &&
+          => await FindByCondition(bc => bc.OriginaBookId == originalBookId && bc.DeletedDate == null &&
                                    bc.Edition == edition &&
                                    bc.PublisherId == publisherId &&
                                    bc.Status == Status.Available,

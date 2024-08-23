@@ -194,7 +194,27 @@ namespace Library.Data.Configuration
                                                   Id = Guid.NewGuid(),
                                                   RoleId = librarianRoleId,
                                                   NavigationMenuId = new Guid("9518e097-f106-497b-aac5-a3c5e7100aed")
-                                              }
+                                              },
+                                                 new RoleMenuPermission
+                                                 {
+                                                     Id = Guid.NewGuid(),
+                                                     RoleId = librarianRoleId,
+                                                     NavigationMenuId = new Guid("3d88fdda-1aa4-40da-a58a-0fa78d5e05c9")
+                                                 },
+                                                  new RoleMenuPermission
+                                                  {
+                                                      Id = Guid.NewGuid(),
+                                                      RoleId = librarianRoleId,
+                                                      NavigationMenuId = new Guid("db4fd8bd-e040-49c8-bea8-57583f1ab369")
+                                                  },
+                                                   new RoleMenuPermission
+                                                   {
+                                                       Id = Guid.NewGuid(),
+                                                       RoleId = librarianRoleId,
+                                                       NavigationMenuId = new Guid("72bced4d-6e72-4201-bcfe-1690f2115a76")
+                                                   }
+
+
 
 
 

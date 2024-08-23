@@ -207,7 +207,35 @@ namespace Library.Data.Configuration
                                                  ControllerName = "Reservation",
                                                  ActionName = "Reservations",
                                                  Permitted = true,
-                                             }
+                                             },
+                                              new NavigationMenu
+                                              {
+                                                  Id = new Guid("3d88fdda-1aa4-40da-a58a-0fa78d5e05c9"),
+                                                  Name = "Reports",
+                                                  ParentMenuId = new Guid("9B96F51E-3D27-4EEB-B491-B6A75D8F0A01"),
+                                                  ControllerName = null,
+                                                  ActionName = null,
+                                                  Permitted = true,
+                                              },
+                                                 new NavigationMenu
+                                                 {
+                                                     Id = new Guid("db4fd8bd-e040-49c8-bea8-57583f1ab369"),
+                                                     Name = "Popularity",
+                                                     ParentMenuId = new Guid("3d88fdda-1aa4-40da-a58a-0fa78d5e05c9"),
+                                                     ControllerName = "Book",
+                                                     ActionName = "PopularityReport",
+                                                     Permitted = true,
+                                                 },
+
+                                                  new NavigationMenu
+                                                  {
+                                                      Id = new Guid("72bced4d-6e72-4201-bcfe-1690f2115a76"),
+                                                      Name = "Lost Books",
+                                                      ParentMenuId = new Guid("3d88fdda-1aa4-40da-a58a-0fa78d5e05c9"),
+                                                      ControllerName = "Book",
+                                                      ActionName = "LostBooksReport",
+                                                      Permitted = true,
+                                                  }
 
                 );
 
