@@ -80,7 +80,7 @@ namespace Library.Data.Library.Implementations
 
         public async Task<PagedList<BookCopy>> GetAllBookCopies(BookCopyParameters bookCopyParameters, bool trackChanges)
         {
-            var query = FindByCondition(bc => bc.DeletedDate == null, trackChanges)
+            var query = FindByCondition(bc => bc.DeletedDate == null && bc.Status == Status.Available, trackChanges)
                 .Include(bc => bc.OriginalBook)
                 .Include(bc => bc.Publisher)
                 .Include(bc => bc.BookCopyShelf)
@@ -102,8 +102,7 @@ namespace Library.Data.Library.Implementations
                 var bookCopies = await query
                     .Where(bc => bc.OriginaBookId == combo.OriginaBookId &&
                                  bc.PublisherId == combo.PublisherId &&
-                                 bc.Edition == combo.Edition &&
-                                 bc.Status == Status.Available)
+                                 bc.Edition == combo.Edition)
                     .ToListAsync();
 
                 if (bookCopies.Count != 0)

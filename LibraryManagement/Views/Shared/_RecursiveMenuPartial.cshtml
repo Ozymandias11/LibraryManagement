@@ -1,0 +1,24 @@
+﻿@model LibraryManagement.ViewModels.NavigationMenuViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+<li class="nav-item @(Model.Children.Any() ? "dropdown" : "")">
+    @if (Model.Children.Any())
+    {
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            @Localizer[Model.Name]
+        </a>
+        <ul class="dropdown-menu">
+            @foreach (var child in Model.Children)
+            {
+                @await Html.PartialAsync("_RecursiveMenuPartial", child)
+            }
+        </ul>
+    }
+    else
+    {
+        <a class="nav-link" asp-controller="@Model.ControllerName" asp-action="@Model.ActionName">
+            @Localizer[Model.Name]
+        </a>
+    }
+</li>
