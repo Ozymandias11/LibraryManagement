@@ -212,6 +212,12 @@ namespace Library.Data.Configuration
                                                        Id = Guid.NewGuid(),
                                                        RoleId = librarianRoleId,
                                                        NavigationMenuId = new Guid("72bced4d-6e72-4201-bcfe-1690f2115a76")
+                                                   },
+                                                   new RoleMenuPermission
+                                                   {
+                                                       Id = Guid.NewGuid(),
+                                                       RoleId = librarianRoleId,
+                                                       NavigationMenuId = new Guid("aa7485cf-1bcb-4064-983e-ef4a730d9d1f")
                                                    }
 
 

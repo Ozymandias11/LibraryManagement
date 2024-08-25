@@ -235,7 +235,16 @@ namespace Library.Data.Configuration
                                                       ControllerName = "Book",
                                                       ActionName = "LostBooksReport",
                                                       Permitted = true,
-                                                  }
+                                                  },
+                                                     new NavigationMenu
+                                                     {
+                                                         Id = new Guid("aa7485cf-1bcb-4064-983e-ef4a730d9d1f"),
+                                                         Name = "Customer Report",
+                                                         ParentMenuId = new Guid("F513D8D7-B945-40D2-B679-2C2BBDD24F25"),
+                                                         ControllerName = "Customer",
+                                                         ActionName = "MonthlyRegistrationReport",
+                                                         Permitted = true,
+                                                     }
 
                 );
 
