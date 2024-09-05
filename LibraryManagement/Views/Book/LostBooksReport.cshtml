@@ -5,7 +5,7 @@
 <div class="card">
     <div class="card-body">
         <h2 class="text-primary mb-3">Lost Books Report</h2>
-        <form id="reportForm" class="mb-3">
+        <form id="reportForm" class="mb-3" data-annual-url="/Book/GetAnnualLostBooksReport" data-range-url="/Book/GetLostBooksReport">
             <div class="row">
                 <div class="col-md-3">
                     <label for="reportPeriod">Report Period:</label>
@@ -61,5 +61,5 @@
     </div>
 </div>
 @section Scripts {
-    <script src="~/js/Reports/lost-books-report.js"></script>
+    <script src="~/js/Reports/book-reports.js"></script>
 }

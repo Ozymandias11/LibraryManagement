@@ -5,7 +5,7 @@
 <div class="card">
     <div class="card-body">
         <h2 class="text-primary mb-3">Report</h2>
-        <form id="reportForm" class="mb-3">
+        <form id="reportForm" class="mb-3" data-annual-url="/Book/GetAnnualReport" data-range-url="/Book/GetPopularityReport">
             <div class="row">
                 <div class="col-md-3">
                     <label for="reportPeriod">Report Period:</label>
@@ -62,5 +62,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/Reports/popularity-report.js"></script>
+    <script src="~/js/Reports/book-reports.js"></script>
 }
