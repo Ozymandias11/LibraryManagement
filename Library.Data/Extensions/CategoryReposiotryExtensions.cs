@@ -17,7 +17,9 @@ namespace Library.Data.Extensions
                 return categories;
 
             var lowerCaseSearchTerm = searchTerm.Trim().ToLower();
-            return categories.Where(c => c.Title.ToLower().Contains(lowerCaseSearchTerm));
+            return categories.Where(c => c.Titles
+                                             .Any(t => t.Title != null && 
+                                                     t.Title.Contains(lowerCaseSearchTerm, StringComparison.CurrentCultureIgnoreCase)));
 
         }
 

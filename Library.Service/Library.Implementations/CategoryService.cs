@@ -27,9 +27,9 @@ namespace Library.Service.Library.Implementations
         }
      
 
-        public async Task<(IEnumerable<CategoryDto> categories, MetaData metaData)> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges)
+        public async Task<(IEnumerable<CategoryDto> categories, MetaData metaData)> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges, string requestedLanguage)
         {
-            var categoriesWithMetaData = await _repositoryManager.CategoryRepository.GetAllCategories(categoryParameters, trackChanges);
+            var categoriesWithMetaData = await _repositoryManager.CategoryRepository.GetAllCategories(categoryParameters, trackChanges, requestedLanguage);
 
             var categoreisDto = _mapper.Map<IEnumerable<CategoryDto>>(categoriesWithMetaData);
 
@@ -79,15 +79,29 @@ namespace Library.Service.Library.Implementations
 
         public async Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges)
         {
-            var existingCategory = await _repositoryManager.CategoryRepository.GetCatgeoryByTitle(categoryDto.Title, trackChanges);
+            var existingCategory = await _repositoryManager.CategoryRepository.GetCatgeoryByTitle(categoryDto.TitleEnglish, trackChanges);
 
             if (existingCategory != null)
             {
-                return Result.Fail($"A category with title {categoryDto.Title} already exists");
+                return Result.Fail($"A category with title {categoryDto.TitleEnglish} already exists");
             }
 
+            var categoryEntity = new Category
+            {
+                Titles =
+                [
+                    new() {
+                        Title = categoryDto.TitleEnglish,
+                        Language = "en-GB"
+                    },
+                    new() {
+                        Title = categoryDto.TitleGerman,
+                        Language = "de-DE"
+                    }
 
-            var categoryEntity = _mapper.Map<Category>(categoryDto);
+                 ],
+                CreatedDate = DateTime.Now
+            };
             _repositoryManager.CategoryRepository.CreateCategory(categoryEntity);
 
             await _repositoryManager.SaveAsync();

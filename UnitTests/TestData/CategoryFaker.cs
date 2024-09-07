@@ -14,7 +14,6 @@ namespace UnitTests.TestData
         {
             return new Faker<Category>()
                 .RuleFor(c => c.CategoryId, f => Guid.NewGuid())
-                .RuleFor(c => c.Title, f => f.Commerce.Categories(1)[0])
                 .RuleFor(c => c.CreatedDate, f => f.Date.Recent())
                 .RuleFor(c => c.DeletedDate, f => null);
         }

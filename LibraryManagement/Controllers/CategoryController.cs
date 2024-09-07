@@ -7,6 +7,7 @@ using Library.Service.Interfaces;
 using Library.Service.Logging;
 using LibraryManagement.ActionFilters;
 using LibraryManagement.ViewModels.Library.ViewModels;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 
@@ -27,7 +28,9 @@ namespace LibraryManagement.Controllers
 
         public async Task<IActionResult> Categories([FromQuery] CategoryParameters categoryParameters)
         {
-            var (categoryDtos, metaData) = await _serviceManager.CategoryService.GetAllCategories(categoryParameters, false);
+            var currentCulture = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name;
+
+            var (categoryDtos, metaData) = await _serviceManager.CategoryService.GetAllCategories(categoryParameters, false, currentCulture);
 
             var categoryViewModel = _mapper.Map<IEnumerable<CategoryViewModel>>(categoryDtos);
 

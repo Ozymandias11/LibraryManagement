@@ -9,8 +9,8 @@ namespace Library.Model.Models
     public class Category : BaseModel
     {
         public Guid CategoryId { get; set; }
-        public string? Title { get; set; }
         public ICollection<BookCategory>? BookCategories { get; set; }
+        public ICollection<CategoryTitle>? Titles { get; set; } // Localized titles
      
 
 

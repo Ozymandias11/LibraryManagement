@@ -23,9 +23,10 @@ namespace Library.Data.Library.Implementations
         public void DeleteCatgeory(Category category) => Delete(category);
 
 
-        public async Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters ,bool trackChanges)
+        public async Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters ,bool trackChanges, string requestedLanguage)
         {
             var categories = await FindByCondition(c => c.DeletedDate == null, trackChanges)
+                .Include(c => c.Titles!.Where(t => t.Language == requestedLanguage))
                 .Search(categoryParameters.SearchTerm)
                 .Sort(categoryParameters.OrderBy)
                 .ToListAsync();
@@ -38,7 +39,6 @@ namespace Library.Data.Library.Implementations
 
         public async Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges)
             => await FindByCondition(c => c.DeletedDate == null, trackChanges)
-               .OrderBy(c => c.Title)
                .ToListAsync();
         
            
@@ -55,7 +55,9 @@ namespace Library.Data.Library.Implementations
             await FindByCondition(c => c.BookCategories.Any(bc => bc.BookId == id), false).ToListAsync();
 
         public async Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges)
-            => await FindByCondition(c => c.Title.ToLower() ==  title.ToLower(), trackChanges).FirstOrDefaultAsync();
+            => await FindByCondition(c => c.Titles
+                                                 .Any(t => t.Title.ToLower() == title.ToLower()), trackChanges).FirstOrDefaultAsync();
+                                
         
     }
 }

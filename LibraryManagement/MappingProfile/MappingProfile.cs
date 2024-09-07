@@ -95,7 +95,13 @@ namespace LibraryManagement.MappingProfile
 
             //categoreis
 
-            CreateMap<Category, CategoryDto>().ReverseMap();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.CategoryId))
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src =>
+                          src.Titles != null && src.Titles.Count != 0
+                           ? src.Titles.FirstOrDefault()!.Title : string.Empty))
+               .ReverseMap();
+               
 
 
             CreateMap<CategoryDto, CategoryViewModel>();
@@ -121,12 +127,12 @@ namespace LibraryManagement.MappingProfile
 
 
             CreateMap<BookCopy, BookCopyDto>()
-                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.OriginalBook.Title))
-                .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher.PublisherName))
-                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.Room.RoomNumber))
-                .ForMember(dest => dest.ShelfNumber, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.ShelfNumber))
-                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.Room.RoomId))
-                .ForMember(dest => dest.ShelfId, opt => opt.MapFrom(src => src.BookCopyShelf.Shelf.ShelfId));
+                .ForMember(dest => dest.BookTitle, opt => opt.MapFrom(src => src.OriginalBook!.Title))
+                .ForMember(dest => dest.PublisherName, opt => opt.MapFrom(src => src.Publisher!.PublisherName))
+                .ForMember(dest => dest.RoomNumber, opt => opt.MapFrom(src => src.BookCopyShelf!.Shelf!.Room.RoomNumber))
+                .ForMember(dest => dest.ShelfNumber, opt => opt.MapFrom(src => src.BookCopyShelf!.Shelf!.ShelfNumber))
+                .ForMember(dest => dest.RoomId, opt => opt.MapFrom(src => src.BookCopyShelf!.Shelf!.Room.RoomId))
+                .ForMember(dest => dest.ShelfId, opt => opt.MapFrom(src => src.BookCopyShelf!.Shelf!.ShelfId));
 
                 
             CreateMap<BookCopyDto, BookCopyViewModel>();
@@ -154,8 +160,8 @@ namespace LibraryManagement.MappingProfile
             //Reservations
 
             CreateMap<Reservation, ReservationDto>()
-                .ForMember(dest => dest.CustomerPersonalID, opt => opt.MapFrom(src => src.Customer.CustomerPersonalId))
-                .ForMember(dest => dest.EmployeeEmail, opt => opt.MapFrom(src => src.Employee.Email));
+                .ForMember(dest => dest.CustomerPersonalID, opt => opt.MapFrom(src => src.Customer!.CustomerPersonalId))
+                .ForMember(dest => dest.EmployeeEmail, opt => opt.MapFrom(src => src.Employee!.Email));
             CreateMap<ReservationDto, ReservationViewModel>();
             CreateMap<ReservationItem, ReservationItemDto>();
             CreateMap<ReservationItemDto, ReservationItemViewModel>();
@@ -173,8 +179,8 @@ namespace LibraryManagement.MappingProfile
             //Reservation Details
 
             CreateMap<Reservation, ReservationDetailsDto>()
-                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => $"{src.Customer.FirstName}  {src.Customer.LastName}"))
-                .ForMember(dest => dest.EmployeeFullName, opt => opt.MapFrom(src => $"{src.Employee.FirstName} {src.Employee.LastName}"))
+                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => $"{src.Customer!.FirstName}  {src.Customer.LastName}"))
+                .ForMember(dest => dest.EmployeeFullName, opt => opt.MapFrom(src => $"{src.Employee!.FirstName} {src.Employee.LastName}"))
                 .ForMember(dest => dest.ReservationItems, opt => opt.Ignore());
 
 
