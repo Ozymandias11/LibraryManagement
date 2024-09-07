@@ -10,7 +10,7 @@
 
 @{
     var requestCulture = Context.Features.Get<IRequestCultureFeature>();
-    var cultureItems = LocalizationOptions.Value.SupportedUICultures
+    var cultureItems = LocalizationOptions.Value.SupportedUICultures?
         .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
         .ToList();
 }

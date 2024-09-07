@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Dto.Library.Dto
 {
-    public record CategoryDto(
-        Guid CategoryId,
-        string Title
-        );
-   
+    public record CategoryDto
+    {
+        public Guid CategoryId { get; set; }
+        public string? Title { get; set; }
+
+    }
 }

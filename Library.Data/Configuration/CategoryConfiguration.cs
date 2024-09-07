@@ -15,13 +15,16 @@ namespace Library.Data.Configuration
         {
             builder.HasKey(c => c.CategoryId);
 
-            builder.Property(c => c.Title).IsRequired();
-
-
 
             builder.HasMany(b => b.BookCategories)
                 .WithOne(bc => bc.Category)
                 .HasForeignKey(bc => bc.CategoryId);
+
+            builder.HasMany(c => c.Titles)
+                .WithOne(ct => ct.Category)
+                .HasForeignKey(ct => ct.CategoryId);    
+
+
         }
     }
 }

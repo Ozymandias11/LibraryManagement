@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace Library.Service.Dto.Library.Dto
 {
-    public record CreateCategoryDto(string Title);
+    public record CreateCategoryDto(string TitleEnglish, string TitleGerman);
     
 }

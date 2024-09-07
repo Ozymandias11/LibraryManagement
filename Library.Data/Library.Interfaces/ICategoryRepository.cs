@@ -10,7 +10,7 @@ namespace Library.Data.Library.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges);
+        Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges, string requestedLanguage);
         Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges);
         Task<Category?> GetCategory(Guid id, bool trackChanges);
         Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges);    
