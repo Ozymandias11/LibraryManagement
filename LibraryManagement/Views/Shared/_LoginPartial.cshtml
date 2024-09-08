@@ -20,7 +20,7 @@
 
         <li class="nav-item">
             <form id="selectLanguage" asp-controller="Home" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" class="form-inline">
-                <select name="culture" onchange="this.form.submit();" class="form-control" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems">
+                <select name="culture" onchange="this.form.submit();" class="form-control" asp-for="@requestCulture!.RequestCulture.UICulture.Name" asp-items="cultureItems">
                 </select>
             </form>
         </li>

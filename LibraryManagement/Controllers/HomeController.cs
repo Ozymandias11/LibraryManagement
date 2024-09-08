@@ -37,7 +37,21 @@ namespace LibraryManagement.Controllers
                 new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
             );
 
-            return Redirect($"{returnUrl}?culture={culture}");
+
+       
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                var currentCulture = returnUrl.Split('/')[1]; 
+                returnUrl = returnUrl.Replace(currentCulture, culture); 
+            }
+            else
+            {
+                returnUrl = $"/{culture}";
+            }
+
+            return Redirect(returnUrl);
+
+
         }
 
     }
