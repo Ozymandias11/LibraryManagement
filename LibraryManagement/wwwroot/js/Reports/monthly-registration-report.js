@@ -2,7 +2,8 @@
     $('#reportForm').submit(function (e) {
         e.preventDefault();
         var year = $('#year').val();
-        $.get('/Customer/GetMonthlyRegistrationReport', { year: year }, function (data) {
+        var url = $(this).data("annual-url");
+        $.get(url, { year: year }, function (data) {
             $('#reportTable').html(data);
             $('#exportButton').show();
             $('#exportForm input[name="year"]').val(year);
