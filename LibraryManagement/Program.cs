@@ -90,7 +90,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
         new CultureInfo("de-DE")
     };
 
-    options.DefaultRequestCulture = new RequestCulture("de-DE");
+    options.DefaultRequestCulture = new RequestCulture("en-GB");
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 
@@ -125,6 +125,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{culture}/{controller=Home}/{action=Index}/{id?}",
+    defaults: new { culture = "en-GB" },
+    constraints: new { culture = "en-GB|de-DE" } 
+);
 
 app.Run();
