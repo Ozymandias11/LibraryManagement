@@ -5,7 +5,8 @@
 <div class="card">
     <div class="card-body">
         <h2 class="text-primary mb-3">Report</h2>
-        <form id="reportForm" class="mb-3" data-annual-url="/Book/GetAnnualReport" data-range-url="/Book/GetPopularityReport">
+        <form id="reportForm" class="mb-3" data-annual-url="@Url.Action("GetAnnualReport", "Book", new { culture = ViewData["Culture"] })"
+                                           data-range-url="@Url.Action("GetPopularityReport", "Book", new { culture = ViewData["Culture"] })">
             <div class="row">
                 <div class="col-md-3">
                     <label for="reportPeriod">Report Period:</label>
@@ -56,7 +57,7 @@
             <input type="hidden" name="endDate" />
             <input type="hidden" name="year" />
             <input type="hidden" name="reportType" />
-            <button type="submit" id="exportButton" class="btn btn-success" style="display: none;">Export to Excel</button>
+            <button type="submit" id="exportButton" class="btn btn-success" style="display: none; margin-top:20px">Export to Excel</button>
         </form>
     </div>
 </div>

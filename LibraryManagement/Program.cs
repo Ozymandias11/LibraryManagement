@@ -1,5 +1,4 @@
 using AspNetCoreHero.ToastNotification;
-using FluentValidation;
 using Library.Data.Implementations;
 using Library.Data.Interfaces;
 using Library.Service;
