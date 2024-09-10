@@ -12,8 +12,8 @@ namespace Library.Service.Library.Interfaces
    public interface ICategoryService
     {
         Task<(IEnumerable<CategoryDto> categories, MetaData metaData)> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges, string requestedLanguage);
-        Task<IEnumerable<CategoryDto>> GetAllCategoriesForDropDown(bool trackChanges);
-        Task<IEnumerable<CategoryDto>> GetBookCategories(Guid bookId, bool trackChanges);
+        Task<IEnumerable<CategoryDto>> GetAllCategoriesForDropDown(bool trackChanges, string requestedLanguage);
+        Task<IEnumerable<CategoryDto>> GetBookCategories(Guid bookId, bool trackChanges, string requestedLanguage);
         Task<Result<CategoryDto>> GetCategory(Guid id, bool trackChanges); 
         Task<Result> CreateCategory(CreateCategoryDto categoryDto, bool trackChanges);
         Task<Result> DeleteCategory(Guid id, bool trackChanges);

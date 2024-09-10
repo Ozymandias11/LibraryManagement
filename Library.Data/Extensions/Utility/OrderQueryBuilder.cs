@@ -21,7 +21,8 @@ namespace Library.Data.Extensions.Utility
                     continue;
 
                 var propertyQueryName = param.Split(" ")[0];
-                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyQueryName, StringComparison.InvariantCultureIgnoreCase));
+                var objectProperty = propertyInfos.FirstOrDefault(pi => pi.Name.Equals(propertyQueryName, StringComparison.InvariantCultureIgnoreCase)
+                    || pi.Name.Equals(propertyQueryName.Split('.')[0], StringComparison.InvariantCultureIgnoreCase));
 
                 if (objectProperty == null)
                     continue;

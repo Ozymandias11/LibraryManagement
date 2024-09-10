@@ -37,9 +37,9 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesForDropDown(bool trackChanges)
+        public async Task<IEnumerable<CategoryDto>> GetAllCategoriesForDropDown(bool trackChanges, string requestedLanguage)
         {
-            var categories = await _repositoryManager.CategoryRepository.GetAllCategoriesForDropDown(trackChanges);
+            var categories = await _repositoryManager.CategoryRepository.GetAllCategoriesForDropDown(trackChanges, requestedLanguage);
 
             var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
@@ -129,9 +129,9 @@ namespace Library.Service.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<CategoryDto>> GetBookCategories(Guid bookId, bool trackChanges)
+        public async Task<IEnumerable<CategoryDto>> GetBookCategories(Guid bookId, bool trackChanges, string requestedLanguage)
         {
-            var categories = await _repositoryManager.CategoryRepository.GetCategoryOfBooks(bookId, trackChanges);
+            var categories = await _repositoryManager.CategoryRepository.GetCategoryOfBooks(bookId, trackChanges, requestedLanguage);
 
             var categoriesDto = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 

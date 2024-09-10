@@ -4,11 +4,25 @@
 });
 
 function initializeSelectFields() {
-    const culture = window.location.pathname.split('/')[1];
-    loadAndInitializeSelect('#authors', `/${culture}/Author/GetAuthorsForDropDown`, null, { createUrl: `/${culture}/Author/Create`, entityName: 'Author' });
-    loadAndInitializeSelect('#publishers', `/${culture}/Publisher/GetPublishersForDropDown`, null, { createUrl: `/${culture}/Publisher/Create`, entityName: 'Publisher' });
-    loadAndInitializeSelect('#categories', `/${culture}/Category/GetCategoriesForDropDown`, null, { createUrl: `/${culture}/Category/Create`, entityName: 'Category' });;
+    const selectFields = [
+        { selector: '#authors', endpoint: '/Author/GetAuthorsForDropDown', createUrl: '/Author/Create', entityName: 'Author' },
+        { selector: '#publishers', endpoint: '/Publisher/GetPublishersForDropDown', createUrl: '/Publisher/Create', entityName: 'Publisher' },
+        { selector: '#categories', endpoint: '/Category/GetCategoriesForDropDown', createUrl: '/Category/Create', entityName: 'Category' }
+    ];
+
+    selectFields.forEach(field => {
+        loadAndInitializeSelect(
+            field.selector,
+            createLocalizedUrl(field.endpoint),
+            null,
+            {
+                createUrl: createLocalizedUrl(field.createUrl),
+                entityName: field.entityName
+            }
+        );
+    });
 }
+
 
 function setupEventHandlers() {
     $(document).on('click', '[class^="create-new-"]', function (e) {

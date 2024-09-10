@@ -1,9 +1,4 @@
 ﻿function loadAndInitializeSelect(selectElement, url, isMultiple, onChangeCallback = null, createNewOptions = null, additionalOptions = {}) {
-
-    const culture = window.location.pathname.split('/')[1];
-
-    const localizedUrl = `/${culture}${url}`;
-
     $.getJSON(url)
         .done(function (allData) {
             const options = allData.map(item => ({
@@ -108,4 +103,13 @@ function addCreateNewOption(selectElement, entityName) {
             </li>`);
         }
     });
+}
+
+function getCurrentCulture() {
+    return window.location.pathname.split('/')[1];
+}
+
+function createLocalizedUrl(baseUrl) {
+    const culture = getCurrentCulture();
+    return `/${culture}${baseUrl}`;
 }

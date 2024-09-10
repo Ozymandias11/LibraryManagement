@@ -17,10 +17,10 @@ namespace Library.Data.Extensions
                 return categories;
 
             var lowerCaseSearchTerm = searchTerm.Trim().ToLower();
-            return categories.Where(c => c.Titles
-                                             .Any(t => t.Title != null && 
-                                                     t.Title.Contains(lowerCaseSearchTerm, StringComparison.CurrentCultureIgnoreCase)));
 
+            return categories.Where(c => c.Titles!.Any(t =>
+                      t.Title != null &&
+                      t.Title.ToLower().Contains(lowerCaseSearchTerm)));
         }
 
         public static IQueryable<Category> Sort(this IQueryable<Category> categories, string? orderByQueryString)
