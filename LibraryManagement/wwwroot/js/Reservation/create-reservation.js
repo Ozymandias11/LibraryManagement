@@ -7,12 +7,12 @@ $(document).ready(function () {
 });
 
 function initializeSelects() {
-    loadAndInitializeSelect('#CustomerID', '/Customer/GetCustomersForDropDown', false, null, {
-        createUrl: '/Customer/CreateCustomer',
+    loadAndInitializeSelect('#CustomerID', createLocalizedUrl('/Customer/GetCustomersForDropDown'), false, null, {
+        createUrl: createLocalizedUrl('/Customer/CreateCustomer'),
         entityName: 'Customer'
     });
 
-    loadAndInitializeSelect('#modalOriginalBookId', '/Book/GetBooksForDropDown', false, populatePublishers, null, {
+    loadAndInitializeSelect('#modalOriginalBookId', createLocalizedUrl('/Book/GetBooksForDropDown'), false, populatePublishers, null, {
         placeholder: "Select a book",
         allowClear: true
     });
@@ -27,7 +27,7 @@ function populatePublishers() {
     var bookId = $('#modalOriginalBookId').val();
     console.log(`Book selected: ${bookId}`);
     if (bookId) {
-        loadAndInitializeSelect('#modalPublisherId', `/Publisher/GetBookPublishersForSelect2/${bookId}`, false);
+        loadAndInitializeSelect('#modalPublisherId', createLocalizedUrl(`/Publisher/GetBookPublishersForSelect2/${bookId}`), false);
         $('#modalPublisherId').prop('disabled', false);
     } else {
         $('#modalPublisherId').empty().prop('disabled', true).append($('<option></option>').val('').text('Select a publisher'));
@@ -61,7 +61,7 @@ function checkAvailability() {
 
     if (originalBookId && edition && publisherId && quantity) {
         $.ajax({
-            url: '/Reservation/CheckBookCopyAvailability',
+            url: createLocalizedUrl('/Reservation/CheckBookCopyAvailability'),
             type: 'GET',
             data: { originalBookId, edition, publisherId, quantity },
             success: function (response) {
@@ -134,3 +134,4 @@ function clearModalInputs() {
     $('#modalQuantity').val('');
     $('#availabilityStatus').text('').removeClass('text-success text-danger');
 }
+

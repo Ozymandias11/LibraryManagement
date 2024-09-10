@@ -8,7 +8,7 @@ function initializeReturnBook() {
 }
 
 function initializeCustomerSelect() {
-    loadAndInitializeSelect('#customerSelect', '/Customer/GetCustomersForDropDown', false, null, {
+    loadAndInitializeSelect('#customerSelect', createLocalizedUrl('/Customer/GetCustomersForDropDown'), false, null, {
         createUrl: '/Customer/CreateCustomer',
         entityName: 'Customer'
     });
@@ -114,3 +114,4 @@ function submitReturn() {
         }
     });
 }
+

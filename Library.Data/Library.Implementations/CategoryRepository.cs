@@ -37,8 +37,9 @@ namespace Library.Data.Library.Implementations
 
         }
 
-        public async Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges)
+        public async Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges, string requestedLanguage)
             => await FindByCondition(c => c.DeletedDate == null, trackChanges)
+               .Include(c => c.Titles!.Where(t => t.Language == requestedLanguage))
                .ToListAsync();
         
            
@@ -51,12 +52,14 @@ namespace Library.Data.Library.Implementations
         public async Task<Category?> GetCategory(Guid id, bool trackChanges) => 
             await FindByCondition(c => c.CategoryId == id, trackChanges).FirstOrDefaultAsync();
 
-        public async Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges) => 
-            await FindByCondition(c => c.BookCategories.Any(bc => bc.BookId == id), false).ToListAsync();
+        public async Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges , string requestedLanguage) => 
+            await FindByCondition(c => c.BookCategories!.Any(bc => bc.BookId == id), false)
+            .Include(c => c.Titles!.Where(t => t.Language == requestedLanguage))
+            .ToListAsync();
 
         public async Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges)
-            => await FindByCondition(c => c.Titles
-                                                 .Any(t => t.Title.ToLower() == title.ToLower()), trackChanges).FirstOrDefaultAsync();
+            => await FindByCondition(c => c.Titles!
+                                                 .Any(t => t.Title!.ToLower() == title.ToLower()), trackChanges).FirstOrDefaultAsync();
                                 
         
     }

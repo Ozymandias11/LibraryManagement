@@ -11,10 +11,10 @@ namespace Library.Data.Library.Interfaces
     public interface ICategoryRepository
     {
         Task<PagedList<Category>> GetAllCategories(CategoryParameters categoryParameters, bool trackChanges, string requestedLanguage);
-        Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges);
+        Task<IEnumerable<Category>> GetAllCategoriesForDropDown(bool trackChanges, string requestedLanguage);
         Task<Category?> GetCategory(Guid id, bool trackChanges);
         Task<Category?> GetCatgeoryByTitle(string title, bool trackChanges);    
-        Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges); 
+        Task<IEnumerable<Category>> GetCategoryOfBooks(Guid id, bool trackChanges, string requestedLanguage); 
         Task<IEnumerable<Category>> GetCategoriesById(IEnumerable<Guid> ids, bool trackChanges);
         void CreateCategory(Category category);
         void DeleteCatgeory(Category category);

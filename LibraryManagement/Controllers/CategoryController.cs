@@ -119,13 +119,17 @@ namespace LibraryManagement.Controllers
         // below are methods used for populating dropowns
         public async Task<IActionResult> GetCategoriesForDropDown()
         {
-            var categoriesDto = await _serviceManager.CategoryService.GetAllCategoriesForDropDown(false);
+            var currentCulture = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name;
+
+            var categoriesDto = await _serviceManager.CategoryService.GetAllCategoriesForDropDown(false, currentCulture);
             return Json(categoriesDto.Select(c => new { id = c.CategoryId, name = c.Title}));
         }
 
         public async Task<IActionResult> GetBookCategories(Guid id)
         {
-            var bookCategories = await _serviceManager.CategoryService.GetBookCategories(id, false);
+            var currentCulture = HttpContext.Features.Get<IRequestCultureFeature>()?.RequestCulture.Culture.Name;
+
+            var bookCategories = await _serviceManager.CategoryService.GetBookCategories(id, false, currentCulture);
             return Json(bookCategories.Select(c => c.CategoryId));
         }
 
