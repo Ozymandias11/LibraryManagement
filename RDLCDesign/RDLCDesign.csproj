@@ -14,12 +14,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>dsCustomersRegistration.xsd</DependentUpon>
     </Compile>
+    <Compile Update="DataSets\dsPopularBooks.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsPopularBooks.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="DataSets\dsCustomersRegistration.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>dsCustomersRegistration.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="DataSets\dsPopularBooks.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsPopularBooks.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
