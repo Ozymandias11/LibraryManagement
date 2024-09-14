@@ -22,9 +22,7 @@ namespace LibraryManagement.Controllers
 
             using var report = new LocalReport();
 
-            var customerRegistrationDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(2024);
-
-            report.DataSources.Add( new ReportDataSource("dsCustomerRegistartion", customerRegistrationDto));
+            await PopulateDataSets(report);
 
             var parameters = new[]
             {
@@ -39,6 +37,16 @@ namespace LibraryManagement.Controllers
 
             return File(pdf, mimetype, "report." + extension);
 
+        }
+
+        private async Task PopulateDataSets(LocalReport report)
+        {
+
+            var customerRegistrationDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(2024);
+            var popularBooks = await _serviceManager.BookService.GetMonthlyReport(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31), "Books");
+
+            report.DataSources.Add(new ReportDataSource("dsCustomerRegistartion", customerRegistrationDto));
+            report.DataSources.Add(new ReportDataSource("dsPopularBooks", popularBooks));
         }
         
     }

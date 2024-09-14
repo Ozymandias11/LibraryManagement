@@ -53,12 +53,22 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="ReportDataSet\dsPopularBooks.Designer.cs">
+      <DependentUpon>dsPopularBooks.xsd</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="ReportDataSet\dsCustomersRegistration.xsd">
       <SubType>Designer</SubType>
       <LastGenOutput>dsCustomersRegistration.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="ReportDataSet\dsPopularBooks.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>dsPopularBooks.Designer.cs</LastGenOutput>
       <Generator>MSDataSetGenerator</Generator>
     </None>
   </ItemGroup>
