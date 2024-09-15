@@ -1,6 +1,7 @@
 ﻿using Library.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Reporting.NETCore;
+using System.Data;
 
 namespace LibraryManagement.Controllers
 {
@@ -14,7 +15,11 @@ namespace LibraryManagement.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> PrintReport()
+        public IActionResult RDLCReport()
+        {
+            return View();
+        }
+        public async Task<IActionResult> PrintReport(DateTime startDate, DateTime endDate)
         {
             var renderFormat = "PDF";
             var extension = "pdf";
@@ -22,7 +27,7 @@ namespace LibraryManagement.Controllers
 
             using var report = new LocalReport();
 
-            await PopulateDataSets(report);
+            await PopulateDataSets(report, startDate, endDate);
 
             var parameters = new[]
             {
@@ -39,12 +44,12 @@ namespace LibraryManagement.Controllers
 
         }
 
-        private async Task PopulateDataSets(LocalReport report)
+        private async Task PopulateDataSets(LocalReport report, DateTime startDate, DateTime endDate)
         {
 
             var customerRegistrationDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(2024);
-            var popularBooks = await _serviceManager.BookService.GetMonthlyReport(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31), "Books");
-            var lostBooks = await _serviceManager.BookService.GetMonhtlyLostBooksReport(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31), "Books");
+            var popularBooks = await _serviceManager.BookService.GetMonthlyReport(startDate, endDate, "Books");
+            var lostBooks = await _serviceManager.BookService.GetMonhtlyLostBooksReport(startDate, endDate, "Books");
 
             report.DataSources.Add(new ReportDataSource("dsCustomerRegistartion", customerRegistrationDto));
             report.DataSources.Add(new ReportDataSource("dsPopularBooks", popularBooks));
