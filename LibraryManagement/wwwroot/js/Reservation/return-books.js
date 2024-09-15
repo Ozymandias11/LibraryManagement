@@ -95,7 +95,7 @@ function submitReturn() {
     };
 
     $.ajax({
-        url: '/Reservation/ReturnBook',
+        url: createLocalizedUrl('/Reservation/ReturnBook'),
         type: 'POST',
         data: JSON.stringify(model),
         contentType: 'application/json; charset=utf-8',
