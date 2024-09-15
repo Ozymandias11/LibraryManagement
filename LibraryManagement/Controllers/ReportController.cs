@@ -26,7 +26,7 @@ namespace LibraryManagement.Controllers
 
             var parameters = new[]
             {
-                new ReportParameter("param1", "Customer Registration RDLC Report")
+                new ReportParameter("param1", "Library Management RDLC Report")
             };
 
             report.ReportPath = $"{_webHostEnvironment.WebRootPath}\\Reports\\rptCustomerRegistration.rdlc";
@@ -44,9 +44,11 @@ namespace LibraryManagement.Controllers
 
             var customerRegistrationDto = await _serviceManager.CustomerService.GetCustomerRegistrationsByYear(2024);
             var popularBooks = await _serviceManager.BookService.GetMonthlyReport(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31), "Books");
+            var lostBooks = await _serviceManager.BookService.GetMonhtlyLostBooksReport(new DateTime(2024, 1, 1), new DateTime(2024, 12, 31), "Books");
 
             report.DataSources.Add(new ReportDataSource("dsCustomerRegistartion", customerRegistrationDto));
             report.DataSources.Add(new ReportDataSource("dsPopularBooks", popularBooks));
+            report.DataSources.Add(new ReportDataSource("dsLostBooks", lostBooks));
         }
         
     }

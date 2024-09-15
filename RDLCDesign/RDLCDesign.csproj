@@ -14,6 +14,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>dsCustomersRegistration.xsd</DependentUpon>
     </Compile>
+    <Compile Update="DataSets\dsLostBooks.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsLostBooks.xsd</DependentUpon>
+    </Compile>
     <Compile Update="DataSets\dsPopularBooks.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -25,6 +30,10 @@
     <None Update="DataSets\dsCustomersRegistration.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>dsCustomersRegistration.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="DataSets\dsLostBooks.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsLostBooks.Designer.cs</LastGenOutput>
     </None>
     <None Update="DataSets\dsPopularBooks.xsd">
       <Generator>MSDataSetGenerator</Generator>
