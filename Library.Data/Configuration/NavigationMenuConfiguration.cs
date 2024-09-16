@@ -244,7 +244,16 @@ namespace Library.Data.Configuration
                                                          ControllerName = "Customer",
                                                          ActionName = "MonthlyRegistrationReport",
                                                          Permitted = true,
-                                                     }
+                                                     },
+                                                       new NavigationMenu
+                                                       {
+                                                           Id = new Guid("f40e9642-65fc-4fc2-a2b8-677c27b9f742"),
+                                                           Name = "RDLC Report",
+                                                           ParentMenuId = null,
+                                                           ControllerName = "Report",
+                                                           ActionName = "RDLCReport",
+                                                           Permitted = true,
+                                                       }
 
                 );
 
