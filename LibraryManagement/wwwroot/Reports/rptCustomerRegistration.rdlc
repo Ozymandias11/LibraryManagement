@@ -367,7 +367,7 @@
             </TablixRowHierarchy>
             <DataSetName>dsCustomerRegistartion</DataSetName>
             <Top>2.37604cm</Top>
-            <Left>0.0997cm</Left>
+            <Left>0.14955cm</Left>
             <Height>1.2cm</Height>
             <Width>16.51cm</Width>
             <Style>
@@ -735,7 +735,7 @@
             </ChartNoDataMessage>
             <DataSetName>dsCustomerRegistartion</DataSetName>
             <Top>5.51435cm</Top>
-            <Left>0.0997cm</Left>
+            <Left>0.14955cm</Left>
             <Height>5cm</Height>
             <Width>16.51cm</Width>
             <ZIndex>1</ZIndex>
@@ -768,6 +768,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox90</rd:DefaultName>
             <Top>14.94254cm</Top>
+            <Left>0.04985cm</Left>
             <Height>0.6cm</Height>
             <Width>16.51cm</Width>
             <ZIndex>2</ZIndex>
@@ -949,8 +950,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>dsPopularBooks</DataSetName>
-            <Top>15.97971cm</Top>
-            <Left>0cm</Left>
+            <Top>16.99571cm</Top>
             <Height>1.2cm</Height>
             <Width>16.51cm</Width>
             <ZIndex>3</ZIndex>
@@ -1306,7 +1306,7 @@
               </Style>
             </ChartNoDataMessage>
             <DataSetName>dsPopularBooks</DataSetName>
-            <Top>20.31888cm</Top>
+            <Top>21.33488cm</Top>
             <Height>5.86783cm</Height>
             <Width>16.51cm</Width>
             <ZIndex>4</ZIndex>
@@ -1340,7 +1340,7 @@
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
             <Top>0.10583cm</Top>
-            <Left>0.0997cm</Left>
+            <Left>0.14955cm</Left>
             <Height>0.6cm</Height>
             <Width>16.41031cm</Width>
             <ZIndex>5</ZIndex>
@@ -1374,7 +1374,7 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>27.97387cm</Top>
+            <Top>36.12303cm</Top>
             <Left>0.0997cm</Left>
             <Height>0.6cm</Height>
             <Width>16.4103cm</Width>
@@ -1557,7 +1557,7 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>dsLostBooks</DataSetName>
-            <Top>29.56137cm</Top>
+            <Top>37.71053cm</Top>
             <Left>0.0997cm</Left>
             <Height>1.2cm</Height>
             <Width>16.4103cm</Width>
@@ -1913,8 +1913,7 @@
               </Style>
             </ChartNoDataMessage>
             <DataSetName>dsLostBooks</DataSetName>
-            <Top>32.73637cm</Top>
-            <Left>0.0997cm</Left>
+            <Top>42.7482cm</Top>
             <Height>5cm</Height>
             <Width>16.4103cm</Width>
             <ZIndex>8</ZIndex>
@@ -1928,10 +1927,10 @@
             </Style>
           </Chart>
         </ReportItems>
-        <Height>14.8985in</Height>
+        <Height>18.81517in</Height>
         <Style />
       </Body>
-      <Width>6.53925in</Width>
+      <Width>6.55888in</Width>
       <Page>
         <PageHeader>
           <Height>2.07433cm</Height>
@@ -1959,7 +1958,7 @@
               </Paragraphs>
               <rd:DefaultName>Textbox7</rd:DefaultName>
               <Top>0.94403cm</Top>
-              <Left>0cm</Left>
+              <Left>0.04985cm</Left>
               <Height>0.6cm</Height>
               <Width>16.51cm</Width>
               <Style>
@@ -2002,7 +2001,7 @@
               </Paragraphs>
               <rd:DefaultName>PageNumber</rd:DefaultName>
               <Top>0.92666cm</Top>
-              <Left>13.24187cm</Left>
+              <Left>13.29172cm</Left>
               <Height>0.6cm</Height>
               <Width>3.26813cm</Width>
               <Style>
@@ -2033,7 +2032,7 @@
               </Paragraphs>
               <rd:DefaultName>ExecutionTime</rd:DefaultName>
               <Top>0.92666cm</Top>
-              <Left>0.62653cm</Left>
+              <Left>0.67638cm</Left>
               <Height>0.6cm</Height>
               <Width>3.8335cm</Width>
               <ZIndex>1</ZIndex>
